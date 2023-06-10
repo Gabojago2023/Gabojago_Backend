@@ -1,0 +1,28 @@
+server:
+  port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+    context-path: /
+
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop #create update none
+    properties:
+        hibernate:
+          dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    show-sql: true
+
+  datasource:
+    url: ${LOCAL_DATASOURCE_URL}
+    username: ${LOCAL_DATASOURCE_USERNAME}
+    password: ${LOCAL_DATASOURCE_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+logging.level:
+  org.hibernate.sql: debug
