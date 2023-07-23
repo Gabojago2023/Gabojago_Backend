@@ -1,6 +1,5 @@
 package com.gabojago.trip.place.controller;
 
-import com.gabojago.trip.common.dto.ResponseDto;
 import com.gabojago.trip.place.service.PlaceService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +15,8 @@ public class PlaceController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseDto> getPlaceAll(){
+    public ResponseEntity<?> getPlaceAll(){
 
-        return new ResponseEntity<>(new ResponseDto(200, "완료", null), HttpStatus.OK);
+        return new ResponseEntity<>("", HttpStatus.OK);
     }
 }
