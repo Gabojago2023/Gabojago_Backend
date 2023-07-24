@@ -15,7 +15,6 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/users")
-@Transactional
 public class UserController {
 
     private UserService userService;
