@@ -3,6 +3,8 @@ package com.gabojago.trip.place.repository;
 import static org.assertj.core.api.Assertions.*;
 
 import com.gabojago.trip.place.domain.Place;
+import com.gabojago.trip.place.dto.response.PlaceResponseDto;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -22,7 +24,8 @@ class PlaceRepositoryTest {
 
     @Test
     public void testGetPlaceById() {
-        Place place = placeRepository.findById(125266);
+        Optional<Place> byId = placeRepository.findById(125266);
+        Place place = byId.get();
         assertThat(place.getName()).isEqualTo("국립 청태산자연휴양림");
     }
 
@@ -38,6 +41,17 @@ class PlaceRepositoryTest {
                 System.out.println("Place ID: " + place.getId() + ", Name: " + place.getName()
                         + ", Image URL: " + place.getImgUrl());
             }
+        }
+    }
+
+    @Test
+    void findPlacesByFilter() {
+        List<PlaceResponseDto> placeResponseDtoList = new ArrayList<>();
+        List<Object[]> placesByFilter = placeRepository.findPlacesByFilter(1, "서울", "강남", "공원");
+        for(Object[] o : placesByFilter) {
+            PlaceResponseDto from = PlaceResponseDto.from(o);
+            placeResponseDtoList.add(from);
+            System.out.println(from);
         }
     }
 }
