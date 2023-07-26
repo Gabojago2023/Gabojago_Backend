@@ -24,9 +24,9 @@ public class PlaceController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseDto> getPlaceAll() {
+    public ResponseEntity<?> getPlaceAll() {
 
-        return new ResponseEntity<>(new ResponseDto(200, "완료", null), HttpStatus.OK);
+        return new ResponseEntity<>("", HttpStatus.OK);
     }
 
     @GetMapping("/keyword")

@@ -1,5 +1,4 @@
 package com.gabojago.trip.route.controller;
-import com.gabojago.trip.common.dto.ResponseDto;
 import com.gabojago.trip.route.dto.TripPlaceDto;
 import com.gabojago.trip.route.dto.TripRouteDto;
 import com.gabojago.trip.route.service.TripRouteService;
@@ -23,45 +22,45 @@ public class TripRouteController {
     }
 
     @GetMapping("user/{userId}")
-    public ResponseEntity<ResponseDto> getAllUser(@PathVariable int userId) {
+    public ResponseEntity<List<TripRouteDto>> getAllUser(@PathVariable int userId) {
         log.debug("[GET] /trip-routes/");
 
         List<TripRouteDto> tripRouteDtoList = tripRouteService.getAllUser(userId);
 
-        return new ResponseEntity<>(new ResponseDto(200,"모든 trip route 조회 완료", tripRouteDtoList), HttpStatus.OK);
+        return new ResponseEntity<>(tripRouteDtoList, HttpStatus.OK);
     }
     @GetMapping("favorite/{routeId}")
-    public ResponseEntity<ResponseDto> getLikeRoute(@PathVariable int routeId) {
+    public ResponseEntity<?> getLikeRoute(@PathVariable int routeId) {
         log.debug("[GET] /trip-routes/favorite/"+routeId);
 
         tripRouteService.hitFavorite(routeId);
 
-        return new ResponseEntity<>(new ResponseDto(200,"route favorite 완료", null), HttpStatus.OK);
+        return new ResponseEntity<>("route favorite 완료", HttpStatus.OK);
     }
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseDto> get(@PathVariable int id) {
+    public ResponseEntity<TripRouteDto> get(@PathVariable int id) {
         log.debug("[GET] /trip-routes/" + id);
 
         TripRouteDto tripRouteDto = tripRouteService.get(id);
 
-        return new ResponseEntity<>(new ResponseDto(200,"trip route 조회 완료 ", tripRouteDto), HttpStatus.OK);
+        return new ResponseEntity<>(tripRouteDto, HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<ResponseDto> get() {
+    public ResponseEntity<List<TripRouteDto>> get() {
         log.debug("[GET] /trip-routes/");
 
         List<TripRouteDto> tripRouteDtoList = tripRouteService.getAll();
 
-        return new ResponseEntity<>(new ResponseDto(200,"모든 trip route 조회 완료", tripRouteDtoList), HttpStatus.OK);
+        return new ResponseEntity<>(tripRouteDtoList, HttpStatus.OK);
 
     }
 
     @PostMapping//TODO: userID에 따른 TripRoute 받아야함
 //    public ResponseEntity<ResponseDto> create(@RequestBody TripRouteDto tripRouteDto) {
-    public ResponseEntity<ResponseDto> create(@RequestBody Map<String, Object> payLoad) {
+    public ResponseEntity<?> create(@RequestBody Map<String, Object> payLoad) {
         Map params = (Map) payLoad.get("params");
         log.debug("[POST] /trip-routes/");
 
@@ -92,11 +91,11 @@ public class TripRouteController {
             tripRouteService.createPlace(tripPlaceDto);
         }
 
-        return new ResponseEntity<>(new ResponseDto(200,"trip 생성 완료", null), HttpStatus.OK);
+        return new ResponseEntity<>("", HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseDto> update(@PathVariable int id, @RequestBody TripRouteDto tripRouteDto) {
+    public ResponseEntity<?> update(@PathVariable int id, @RequestBody TripRouteDto tripRouteDto) {
         log.debug("[PUT] /trip-routes/");
 
         tripRouteDto.setId(id);
@@ -110,16 +109,16 @@ public class TripRouteController {
 
         tripRouteService.update(tripRouteDto);
 
-        return new ResponseEntity<>(new ResponseDto(200,"trip route 수정 완료 ", null), HttpStatus.OK);
+        return new ResponseEntity<>("", HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDto> delete(@PathVariable int id) {
+    public ResponseEntity<?> delete(@PathVariable int id) {
         log.debug("[DELETE] /trip-routes/" + id);
 
         tripRouteService.delete(id);
 
-        return new ResponseEntity<>(new ResponseDto(200,"trip route 삭제 완료 ", null), HttpStatus.OK);
+        return new ResponseEntity<>("", HttpStatus.OK);
     }
 
 }

@@ -1,7 +1,5 @@
 package com.gabojago.trip.common.controller;
 
-import com.gabojago.trip.common.dto.ErrorDetail;
-import com.gabojago.trip.common.dto.ErrorResponseDto;
 import com.gabojago.trip.common.exception.GabojagoApiException;
 
 import java.time.LocalDateTime;
@@ -37,38 +35,17 @@ public class ExceptionControllerAdvice extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(
             Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        ServletWebRequest servletWebRequest = (ServletWebRequest) request;
-        ErrorDetail errorDetail;
-        if (status == HttpStatus.INTERNAL_SERVER_ERROR) {
-            errorDetail = new ErrorDetail(
-                    LocalDateTime.now(),
-                    status.value(),
-                    servletWebRequest.getRequest().getRequestURI(),
-                    servletWebRequest.getRequest().getRemoteAddr()
-            );
-        } else {
-            errorDetail = new ErrorDetail(
-                    LocalDateTime.now(),
-                    status.value(),
-                    servletWebRequest.getRequest().getRequestURI(),
-                    servletWebRequest.getRequest().getRemoteAddr()
-            );
-        }
+
         return ResponseEntity.status(status).headers(headers)
-                .body(new ErrorResponseDto(status.value(), ex.getMessage(), errorDetail));
+                .body(ex.getMessage());
     }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         ServletWebRequest servletWebRequest = (ServletWebRequest) request;
-        ErrorDetail errorDetail = new ErrorDetail(
-                LocalDateTime.now(),
-                status.value(),
-                servletWebRequest.getRequest().getRequestURI(),
-                servletWebRequest.getRequest().getRemoteAddr()
-        );
+
         String message = ex.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
-        return ResponseEntity.badRequest().body(new ErrorResponseDto(status.value(), message, errorDetail));
+        return ResponseEntity.badRequest().body(message);
     }
 }
