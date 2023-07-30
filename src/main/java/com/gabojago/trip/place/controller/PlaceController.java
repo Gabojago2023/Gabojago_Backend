@@ -1,6 +1,5 @@
 package com.gabojago.trip.place.controller;
 
-import com.gabojago.trip.common.dto.ResponseDto;
 import com.gabojago.trip.place.dto.response.PlaceResponseDto;
 import com.gabojago.trip.place.service.PlaceService;
 import java.util.List;
