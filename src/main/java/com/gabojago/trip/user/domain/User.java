@@ -27,13 +27,11 @@ public class User {
     private String providerId;
     private Boolean isAdmin;
     private String image;
-    private Integer createdAt;
-    private Integer modifiedAt;
 
     @Builder
     public User(Integer id, String name, String nickname, String email, String provider,
         String providerId,
-        boolean isAdmin, String image, Integer createdAt, Integer modifiedAt) {
+        boolean isAdmin, String image) {
         this.id = id;
         this.name = name;
         this.nickname = nickname;
@@ -42,8 +40,6 @@ public class User {
         this.providerId = providerId;
         this.isAdmin = isAdmin;
         this.image = image;
-        this.createdAt = createdAt;
-        this.modifiedAt = modifiedAt;
     }
 
     public static User from(UserDto userDto) {
