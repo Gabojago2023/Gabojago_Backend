@@ -2,7 +2,9 @@ package com.gabojago.trip.place.controller;
 
 import com.gabojago.trip.place.dto.response.PlaceResponseDto;
 import com.gabojago.trip.place.service.PlaceService;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,10 +36,12 @@ public class PlaceController {
             @RequestParam String keyword) {
         // 임의의 userId
         Integer userId = 3;
+        Map<String, List> result = new HashMap<>();
         try {
             List<PlaceResponseDto> list = placeService.searchAttractionByKeyword(userId, sidoCode,
                     gugunCode, keyword);
-            return new ResponseEntity<>(list, HttpStatus.OK);
+            result.put("places", list);
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<String>("검색 실패!!!", HttpStatus.NOT_ACCEPTABLE);
         }
