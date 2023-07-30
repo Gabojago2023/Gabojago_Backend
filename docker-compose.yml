@@ -8,7 +8,7 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD : root
-      MYSQL_DATABASE : trip
+      MYSQL_DATABASE : gabojago
       TZ: Asia/Seoul
     ports:
       - 3306:3306
