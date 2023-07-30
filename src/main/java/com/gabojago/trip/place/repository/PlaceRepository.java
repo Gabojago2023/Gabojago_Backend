@@ -19,10 +19,10 @@ public interface PlaceRepository extends JpaRepository<Place, Integer> {
             "CASE WHEN ps.userId IS NOT NULL THEN 1 ELSE 0 END AS isBookmarked " +
             "FROM Place p " +
             "LEFT JOIN PlaceScrap ps ON p.id = ps.placeId AND ps.userId = :userId " +
-            "WHERE p.address LIKE CONCAT('%', :sido, '%') " +
-            "AND p.address LIKE CONCAT('%', :gugun , '%') " +
+            "WHERE p.sidoCode = :sidoCode " +
+            "AND p.gugunCode = :gugunCode " +
             "AND p.name LIKE CONCAT('%', :keyword, '%') " +
             "ORDER BY CASE WHEN ps.userId IS NOT NULL THEN 1 ELSE 0 END DESC, p.id")
-    List<Object[]> findPlacesByFilter(@Param("userId") Integer userId, @Param("sido") String sido,
-            @Param("gugun") String gugun, @Param("keyword") String keyword);
+    List<Object[]> findPlacesByFilter(@Param("userId") Integer userId, @Param("sidoCode") Integer sidoCode,
+            @Param("gugunCode") Integer gugunCode, @Param("keyword") String keyword);
 }

@@ -5,6 +5,6 @@ import java.util.List;
 
 public interface PlaceService {
 
-    List<PlaceResponseDto> searchAttractionByKeyword(Integer userId, String sido, String gugun,
+    List<PlaceResponseDto> searchAttractionByKeyword(Integer userId, Integer sidoCode, Integer gugunCode,
             String keyword);
 }

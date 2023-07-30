@@ -30,9 +30,10 @@ public class PlaceController {
     }
 
     @GetMapping("/keyword")
-    public ResponseEntity<?> getPlaceSearchedByKeyword(@RequestParam String sidoCode,
-            @RequestParam String gugunCode,
+    public ResponseEntity<?> getPlaceSearchedByKeyword(@RequestParam Integer sidoCode,
+            @RequestParam Integer gugunCode,
             @RequestParam String keyword) {
+        // 임의의 userId
         Integer userId = 3;
         try {
             List<PlaceResponseDto> list = placeService.searchAttractionByKeyword(userId, sidoCode,

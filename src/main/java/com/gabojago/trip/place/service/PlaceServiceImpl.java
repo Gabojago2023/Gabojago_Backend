@@ -17,10 +17,10 @@ public class PlaceServiceImpl implements PlaceService{
     }
 
     @Override
-    public List<PlaceResponseDto> searchAttractionByKeyword(Integer userId, String sido,
-            String gugun, String keyword) {
+    public List<PlaceResponseDto> searchAttractionByKeyword(Integer userId, Integer sidoCode,
+            Integer gugunCode, String keyword) {
         List<PlaceResponseDto> placeResponseDtoList = new ArrayList<>();
-        List<Object[]> placesByFilter = placeRepository.findPlacesByFilter(1, "서울", "강남", "공원");
+        List<Object[]> placesByFilter = placeRepository.findPlacesByFilter(userId, sidoCode, gugunCode, "공원");
         for(Object[] o : placesByFilter) {
             PlaceResponseDto from = PlaceResponseDto.from(o);
             placeResponseDtoList.add(from);
