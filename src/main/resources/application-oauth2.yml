@@ -1,14 +1,14 @@
 auth:
   google:
-    client-id:
-    client-secret:
+    client-id: ${GOOGLE_CLIENT_ID}
+    client-secret: ${GOOGLE_CLIENT_SECRET}
     scope:
       - email
       - profile
     token-req-url : https://oauth2.googleapis.com
   kakao:
-    client-id:
-    client-secret:
+    client-id: ${KAKAO_CLIENT_ID}
+    client-secret: ${KAKAO_CLIENT_SECRET}
     scope:
       - profile_nickname
       - profile_image
@@ -17,4 +17,4 @@ auth:
 
 custom:
   jwt:
-    secret: jwt시크릿
+    secret: ${JWT_SECRET}
