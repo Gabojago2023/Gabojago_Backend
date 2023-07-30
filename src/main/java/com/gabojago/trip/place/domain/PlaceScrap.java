@@ -1,19 +1,23 @@
-package com.gabojago.trip.route.domain;
+package com.gabojago.trip.place.domain;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @NoArgsConstructor
-public class TripRoute {
+@ToString
+@Getter
+public class PlaceScrap {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Integer id;
 
+    private Integer placeId;
+    private Integer userId;
 }
