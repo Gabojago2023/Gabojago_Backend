@@ -1,7 +1,7 @@
-#spring:
-#  datasource:
-#    url: jdbc:mysql://localhost:3306/trip
-#    username: root
-#    password: root
-#logging.level:
-#  org.hibernate.sql: debug
+spring:
+  datasource:
+    url: ${LOCAL_DATASOURCE_URL}
+    username: ${LOCAL_DATASOURCE_USERNAME}
+    password: ${LOCAL_DATASOURCE_PASSWORD}
+logging.level:
+  org.hibernate.sql: debug
