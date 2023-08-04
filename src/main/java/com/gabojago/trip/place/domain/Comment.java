@@ -1,37 +1,42 @@
 package com.gabojago.trip.place.domain;
 
+import java.sql.Timestamp;
+
 import com.gabojago.trip.user.domain.User;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
+import org.hibernate.annotations.CreationTimestamp;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @NoArgsConstructor
 @ToString
 @Getter
 public class Comment {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "place_id")
-    private Place place;
+	@ManyToOne
+	@JoinColumn(name = "place_id")
+	private Place place;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private User user;
 
-    private String commentText;
-    private Integer starRating;
+	private String commentText;
+	private Integer starRating;
 
-    @CreationTimestamp
-    private java.sql.Timestamp createdDate;
+	@CreationTimestamp
+	private Timestamp createdDate;
 }
