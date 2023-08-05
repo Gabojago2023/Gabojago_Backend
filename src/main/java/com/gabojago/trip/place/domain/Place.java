@@ -1,7 +1,6 @@
 package com.gabojago.trip.place.domain;
 
 import java.math.BigDecimal;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,7 +8,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -51,8 +49,4 @@ public class Place {
     @ManyToOne
     @JoinColumn(name = "gugun_code")
     private Gugun gugun;
-
-    @OneToMany(mappedBy = "place")
-    private List<PlaceScrap> placeScraps;
-
 }

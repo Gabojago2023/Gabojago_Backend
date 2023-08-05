@@ -1,10 +1,8 @@
 package com.gabojago.trip.place.domain;
 
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,8 +18,4 @@ public class Sido {
     private String sidoName;
 
     private String imageUrl;
-
-    @OneToMany(mappedBy = "sido")
-    private List<Place> places;
-
 }
