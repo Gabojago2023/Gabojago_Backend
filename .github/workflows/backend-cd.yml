@@ -23,3 +23,7 @@ jobs:
           script: |
             cd ~/Gabojago_Backend/
             git pull
+            # 자바 빌드 -> .jar
+            # ./gradle build
+            # 폴더 이동 및 빌드 된 jar 파일 실행
+            # java -jar build/libs/trip-0.0.1-SNAPSHOT.jar
