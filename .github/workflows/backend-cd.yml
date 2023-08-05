@@ -1,0 +1,25 @@
+name: Backend Deploy
+
+on:
+  push:
+    branches: [ "develop" ]
+
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Deploy
+        uses: appleboy/ssh-action@v0.1.7
+
+        with:
+          host: ${{secrets.HOST}}
+          username: ${{secrets.USERNAME}}
+          key: ${{secrets.KEY}}
+          port: 22
+
+          scripts: |
+            cd Gabojago_Backend/
+            git pull
