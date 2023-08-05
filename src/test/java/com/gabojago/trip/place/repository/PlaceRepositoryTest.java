@@ -34,7 +34,6 @@ class PlaceRepositoryTest {
         PageRequest pageRequest = PageRequest.of(0, 3);
 
         List<Integer> top3ScrappedPlacesId = placeRepository.findTop3ScrappedPlacesId(pageRequest);
-        System.out.println(top3ScrappedPlacesId.toString());
         for (Integer placeId : top3ScrappedPlacesId) {
             Optional<Place> optionalValue = placeRepository.findById(placeId);
             if (optionalValue.isPresent()) {
