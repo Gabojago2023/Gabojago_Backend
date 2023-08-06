@@ -23,6 +23,11 @@ jobs:
           script: |
             cd ~/Gabojago_Backend/
             git pull
+            chmod +x gradlew
+            ./gradlew clean compileJava bootJar
+            docker compose build
+            docker run -d --name onepick_backend --env-file ./config/.env -p 8081:8080 ynwoo/onepick_test
+            
             # 자바 빌드 -> .jar
             # ./gradle build
             # 폴더 이동 및 빌드 된 jar 파일 실행
