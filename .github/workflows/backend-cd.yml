@@ -13,6 +13,9 @@ jobs:
     steps:
       - name: 저장소 Checkout
         uses: actions/checkout@v3
+
+      - name: 권한부여 # (0)
+        run: chmod +x gradlew
         
       - name: springboot application build # (1)
         run: ./gradlew clean compileJava bootJar
