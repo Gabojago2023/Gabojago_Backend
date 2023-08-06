@@ -1,6 +1,7 @@
 package com.gabojago.trip.route.domain;
 
 import com.gabojago.trip.place.domain.Place;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
