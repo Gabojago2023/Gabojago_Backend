@@ -20,30 +20,31 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    private String email;
+    private String password; // 비밀번호
+    private String image;
+    private Boolean isAdmin;
+
     private String name;
     private String nickname;
-    private String email;
+
     private String provider;
     private String providerId;
-    private Boolean isAdmin;
-    private String image;
-    private Integer createdAt;
-    private Integer modifiedAt;
-
+    private int streak;
     @Builder
-    public User(Integer id, String name, String nickname, String email, String provider,
-        String providerId,
-        boolean isAdmin, String image, Integer createdAt, Integer modifiedAt) {
+    public User(Integer id, String email, String password, String image, Boolean isAdmin,
+        String name,
+        String nickname, String provider, String providerId, int streak) {
         this.id = id;
+        this.email = email;
+        this.password = password;
+        this.image = image;
+        this.isAdmin = isAdmin;
         this.name = name;
         this.nickname = nickname;
-        this.email = email;
         this.provider = provider;
         this.providerId = providerId;
-        this.isAdmin = isAdmin;
-        this.image = image;
-        this.createdAt = createdAt;
-        this.modifiedAt = modifiedAt;
+        this.streak = streak;
     }
 
     public static User from(UserDto userDto) {

@@ -1,21 +1,24 @@
 package com.gabojago.trip.route.domain;
 
 import com.gabojago.trip.place.domain.Place;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
-@Setter
+@NoArgsConstructor
 public class TripPlace {
+
     @Id
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     @ManyToOne
-    TripRoute tripRoute;
+    private TripRoute tripRoute;
     @ManyToOne
-    Place place;
+    private Place place;
 }
