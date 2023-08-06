@@ -2,12 +2,7 @@ package com.gabojago.trip.route.domain;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 import com.gabojago.trip.route.dto.TripRouteCreateDto;
 import com.gabojago.trip.route.dto.TripRouteModifyDto;
@@ -22,7 +17,6 @@ public class TripRoute {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Integer id;
 
     private String name;
@@ -33,7 +27,8 @@ public class TripRoute {
     private boolean isPublic;
     private LocalDateTime createdAt;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Builder
