@@ -83,7 +83,7 @@ public class TripRouteController {
     }
     private boolean isCompanionAndHasRole(User user, List<Companion> companionList) {
         return companionList.stream().filter(x -> x.getId() == user.getId())
-                .filter(x -> x.getGrant() == CompanionGrant.WRITER)
+                .filter(x -> x.getCompanionGrant() == CompanionGrant.WRITER)
                 .count() == 1;
     }
 }

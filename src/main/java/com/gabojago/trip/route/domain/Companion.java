@@ -3,26 +3,27 @@ package com.gabojago.trip.route.domain;
 import com.gabojago.trip.user.domain.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-
-
+@NoArgsConstructor
+@Setter
 @Getter
 @Entity
-@NoArgsConstructor
 public class Companion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Enumerated(EnumType.STRING)
-    private CompanionGrant grant; // 권한 레벨
+    private CompanionGrant companionGrant; // 권한 레벨
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TRIP_ROUTE_ID")
+    @JoinColumn(name = "trip_route_id")
     private TripRoute tripRoute; // 여행계획아이디
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID")
-    private User user; // 동행자아이디
+    @JoinColumn(name = "user_id")
+    private User creator; // 동행자아이디
 
 }
