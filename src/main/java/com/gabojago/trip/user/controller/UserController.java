@@ -1,6 +1,7 @@
 package com.gabojago.trip.user.controller;
 
 
+import com.gabojago.trip.user.domain.User;
 import com.gabojago.trip.user.dto.UserDto;
 import com.gabojago.trip.user.dto.UserResDto;
 import com.gabojago.trip.user.service.UserService;
@@ -38,7 +39,8 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserResDto> get(@PathVariable int userId) {
-        UserResDto userResDto = userService.getUser(userId);
+        User user = userService.getUser(userId);
+        UserResDto userResDto = UserResDto.from(user);
         return new ResponseEntity<>(userResDto, HttpStatus.OK);
     }
 
