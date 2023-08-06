@@ -34,7 +34,10 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
+          
+      - name: Docker image check # (4)
+        run: docker images
+        
       - name: Docker Hub 퍼블리시 # (4)
         run: docker push ynwoo/onepick_test
 
