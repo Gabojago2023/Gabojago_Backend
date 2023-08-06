@@ -7,7 +7,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -18,7 +17,11 @@ public class TripPlace {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @ManyToOne
-    private TripRoute tripRoute;
-    @ManyToOne
     private Place place;
+    private int tripDay;
+    private int tripOrder;
+    @ManyToOne
+    private TripRoute tripRoute;
+
+
 }

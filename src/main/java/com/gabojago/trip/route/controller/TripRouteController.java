@@ -28,6 +28,11 @@ public class TripRouteController {
     private final AuthService authService;
     private final UserService userService;
 
+    @GetMapping
+    public ResponseEntity<?> getPlan(@RequestHeader("Authorization") String token,@RequestParam Integer placeId){
+        List<TripRouteResDto> tripRoute = tripRouteService.getTripRouteByPlaceId(placeId);
+        return ResponseEntity.status(HttpStatus.OK).body(tripRoute);
+    }
     @PostMapping
     public ResponseEntity<?> addPlan(@RequestHeader("Authorization") String token, @RequestBody TripRouteCreateDto tripRouteCreateDto) {
         Integer userId = authService.getUserIdFromToken(token);
@@ -65,7 +70,7 @@ public class TripRouteController {
     }
     @GetMapping("/{planId}")
     public ResponseEntity<?> searchPlan(@PathVariable Integer planId){
-        TripRoute tripRoute =  tripRouteService.getTripRouteBy(planId);
+        TripRoute tripRoute =  tripRouteService.getTripRouteById(planId);
         TripRouteResDto tripRouteResDto = TripRouteResDto.from(tripRoute);
         return ResponseEntity.status(HttpStatus.OK).body(tripRouteResDto);
     }

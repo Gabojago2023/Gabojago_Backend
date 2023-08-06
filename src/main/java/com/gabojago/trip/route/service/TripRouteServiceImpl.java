@@ -4,6 +4,7 @@ import com.gabojago.trip.route.domain.Companion;
 import com.gabojago.trip.route.domain.TripRoute;
 import com.gabojago.trip.route.dto.TripRouteCreateDto;
 import com.gabojago.trip.route.dto.TripRouteModifyDto;
+import com.gabojago.trip.route.dto.TripRouteResDto;
 import com.gabojago.trip.route.exception.TripRouteNotFoundException;
 import com.gabojago.trip.route.repository.CompanionRepository;
 import com.gabojago.trip.route.repository.TripRouteRepository;
@@ -48,7 +49,7 @@ public class TripRouteServiceImpl implements TripRouteService{
     }
 
     @Override
-    public TripRoute getTripRouteBy(Integer tripRouteId) {
+    public TripRoute getTripRouteById(Integer tripRouteId) {
         TripRoute tripRoute = tripRouteRepository.findById(tripRouteId)
                 .orElseThrow(()->new TripRouteNotFoundException("tripRoute 없음"));
         return tripRoute;
@@ -58,6 +59,13 @@ public class TripRouteServiceImpl implements TripRouteService{
     public List<TripRoute> getMyTripRoutes(User user) {
         List<TripRoute> tripRoutes =
                 tripRouteRepository.findByUser(user.getId());
+        return tripRoutes;
+    }
+
+    @Override
+    public List<TripRouteResDto> getTripRouteByPlaceId(Integer placeId) {
+        List<TripRouteResDto> tripRoutes =
+                tripRouteRepository.findByPlaceId(placeId);
         return tripRoutes;
     }
 }

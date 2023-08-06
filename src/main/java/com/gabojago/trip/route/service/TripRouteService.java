@@ -4,6 +4,7 @@ import com.gabojago.trip.route.domain.Companion;
 import com.gabojago.trip.route.domain.TripRoute;
 import com.gabojago.trip.route.dto.TripRouteCreateDto;
 import com.gabojago.trip.route.dto.TripRouteModifyDto;
+import com.gabojago.trip.route.dto.TripRouteResDto;
 import com.gabojago.trip.user.domain.User;
 
 import java.util.List;
@@ -22,7 +23,9 @@ public interface TripRouteService {
 
     void edit(TripRouteModifyDto tripRouteModifyDto);
 
-    TripRoute getTripRouteBy(Integer tripRouteId);
+    TripRoute getTripRouteById(Integer tripRouteId);
 
     List<TripRoute> getMyTripRoutes(User user);
+
+    List<TripRouteResDto> getTripRouteByPlaceId(Integer placeId);
 }
