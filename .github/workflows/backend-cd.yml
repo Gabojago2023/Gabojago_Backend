@@ -1,0 +1,29 @@
+name: Backend Deploy
+
+on:
+  push:
+    branches: [ "develop" ]
+
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Deploy
+        uses: appleboy/ssh-action@v0.1.7
+
+        with:
+          host: ${{secrets.HOST}}
+          username: ${{secrets.USERNAME}}
+          key: ${{secrets.KEY}}
+          port: 22
+
+          script: |
+            cd ~/Gabojago_Backend/
+            git pull
+            # 자바 빌드 -> .jar
+            # ./gradle build
+            # 폴더 이동 및 빌드 된 jar 파일 실행
+            # java -jar build/libs/trip-0.0.1-SNAPSHOT.jar

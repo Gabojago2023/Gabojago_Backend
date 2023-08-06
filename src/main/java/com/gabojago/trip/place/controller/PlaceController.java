@@ -18,7 +18,7 @@ import java.util.Map;
 @RequestMapping("/places")
 public class PlaceController {
 
-    private PlaceService placeService;
+    private final PlaceService placeService;
 
     @Autowired
     public PlaceController(PlaceService placeService) {
@@ -32,8 +32,8 @@ public class PlaceController {
     }
 
     @GetMapping("/keyword")
-    public ResponseEntity<?> getPlaceSearchedByKeyword(@RequestParam Integer sidoCode,
-            @RequestParam Integer gugunCode,
+    public ResponseEntity<?> getPlaceSearchedByKeyword(@RequestParam("sido-code") Integer sidoCode,
+            @RequestParam("gugun-code") Integer gugunCode,
             @RequestParam String keyword) {
         // 임의의 userId
         Integer userId = 3;
@@ -44,7 +44,7 @@ public class PlaceController {
             result.put("places", list);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<String>("검색 실패!!!", HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>("검색 실패!!!", HttpStatus.NOT_ACCEPTABLE);
         }
 //        try {
 //            List<PlaceResponseDto> list = placeService.searchAttractionByKeyword(Integer.parseInt(sidoCode),

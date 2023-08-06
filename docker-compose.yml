@@ -2,6 +2,14 @@
 version: '3.1'
 
 services:
+  app:
+    container_name: app
+    image: ynwoo/onepick_test
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"
+      
   db:
     image: mysql:8.0
     container_name: trip-container
