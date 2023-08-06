@@ -1,26 +1,28 @@
 package com.gabojago.trip.route.service;
 
-import com.gabojago.trip.route.dto.TripPlaceDto;
-import com.gabojago.trip.route.dto.TripRouteDto;
+import com.gabojago.trip.route.domain.Companion;
+import com.gabojago.trip.route.domain.TripRoute;
+import com.gabojago.trip.route.dto.TripRouteCreateDto;
+import com.gabojago.trip.route.dto.TripRouteModifyDto;
+import com.gabojago.trip.user.domain.User;
+
 import java.util.List;
 
 public interface TripRouteService {
 
-    List<TripRouteDto> getAllUser(int userId);
 
-    void hitFavorite(int routeId);
+    void add(User user, TripRouteCreateDto tripRouteCreateDto);
 
-    List<TripRouteDto> getAll();
+    User getOwner(Integer tripRouteId);
 
-    int getRecentRouteId(int userId);
+    void delete(Integer planId);
 
-    TripRouteDto get(int id);
 
-    void create(TripRouteDto tripRouteDto);
+    List<Companion> getCompanions(Integer planId);
 
-    void createPlace(TripPlaceDto tripPlaceDto);
+    void edit(TripRouteModifyDto tripRouteModifyDto);
 
-    void update(TripRouteDto tripRouteDto);
+    TripRoute getTripRouteBy(Integer tripRouteId);
 
-    void delete(int id);
+    List<TripRoute> getMyTripRoutes(User user);
 }

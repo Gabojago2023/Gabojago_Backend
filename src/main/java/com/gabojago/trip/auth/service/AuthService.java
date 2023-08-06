@@ -19,4 +19,6 @@ public interface AuthService {
     void saveTokens(Integer id, JwtDto jwtDto);
 
     void updateTokens(Auth saved);
+
+    Integer getUserIdFromToken(String token);
 }

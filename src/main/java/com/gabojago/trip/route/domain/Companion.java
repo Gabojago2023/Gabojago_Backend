@@ -1,19 +1,17 @@
 package com.gabojago.trip.route.domain;
 
 import com.gabojago.trip.user.domain.User;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import lombok.Getter;
 
-import static javax.persistence.EnumType.STRING;
+import javax.persistence.*;
 
+@Getter
 @Entity
 public class Companion {
 
     @Id
     private Integer id;
-    @Enumerated(STRING)
+    @Enumerated(EnumType.STRING)
     private CompanionGrant grant; // 권한 레벨
     @ManyToOne
     private TripRoute tripRoute; // 여행계획아이디

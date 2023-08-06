@@ -27,11 +27,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResDto getUser(int userId) {
+    public User getUser(int userId) {
         User user = userRepository.findById(userId).orElseThrow(
             () -> new UserNotFoundException("" + userId)
         );
-        return UserResDto.from(user);
+        return user;
     }
 
     @Override
