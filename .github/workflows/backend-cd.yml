@@ -55,9 +55,9 @@ jobs:
             # chmod +x gradlew
             # ./gradlew clean compileJava bootJar
             
-            docker pull ynwoo/onepick_backend_test
+            docker pull ynwoo/onepick_test
             # docker run -d -p 8080:8080 --name <container_name> <docker_hub_username>/<image_name>
-            docker run -d --name onepick_backend --env-file ./config/.env -p 8081:8080 ynwoo/onepick_backend_test
+            docker run -d --name onepick_backend --env-file ./config/.env -p 8081:8080 ynwoo/onepick_test
 
 
             
