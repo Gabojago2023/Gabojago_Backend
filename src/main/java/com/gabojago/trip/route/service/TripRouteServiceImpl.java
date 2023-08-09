@@ -1,55 +1,71 @@
 package com.gabojago.trip.route.service;
 
-import com.gabojago.trip.route.dto.TripPlaceDto;
-import com.gabojago.trip.route.dto.TripRouteDto;
-import java.util.List;
+import com.gabojago.trip.route.domain.Companion;
+import com.gabojago.trip.route.domain.TripRoute;
+import com.gabojago.trip.route.dto.TripRouteCreateDto;
+import com.gabojago.trip.route.dto.TripRouteModifyDto;
+import com.gabojago.trip.route.dto.TripRouteResDto;
+import com.gabojago.trip.route.exception.TripRouteNotFoundException;
+import com.gabojago.trip.route.repository.CompanionRepository;
+import com.gabojago.trip.route.repository.TripRouteRepository;
+import com.gabojago.trip.user.domain.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+@RequiredArgsConstructor
 @Service
 public class TripRouteServiceImpl implements TripRouteService{
-
+    private final TripRouteRepository tripRouteRepository;
+    private final CompanionRepository companionRepository;
     @Override
-    public List<TripRouteDto> getAllUser(int userId) {
-        return null;
+    public void add(User user, TripRouteCreateDto tripRouteCreateDto) {
+       tripRouteRepository.save(TripRoute.from(tripRouteCreateDto,user));
     }
 
     @Override
-    public void hitFavorite(int routeId) {
-
+    public User getOwner(Integer tripRouteId) {
+        return tripRouteRepository.findUserByTripRouteId(tripRouteId);
     }
 
     @Override
-    public List<TripRouteDto> getAll() {
-        return null;
+    public void delete(Integer planId) {
+        TripRoute tripRoute = tripRouteRepository.findById(planId).orElseThrow(()-> new TripRouteNotFoundException("triproute에 헤당하는 id 없음"));
+        tripRouteRepository.delete(tripRoute);
     }
 
     @Override
-    public int getRecentRouteId(int userId) {
-        return 0;
+    public List<Companion> getCompanions(Integer planId) {
+        return companionRepository.findAllByTripRouteId(planId);
     }
 
     @Override
-    public TripRouteDto get(int id) {
-        return null;
+    public void edit(TripRouteModifyDto tripRouteModifyDto) {
+        //TODO : 동행자 추가 삭제
+        TripRoute tripRoute = tripRouteRepository.findById(tripRouteModifyDto.getId())
+                .orElseThrow(()-> new TripRouteNotFoundException("triprouteId 없음"));
+        TripRoute updated = TripRoute.from(tripRouteModifyDto,tripRoute.getUser());
+        tripRouteRepository.save(updated);
     }
 
     @Override
-    public void create(TripRouteDto tripRouteDto) {
-
+    public TripRoute getTripRouteById(Integer tripRouteId) {
+        TripRoute tripRoute = tripRouteRepository.findById(tripRouteId)
+                .orElseThrow(()->new TripRouteNotFoundException("tripRoute 없음"));
+        return tripRoute;
     }
 
     @Override
-    public void createPlace(TripPlaceDto tripPlaceDto) {
-
+    public List<TripRoute> getMyTripRoutes(User user) {
+        List<TripRoute> tripRoutes =
+                tripRouteRepository.findByUser(user.getId());
+        return tripRoutes;
     }
 
     @Override
-    public void update(TripRouteDto tripRouteDto) {
-
-    }
-
-    @Override
-    public void delete(int id) {
-
+    public List<TripRouteResDto> getTripRouteByPlaceId(Integer placeId) {
+        List<TripRouteResDto> tripRoutes =
+                tripRouteRepository.findByPlaceId(placeId);
+        return tripRoutes;
     }
 }

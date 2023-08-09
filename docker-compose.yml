@@ -2,13 +2,24 @@
 version: '3.1'
 
 services:
+  app:
+    container_name: app
+    image: ynwoo/onepick_test
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"
+      
   db:
     image: mysql:8.0
     container_name: trip-container
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD : root
-      MYSQL_DATABASE : trip
+      MYSQL_DATABASE : gabojago
       TZ: Asia/Seoul
     ports:
       - 3306:3306
