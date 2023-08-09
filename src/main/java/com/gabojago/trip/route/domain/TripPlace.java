@@ -12,11 +12,13 @@ public class TripPlace {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "PLACE_ID")
     private Place place;
     private int tripDay;
     private int tripOrder;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "TRIP_ROUTE_ID")
     private TripRoute tripRoute;
 
 

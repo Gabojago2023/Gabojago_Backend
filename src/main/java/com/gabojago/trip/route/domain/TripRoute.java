@@ -1,5 +1,4 @@
 package com.gabojago.trip.route.domain;
-
 import com.gabojago.trip.route.dto.TripRouteCreateDto;
 import com.gabojago.trip.route.dto.TripRouteModifyDto;
 import com.gabojago.trip.user.domain.User;
@@ -17,7 +16,6 @@ public class TripRoute {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Integer id;
 
     private String name;
@@ -28,7 +26,8 @@ public class TripRoute {
     private boolean isPublic;
     private LocalDateTime createdAt;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Builder

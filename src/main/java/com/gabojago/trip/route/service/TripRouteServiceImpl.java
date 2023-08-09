@@ -36,7 +36,7 @@ public class TripRouteServiceImpl implements TripRouteService{
 
     @Override
     public List<Companion> getCompanions(Integer planId) {
-        return companionRepository.findCompanionsByTripRouteId(planId);
+        return companionRepository.findAllByTripRouteId(planId);
     }
 
     @Override

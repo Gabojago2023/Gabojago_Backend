@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface CompanionRepository extends JpaRepository<Companion,Integer> {
-    List<Companion> findCompanionsByTripRouteId(Integer planId);
+    List<Companion> findAllByTripRouteId(Integer planId);
 
 }

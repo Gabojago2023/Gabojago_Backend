@@ -1,7 +1,0 @@
-spring:
-  datasource:
-    url: ${LOCAL_DATASOURCE_URL}
-    username: ${LOCAL_DATASOURCE_USERNAME}
-    password: ${LOCAL_DATASOURCE_PASSWORD}
-logging.level:
-  org.hibernate.sql: debug

@@ -19,12 +19,10 @@ public class Auth {
     private Integer id;
     private Integer userId;//unique
     private String refreshToken;
-    private String accessToken;
 
     @Builder
-    public Auth(Integer userId, String refreshToken, String accessToken) {
+    public Auth(Integer userId, String refreshToken) {
         this.userId = userId;
         this.refreshToken = refreshToken;
-        this.accessToken = accessToken;
     }
 }
