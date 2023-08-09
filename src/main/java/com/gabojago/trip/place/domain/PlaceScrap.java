@@ -1,5 +1,8 @@
 package com.gabojago.trip.place.domain;
 
+import com.gabojago.trip.user.domain.User;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
