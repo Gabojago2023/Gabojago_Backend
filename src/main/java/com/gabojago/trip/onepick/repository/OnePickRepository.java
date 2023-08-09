@@ -8,15 +8,15 @@ import org.springframework.data.jpa.repository.Query;
 public interface OnePickRepository extends JpaRepository<OnePick, Integer> {
 
     // 랜덤한 원픽 조회: 카테고리, 지역
-    @Query("SELECT o FROM OnePick o WHERE o.category = :category AND o.baseLocation = :baseLocation ORDER BY RAND() LIMIT 1")
+    @Query(value = "SELECT o FROM OnePick o WHERE o.category = :category AND o.baseLocation = :baseLocation ORDER BY RAND() LIMIT 1", nativeQuery = true)
     OnePick findOnePickByCategoryAndBaseLocation(String category, String baseLocation);
 
     // 랜덤한 원픽 조회: 카테고리
-    @Query("SELECT o FROM OnePick o WHERE o.category = :category ORDER BY RAND() LIMIT 1")
+    @Query(value = "SELECT o FROM OnePick o WHERE o.category = :category ORDER BY RAND() LIMIT 1", nativeQuery = true)
     OnePick findOnePickByCategory(String category);
 
     // 랜덤한 원픽 조회: 지역
-    @Query("SELECT o FROM OnePick o WHERE o.baseLocation = :baseLocation ORDER BY RAND() LIMIT 1")
+    @Query(value = "SELECT o FROM OnePick o WHERE o.baseLocation = :baseLocation ORDER BY RAND() LIMIT 1", nativeQuery = true)
     OnePick findOnePickByBaseLocation(String baseLocation);
 
     // user id로 모든 원픽 조회
@@ -24,11 +24,12 @@ public interface OnePickRepository extends JpaRepository<OnePick, Integer> {
     OnePick[] findAllOnePickByUserId(Integer userId);
 
     // 새로운 원픽 추가 (수정도 추가로 처리 -> 생성 시간 필드로 버저닝 필드를 대체)
-    @Query("INSERT INTO OnePick (description, place, user, category, baseLocation) VALUES (:description, :place, :user, :category, :baseLocation)")
-    void addOnePick(String description, Integer place, Integer user, Integer category, Integer baseLocation);
+    @Query(value = "INSERT INTO OnePick (description, place, user, category, baseLocation) VALUES (:description, :place, :user, :category, :baseLocation)", nativeQuery = true)
+    void addOnePick(String description, Integer place, Integer user, Integer category,
+            Integer baseLocation);
 
     // DistributedOnePick 새롭게 등록
-    @Query("INSERT INTO DistributedOnePick (onePick, user) VALUES (:onePick, :user)")
+    @Query(value = "INSERT INTO DistributedOnePick (onePick, user) VALUES (:onePick, :user)", nativeQuery = true)
     void addDistributedOnePick(Integer onePick, Integer user);
 
     // 유저가 해당 원픽일 이미 뽑았는지의 여부

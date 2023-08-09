@@ -2,6 +2,7 @@ package com.gabojago.trip.ticket.repository;
 
 import com.gabojago.trip.ticket.domain.Ticket;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 public interface TicketRepository extends JpaRepository<Ticket, Integer> {
@@ -11,11 +12,12 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer> {
     void useTicket(Integer ticketId);
 
     // 유저가 보유중인 티켓을 N개 조회
-    @Query("SELECT t FROM Ticket t WHERE t.user.id = :userId AND t.type = 1 LIMIT :count")
+    @Query(value = "SELECT t FROM Ticket t WHERE t.user.id = :userId AND t.type = 1 LIMIT :count", nativeQuery = true)
     Ticket[] findTicketsByUserId(Integer userId, Integer count);
 
     // 구매, 티켓 하나 추가
-    @Query("INSERT INTO Ticket (user_id, type) VALUES (:userId, 1)")
+    @Modifying
+    @Query(value = "INSERT INTO Ticket (user_id, type) VALUES (:userId, 1)", nativeQuery = true)
     void addTicket(Integer userId);
 
     // 티켓 개수 조회
