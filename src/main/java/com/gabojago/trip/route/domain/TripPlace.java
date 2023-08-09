@@ -1,10 +1,9 @@
 package com.gabojago.trip.route.domain;
 
 import com.gabojago.trip.place.domain.Place;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-
-import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor

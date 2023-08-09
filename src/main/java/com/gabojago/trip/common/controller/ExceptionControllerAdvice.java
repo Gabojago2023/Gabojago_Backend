@@ -1,8 +1,6 @@
 package com.gabojago.trip.common.controller;
 
 import com.gabojago.trip.common.exception.GabojagoApiException;
-
-import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
