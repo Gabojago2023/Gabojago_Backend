@@ -19,7 +19,11 @@ public class AuthServiceImpl implements AuthService {
         this.jwtUtil = jwtUtil;
         this.authRepository = authRepository;
     }
-
+    @Override
+    public Integer getUserIdFromToken(String token) {
+        Integer userId = (Integer) jwtUtil.getClaims(token).get("id");
+        return userId;
+    }
     @Override
     public JwtDto createTokens(User user) {
         Map<String, Object> claims = new HashMap<>();
@@ -52,7 +56,6 @@ public class AuthServiceImpl implements AuthService {
     public void saveTokens(Integer userId, JwtDto jwtDto) {
         Auth newTokens = Auth.builder()
                 .userId(userId)
-                .accessToken(jwtDto.getAccessToken())
                 .refreshToken(jwtDto.getRefreshToken())
                 .build();
         authRepository.save(newTokens); // userId가 존재시, update token
@@ -62,5 +65,7 @@ public class AuthServiceImpl implements AuthService {
     public void updateTokens(Auth saved) {
         authRepository.save(saved);
     }
+
+
 
 }

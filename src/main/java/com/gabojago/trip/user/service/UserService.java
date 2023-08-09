@@ -12,7 +12,7 @@ public interface UserService {
 
   void addUser(UserDto userReqDto);
 
-  UserResDto getUser(int userId);
+  User getUser(int userId);
 
   int modifyUser(int userId, UserDto userReqDto);
 
