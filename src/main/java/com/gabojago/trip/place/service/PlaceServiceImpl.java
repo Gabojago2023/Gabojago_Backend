@@ -1,25 +1,34 @@
 package com.gabojago.trip.place.service;
 
 import com.gabojago.trip.place.domain.Place;
+import com.gabojago.trip.place.domain.PlaceScrap;
 import com.gabojago.trip.place.dto.response.PlaceDetailResponseDto;
 import com.gabojago.trip.place.dto.response.PlaceResponseDto;
+import com.gabojago.trip.place.exception.PlaceAlreadyExistsException;
+import com.gabojago.trip.place.exception.PlaceNotFoundException;
+import com.gabojago.trip.place.exception.PlaceScrapNotFoundException;
 import com.gabojago.trip.place.repository.PlaceRepository;
+import com.gabojago.trip.place.repository.PlaceScrapRepository;
+import com.gabojago.trip.user.domain.User;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PlaceServiceImpl implements PlaceService {
 
     private final PlaceRepository placeRepository;
+    private final PlaceScrapRepository placeScrapRepository;
 
     @Autowired
-    public PlaceServiceImpl(PlaceRepository placeRepository) {
+    public PlaceServiceImpl(PlaceRepository placeRepository,
+            PlaceScrapRepository placeScrapRepository) {
         this.placeRepository = placeRepository;
+        this.placeScrapRepository = placeScrapRepository;
     }
 
     @Override
@@ -89,5 +98,42 @@ public class PlaceServiceImpl implements PlaceService {
         Object[] result = placeRepository.findPlaceWithAvgRatingAndCommentCount(
                 placeId);
         return PlaceDetailResponseDto.from((Object[]) result[0]);
+    }
+
+    @Override
+    public void addScrapPlace(Integer placeId, Integer userId) {
+        Optional<Place> byId = placeRepository.findById(placeId);
+
+        PlaceScrap isExisting = placeScrapRepository.findByPlaceIdAndUserId(placeId,
+                userId);
+        if (byId.isEmpty()) {
+            throw new PlaceNotFoundException(placeId.toString());
+        } else if (isExisting != null) {
+            throw new PlaceAlreadyExistsException(userId.toString() + " : " + placeId);
+        } else {
+            Place place = new Place(placeId);
+            User user = new User(userId);
+            PlaceScrap placeScrap = new PlaceScrap(place, user);
+            placeScrapRepository.save(placeScrap);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void removeScrapPlace(Integer placeId, Integer userId) {
+        Optional<Place> byId = placeRepository.findById(placeId);
+
+        PlaceScrap isExisting = placeScrapRepository.findByPlaceIdAndUserId(placeId,
+                userId);
+
+        if (byId.isEmpty()) {
+            throw new PlaceNotFoundException(placeId.toString());
+        } else if (isExisting == null) {
+            throw new PlaceScrapNotFoundException(userId.toString() + " : " + placeId);
+        } else {
+            Place place = new Place(placeId);
+            User user = new User(userId);
+            placeScrapRepository.deleteByPlaceAndUser(place, user);
+        }
     }
 }

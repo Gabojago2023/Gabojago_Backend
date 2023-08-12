@@ -19,4 +19,8 @@ public interface PlaceService {
             Integer spp);
 
     PlaceDetailResponseDto getPlaceDetailByPlaceId(Integer placeId);
+
+    void addScrapPlace(Integer placeId, Integer userId);
+    
+    void removeScrapPlace(Integer placeId, Integer userId);
 }

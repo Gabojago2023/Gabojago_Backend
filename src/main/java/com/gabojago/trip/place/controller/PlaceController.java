@@ -6,8 +6,10 @@ import com.gabojago.trip.place.service.PlaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -108,5 +110,25 @@ public class PlaceController {
         } else {
             return new ResponseEntity<>(result, HttpStatus.NO_CONTENT);
         }
+    }
+
+    @PostMapping("/{placeId}/scrap")
+    public ResponseEntity<?> addScrapPlace(@PathVariable Integer placeId) {
+        // JWT토큰에서 파싱한 유저 id
+        // 토큰 정보 없으면 필터 or 인터셉터 에서 401 반환
+        Integer userId = 1;
+
+        placeService.addScrapPlace(placeId, userId);
+        return new ResponseEntity<>("", HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{placeId}/scrap")
+    public ResponseEntity<?> deleteScrapPlace(@PathVariable Integer placeId) {
+        // JWT토큰에서 파싱한 유저 id
+        // 토큰 정보 없으면 필터 or 인터셉터 에서 401 반환
+        Integer userId = 1;
+
+        placeService.removeScrapPlace(placeId, userId);
+        return new ResponseEntity<>("", HttpStatus.OK);
     }
 }

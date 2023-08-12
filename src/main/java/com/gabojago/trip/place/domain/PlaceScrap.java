@@ -31,4 +31,9 @@ public class PlaceScrap {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public PlaceScrap(Place place, User user) {
+        this.place = place;
+        this.user = user;
+    }
 }
