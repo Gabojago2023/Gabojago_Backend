@@ -7,5 +7,5 @@ import java.util.List;
 public interface PlaceService {
 
     List<PlaceResponseDto> searchAttractionByKeyword(Integer userId, Integer sidoCode, Integer gugunCode,
-            String keyword);
+            String keyword, Integer pg, Integer spp);
 }

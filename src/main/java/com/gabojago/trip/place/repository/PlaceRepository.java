@@ -13,7 +13,10 @@ import java.util.List;
 public interface PlaceRepository extends JpaRepository<Place, Integer> {
 
     // 가장 많이 스크랩된 3개 장소의 id 리스트 정보
-    @Query("SELECT ps.place.id FROM PlaceScrap ps GROUP BY ps.place.id ORDER BY count(ps.place.id) DESC")
+    @Query("SELECT ps.place.id " +
+            "FROM PlaceScrap ps " +
+            "GROUP BY ps.place.id " +
+            "ORDER BY count(ps.place.id) DESC")
     List<Integer> findTop3ScrappedPlacesId(Pageable pageable);
 
     @Query("SELECT p.id, p.name, p.longitude, p.latitude, p.address, p.category, p.imgUrl, p.imgUrl2, p.sido.sidoCode, p.gugun.gugunCode, p.overview, " +
@@ -25,5 +28,5 @@ public interface PlaceRepository extends JpaRepository<Place, Integer> {
             "AND p.name LIKE CONCAT('%', :keyword, '%') " +
             "ORDER BY CASE WHEN ps.user.id IS NOT NULL THEN 1 ELSE 0 END DESC, p.id")
     List<Object[]> findPlacesByFilter(@Param("userId") Integer userId, @Param("sidoCode") Integer sidoCode,
-            @Param("gugunCode") Integer gugunCode, @Param("keyword") String keyword);
+            @Param("gugunCode") Integer gugunCode, @Param("keyword") String keyword, Pageable pageable);
 }

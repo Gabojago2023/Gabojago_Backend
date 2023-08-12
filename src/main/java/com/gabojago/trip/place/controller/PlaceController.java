@@ -34,24 +34,29 @@ public class PlaceController {
     @GetMapping("/keyword")
     public ResponseEntity<?> getPlaceSearchedByKeyword(@RequestParam("sido-code") Integer sidoCode,
             @RequestParam("gugun-code") Integer gugunCode,
-            @RequestParam String keyword) {
-        // 임의의 userId
-        Integer userId = 3;
+            @RequestParam String keyword,
+            @RequestParam Integer pg,
+            @RequestParam Integer spp) {
+        // 로그인 한 유저라면 그 유저의 id
+        // 비로그인 시 -1
+        Integer userId = -1;
         Map<String, List> result = new HashMap<>();
-        try {
-            List<PlaceResponseDto> list = placeService.searchAttractionByKeyword(userId, sidoCode,
-                    gugunCode, keyword);
-            result.put("places", list);
+        List<PlaceResponseDto> list = placeService.searchAttractionByKeyword(userId, sidoCode,
+                gugunCode, keyword, pg, spp);
+        result.put("places", list);
+        if (list.size() != 0) {
             return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>("검색 실패!!!", HttpStatus.NOT_ACCEPTABLE);
+        } else {
+            return new ResponseEntity<>(result, HttpStatus.NO_CONTENT);
         }
+
 //        try {
-//            List<PlaceResponseDto> list = placeService.searchAttractionByKeyword(Integer.parseInt(sidoCode),
-//                    Integer.parseInt(gugunCode), keyword);
-//            return new ResponseEntity<List>(list, HttpStatus.OK);
+//            List<PlaceResponseDto> list = placeService.findAttractionByKeyword(userId, sidoCode,
+//                    gugunCode, keyword, pg, spp);
+//            result.put("places", list);
+//            return new ResponseEntity<>(result, HttpStatus.OK);
 //        } catch (Exception e) {
-//            return new ResponseEntity<String>("검색 실패!!!", HttpStatus.NOT_ACCEPTABLE);
+//            return new ResponseEntity<>("검색 실패!!!", HttpStatus.NOT_ACCEPTABLE);
 //        }
     }
 }
