@@ -25,21 +25,19 @@ public class PlaceController {
         this.placeService = placeService;
     }
 
-    @GetMapping
-    public ResponseEntity<?> getPlaceAll() {
-
-        return new ResponseEntity<>("", HttpStatus.OK);
-    }
+//    @GetMapping
+//    public ResponseEntity<?> getPlaceAll() {
+//
+//        return new ResponseEntity<>("", HttpStatus.OK);
+//    }
 
     @GetMapping("/keyword")
     public ResponseEntity<?> getPlaceSearchedByKeyword(@RequestParam("sido-code") Integer sidoCode,
-            @RequestParam("gugun-code") Integer gugunCode,
-            @RequestParam String keyword,
-            @RequestParam Integer pg,
-            @RequestParam Integer spp) {
+            @RequestParam("gugun-code") Integer gugunCode, @RequestParam String keyword,
+            @RequestParam Integer pg, @RequestParam Integer spp) {
         // 로그인 한 유저라면 그 유저의 id
-        // 비로그인 시 -1
-        Integer userId = -1;
+        // 비로그인 시 0
+        Integer userId = 0;
         Map<String, List> result = new HashMap<>();
         List<PlaceResponseDto> list = placeService.searchAttractionByKeyword(userId, sidoCode,
                 gugunCode, keyword, pg, spp);
@@ -59,5 +57,23 @@ public class PlaceController {
         result.put("top3Places", placeResponseDtoList);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getPlaceSearchedByLocation(@RequestParam("location") String location,
+            @RequestParam Integer pg, @RequestParam Integer spp) {
+        // 로그인 한 유저라면 그 유저의 id
+        // 비로그인 시 0
+        Integer userId = 0;
+        Map<String, List> result = new HashMap<>();
+        List<PlaceResponseDto> placeResponseDtoList = placeService.searchAttractionByLocation(
+                userId, location, pg, spp);
+
+        result.put("places", placeResponseDtoList);
+        if (placeResponseDtoList.size() != 0) {
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(result, HttpStatus.NO_CONTENT);
+        }
     }
 }

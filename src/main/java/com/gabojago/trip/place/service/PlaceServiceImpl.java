@@ -52,4 +52,20 @@ public class PlaceServiceImpl implements PlaceService {
         }
         return placeResponseDtoList;
     }
+
+    @Override
+    public List<PlaceResponseDto> searchAttractionByLocation(Integer userId, String location,
+            Integer pg, Integer spp) {
+        PageRequest pageRequest = PageRequest.of(pg - 1, spp);
+
+        List<PlaceResponseDto> placeResponseDtoList = new ArrayList<>();
+        List<Object[]> result = placeRepository.findPlacesByLocation(location, userId, pageRequest);
+        for (Object[] o : result) {
+            PlaceResponseDto from = PlaceResponseDto.from(o);
+            placeResponseDtoList.add(from);
+            System.out.println(from);
+        }
+
+        return placeResponseDtoList;
+    }
 }
