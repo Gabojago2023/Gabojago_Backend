@@ -68,4 +68,18 @@ public class PlaceServiceImpl implements PlaceService {
 
         return placeResponseDtoList;
     }
+
+    @Override
+    public List<PlaceResponseDto> getBookmarkedAttractionsByUserId(Integer userId, Integer pg,
+            Integer spp) {
+        PageRequest pageRequest = PageRequest.of(pg - 1, spp);
+
+        List<PlaceResponseDto> placeResponseDtoList = new ArrayList<>();
+        List<Object[]> result = placeRepository.findBookmarkedPlacesByUserId(userId, pageRequest);
+        for (Object[] o : result) {
+            PlaceResponseDto from = PlaceResponseDto.from(o);
+            placeResponseDtoList.add(from);
+        }
+        return placeResponseDtoList;
+    }
 }

@@ -76,4 +76,23 @@ public class PlaceController {
             return new ResponseEntity<>(result, HttpStatus.NO_CONTENT);
         }
     }
+
+    @GetMapping("/scrap")
+    public ResponseEntity<?> getBookmarkedPlacesByUserId(@RequestParam Integer pg,
+            @RequestParam Integer spp) {
+        // JWT토큰에서 파싱한 유저 id
+        // 토큰 정보 없으면 필터 or 인터셉터 에서 401 반환
+        Integer userId = 1;
+        Map<String, List> result = new HashMap<>();
+
+        List<PlaceResponseDto> bookmarkedAttractionsByUserId = placeService.getBookmarkedAttractionsByUserId(
+                userId, pg, spp);
+
+        result.put("places", bookmarkedAttractionsByUserId);
+        if (bookmarkedAttractionsByUserId.size() != 0) {
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(result, HttpStatus.NO_CONTENT);
+        }
+    }
 }

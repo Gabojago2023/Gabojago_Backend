@@ -17,11 +17,11 @@ public interface PlaceRepository extends JpaRepository<Place, Integer> {
     List<Integer> findTop3ScrappedPlacesId(Pageable pageable);
 
     @Query("SELECT p.id, p.name, p.longitude, p.latitude, p.address, p.category, p.imgUrl, p.imgUrl2, p.sido.sidoCode, p.gugun.gugunCode, p.overview, "
-                    + "CASE WHEN ps.user.id IS NOT NULL THEN 1 ELSE 0 END AS isBookmarked "
-                    + "FROM Place p "
-                    + "LEFT JOIN PlaceScrap ps ON p.id = ps.place.id AND ps.user.id = :userId "
-                    + "WHERE p.address LIKE CONCAT('%', :location, '%') "
-                    + "ORDER BY CASE WHEN ps.user.id IS NOT NULL THEN 1 ELSE 0 END DESC, p.id")
+            + "CASE WHEN ps.user.id IS NOT NULL THEN 1 ELSE 0 END AS isBookmarked "
+            + "FROM Place p "
+            + "LEFT JOIN PlaceScrap ps ON p.id = ps.place.id AND ps.user.id = :userId "
+            + "WHERE p.address LIKE CONCAT('%', :location, '%') "
+            + "ORDER BY CASE WHEN ps.user.id IS NOT NULL THEN 1 ELSE 0 END DESC, p.id")
     List<Object[]> findPlacesByLocation(@Param("location") String location,
             @Param("userId") Integer userId, Pageable pageable);
 
@@ -35,4 +35,10 @@ public interface PlaceRepository extends JpaRepository<Place, Integer> {
     List<Object[]> findPlacesByFilter(@Param("userId") Integer userId,
             @Param("sidoCode") Integer sidoCode, @Param("gugunCode") Integer gugunCode,
             @Param("keyword") String keyword, Pageable pageable);
+
+    @Query("SELECT p.id, p.name, p.longitude, p.latitude, p.address, p.category, p.imgUrl, p.imgUrl2, p.sido.sidoCode, p.gugun.gugunCode, p.overview, "
+            + "CASE WHEN ps.user.id IS NOT NULL THEN 1 ELSE 0 END AS isBookmarked "
+            + "FROM Place p " + "JOIN PlaceScrap ps ON p.id = ps.place.id "
+            + "WHERE ps.user.id = :userId")
+    List<Object[]> findBookmarkedPlacesByUserId(@Param("userId") Integer userId, Pageable pageable);
 }
