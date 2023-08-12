@@ -41,4 +41,12 @@ public interface PlaceRepository extends JpaRepository<Place, Integer> {
             + "FROM Place p " + "JOIN PlaceScrap ps ON p.id = ps.place.id "
             + "WHERE ps.user.id = :userId")
     List<Object[]> findBookmarkedPlacesByUserId(@Param("userId") Integer userId, Pageable pageable);
+
+    @Query("SELECT p.id, p.name, p.longitude, p.latitude, p.address, p.category, p.imgUrl, p.imgUrl2, "
+            + "p.sido.sidoCode, p.gugun.gugunCode, p.overview, "
+            + "AVG(c.starRating) AS avgRating, "
+            + "COUNT(c.place.id) AS commentCount "
+            + "FROM Place p "
+            + "LEFT JOIN Comment c ON p.id = c.place.id WHERE p.id = :placeId")
+    Object[] findPlaceWithAvgRatingAndCommentCount(@Param("placeId") Integer placeId);
 }

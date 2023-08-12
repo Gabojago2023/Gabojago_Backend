@@ -1,6 +1,7 @@
 package com.gabojago.trip.place.service;
 
 import com.gabojago.trip.place.domain.Place;
+import com.gabojago.trip.place.dto.response.PlaceDetailResponseDto;
 import com.gabojago.trip.place.dto.response.PlaceResponseDto;
 import com.gabojago.trip.place.repository.PlaceRepository;
 import java.util.Optional;
@@ -81,5 +82,12 @@ public class PlaceServiceImpl implements PlaceService {
             placeResponseDtoList.add(from);
         }
         return placeResponseDtoList;
+    }
+
+    @Override
+    public PlaceDetailResponseDto getPlaceDetailByPlaceId(Integer placeId) {
+        Object[] result = placeRepository.findPlaceWithAvgRatingAndCommentCount(
+                placeId);
+        return PlaceDetailResponseDto.from((Object[]) result[0]);
     }
 }

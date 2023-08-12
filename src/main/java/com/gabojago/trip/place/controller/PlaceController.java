@@ -1,11 +1,13 @@
 package com.gabojago.trip.place.controller;
 
+import com.gabojago.trip.place.dto.response.PlaceDetailResponseDto;
 import com.gabojago.trip.place.dto.response.PlaceResponseDto;
 import com.gabojago.trip.place.service.PlaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -90,6 +92,18 @@ public class PlaceController {
 
         result.put("places", bookmarkedAttractionsByUserId);
         if (bookmarkedAttractionsByUserId.size() != 0) {
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(result, HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @GetMapping("/{placeId}/detail")
+    public ResponseEntity<?> getPlaceDetail(@PathVariable Integer placeId) {
+        Map<String, PlaceDetailResponseDto> result = new HashMap<>();
+        PlaceDetailResponseDto placeDetailByPlaceId = placeService.getPlaceDetailByPlaceId(placeId);
+        if (placeDetailByPlaceId != null) {
+            result.put("place", placeDetailByPlaceId);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(result, HttpStatus.NO_CONTENT);
