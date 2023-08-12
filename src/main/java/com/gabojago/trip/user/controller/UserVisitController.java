@@ -32,17 +32,26 @@ public class UserVisitController {
             return new ResponseEntity<>(visits.size(), HttpStatus.OK);
         } else if ("continuity".equals(type)) {
             int count = 0;
+            // if no visits, return 0 <- should not be executed ideally
+            if (visits.isEmpty()) {
+                return new ResponseEntity<>(count, HttpStatus.OK);
+            }
+
             // sort visits by UserVisitDto.lastVisit of type LocalDate from current to old date
             visits.sort((v1, v2) -> v2.getLastVisit().compareTo(v1.getLastVisit()));
 
-            // count the number of consequent visits
-            for (int i = 0; i < visits.size() - 1; i++) {
-                if (visits.get(i).getLastVisit().minusDays(1).equals(visits.get(i + 1).getLastVisit())) {
-                    count++;
-                } else {
-                    break;
+            // check if user have visited today
+            if (visits.get(0).getLastVisit().equals(java.time.LocalDate.now())) {
+                // count the number of consequent visits
+                for (int i = 0; i < visits.size() - 1; i++) {
+                    if (visits.get(i).getLastVisit().minusDays(1).equals(visits.get(i + 1).getLastVisit())) {
+                        count++;
+                    } else {
+                        break;
+                    }
                 }
             }
+
             return new ResponseEntity<>(count, HttpStatus.OK);
 
         } else {

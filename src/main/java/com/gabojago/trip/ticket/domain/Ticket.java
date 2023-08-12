@@ -33,5 +33,8 @@ public class Ticket {
     @JoinColumn(name = "user_id")
     private User user;
 
-
+    public Ticket(User user, Integer type) {
+        this.user = user;
+        this.type = type;
+    }
 }

@@ -15,10 +15,10 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer> {
     @Query(value = "SELECT t FROM Ticket t WHERE t.user.id = :userId AND t.type = 1 LIMIT :count", nativeQuery = true)
     Ticket[] findTicketsByUserId(Integer userId, Integer count);
 
-    // 구매, 티켓 하나 추가
-    @Modifying
-    @Query(value = "INSERT INTO Ticket (user_id, type) VALUES (:userId, 1)", nativeQuery = true)
-    void addTicket(Integer userId);
+//    // 구매, 티켓 하나 추가
+//    @Modifying
+//    @Query(value = "INSERT INTO Ticket (user_id, type) VALUES (:userId, 1)", nativeQuery = true)
+//    void addTicket(Integer userId);
 
     // 티켓 개수 조회
     @Query("SELECT COUNT(t) FROM Ticket t WHERE t.user.id = :userId AND t.type = 1")

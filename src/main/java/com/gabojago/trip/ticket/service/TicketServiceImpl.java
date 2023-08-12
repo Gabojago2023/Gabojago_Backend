@@ -2,6 +2,7 @@ package com.gabojago.trip.ticket.service;
 
 import com.gabojago.trip.ticket.domain.Ticket;
 import com.gabojago.trip.ticket.repository.TicketRepository;
+import com.gabojago.trip.user.domain.User;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,7 +26,10 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public void addTicket(Integer userId) {
-        ticketRepository.addTicket(userId);
+        User user = new User();
+        user.setId(userId);
+        // user not found exception handling required
+        ticketRepository.save(new Ticket(user, 1));
     }
 
     @Override
