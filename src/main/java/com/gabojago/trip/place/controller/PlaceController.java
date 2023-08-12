@@ -49,14 +49,15 @@ public class PlaceController {
         } else {
             return new ResponseEntity<>(result, HttpStatus.NO_CONTENT);
         }
+    }
 
-//        try {
-//            List<PlaceResponseDto> list = placeService.findAttractionByKeyword(userId, sidoCode,
-//                    gugunCode, keyword, pg, spp);
-//            result.put("places", list);
-//            return new ResponseEntity<>(result, HttpStatus.OK);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>("검색 실패!!!", HttpStatus.NOT_ACCEPTABLE);
-//        }
+    @GetMapping("/like-place")
+    public ResponseEntity<?> getTop3Places(@RequestParam("top") Integer top) {
+        Map<String, List> result = new HashMap<>();
+        List<PlaceResponseDto> placeResponseDtoList = placeService.searchTop3ScrappedPlaces(top);
+
+        result.put("top3Places", placeResponseDtoList);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

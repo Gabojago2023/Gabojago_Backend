@@ -8,4 +8,6 @@ public interface PlaceService {
 
     List<PlaceResponseDto> searchAttractionByKeyword(Integer userId, Integer sidoCode, Integer gugunCode,
             String keyword, Integer pg, Integer spp);
+
+    List<PlaceResponseDto> searchTop3ScrappedPlaces(Integer top);
 }

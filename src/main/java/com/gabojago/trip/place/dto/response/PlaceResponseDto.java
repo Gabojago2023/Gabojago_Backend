@@ -1,27 +1,27 @@
 package com.gabojago.trip.place.dto.response;
 
+import com.gabojago.trip.place.domain.Place;
+import java.math.BigDecimal;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
-
-import java.math.BigDecimal;
 
 @ToString
 @Getter
 public class PlaceResponseDto {
 
-    private Integer id;
-    private String name;
-    private BigDecimal longitude;
-    private BigDecimal latitude;
-    private String address;
-    private String category;
-    private String imgUrl;
-    private String imgUrl2;
-    private Integer sidoCode;
-    private Integer gugunCode;
-    private String overview;
-    private Integer isBookmarked;
+    private final Integer id;
+    private final String name;
+    private final BigDecimal longitude;
+    private final BigDecimal latitude;
+    private final String address;
+    private final String category;
+    private final String imgUrl;
+    private final String imgUrl2;
+    private final Integer sidoCode;
+    private final Integer gugunCode;
+    private final String overview;
+    private final Integer isBookmarked;
 
     @Builder
     public PlaceResponseDto(Integer id, String name, BigDecimal longitude, BigDecimal latitude,
@@ -56,6 +56,22 @@ public class PlaceResponseDto {
                 .gugunCode((Integer) o[9])
                 .overview((String) o[10])
                 .isBookmarked((Integer) o[11])
+                .build();
+    }
+
+    public static PlaceResponseDto from(Place place) {
+        return PlaceResponseDto.builder()
+                .id(place.getId())
+                .name(place.getName())
+                .longitude(place.getLongitude())
+                .latitude(place.getLatitude())
+                .address(place.getAddress())
+                .category(place.getCategory())
+                .imgUrl(place.getImgUrl())
+                .imgUrl2(place.getImgUrl2())
+                .sidoCode(place.getSido().getSidoCode())
+                .gugunCode(place.getGugun().getGugunCode())
+                .overview(place.getOverview())
                 .build();
     }
 }
