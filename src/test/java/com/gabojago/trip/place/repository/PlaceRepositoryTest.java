@@ -70,4 +70,17 @@ class PlaceRepositoryTest {
         }
 
     }
+
+    @Test
+    void testFindBookmarkedPlacesByUserId() {
+        PageRequest pageRequest = PageRequest.of(0, 10);
+
+        List<PlaceResponseDto> placeResponseDtoList = new ArrayList<>();
+        List<Object[]> result = placeRepository.findBookmarkedPlacesByUserId(1,pageRequest);
+        for(Object[] o : result) {
+            PlaceResponseDto from = PlaceResponseDto.from(o);
+            placeResponseDtoList.add(from);
+            System.out.println(from);
+        }
+    }
 }
