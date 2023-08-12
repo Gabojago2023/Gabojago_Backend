@@ -40,4 +40,11 @@ public class Comment {
 
 	@CreationTimestamp
 	private Timestamp createdDate;
+
+	public Comment(Place place, User user, String commentText, Integer starRating) {
+		this.place = place;
+		this.user = user;
+		this.commentText = commentText;
+		this.starRating = starRating;
+	}
 }
