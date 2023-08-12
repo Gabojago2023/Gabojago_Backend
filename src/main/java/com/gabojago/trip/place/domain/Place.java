@@ -14,9 +14,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.persistence.*;
-import java.math.BigDecimal;
-
 @Entity
 @NoArgsConstructor
 @ToString
@@ -40,14 +37,14 @@ public class Place {
     @Column(length = 45)
     private String category;
     @Column(length = 200)
-    private String imgUrl; // img_url
+    private String imgUrl;
     @Column(length = 200)
-    private String imgUrl2; // img_url
+    private String imgUrl2;
 
     @Column(length = 10000)
     private String overview;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sido_code")
     private Sido sido;
 
