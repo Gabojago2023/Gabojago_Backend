@@ -19,6 +19,10 @@ public interface OnePickRepository extends JpaRepository<OnePick, Integer> {
     @Query(value = "SELECT o FROM OnePick o WHERE o.baseLocation = :baseLocation ORDER BY RAND() LIMIT 1", nativeQuery = true)
     OnePick findOnePickByBaseLocation(String baseLocation);
 
+    // 랜덤한 원픽 조회
+    @Query(value = "SELECT o FROM OnePick o ORDER BY RAND() LIMIT 1", nativeQuery = true)
+    OnePick findRandomOnePick();
+
     // user id로 모든 원픽 조회
     @Query("SELECT o FROM OnePick o WHERE o.user.id = :userId ORDER BY o.createdDate DESC")
     OnePick[] findAllOnePickByUserId(Integer userId);

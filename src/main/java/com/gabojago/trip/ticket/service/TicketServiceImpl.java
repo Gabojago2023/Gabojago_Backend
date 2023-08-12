@@ -16,12 +16,16 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public void useTicket(Integer ticketId) {
-        ticketRepository.useTicket(ticketId);
+        Ticket ticket = ticketRepository.findById(ticketId).orElse(null);
+        if (ticket != null) {
+            ticket.setType(0);
+            ticketRepository.save(ticket);
+        }
     }
 
     @Override
-    public Ticket[] findTicketsByUserId(Integer userId, Integer count) {
-        return ticketRepository.findTicketsByUserId(userId, count);
+    public Ticket[] findTicketsByUserId(Integer userId) {
+        return ticketRepository.findTicketsByUserId(userId);
     }
 
     @Override

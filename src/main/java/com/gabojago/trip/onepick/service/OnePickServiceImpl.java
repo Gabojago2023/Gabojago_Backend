@@ -3,7 +3,9 @@ package com.gabojago.trip.onepick.service;
 import com.gabojago.trip.onepick.domain.DistributedOnePick;
 import com.gabojago.trip.onepick.domain.OnePick;
 import com.gabojago.trip.onepick.repository.OnePickRepository;
+import org.springframework.stereotype.Service;
 
+@Service
 public class OnePickServiceImpl implements OnePickService {
 
     private final OnePickRepository onePickRepository;
@@ -24,7 +26,7 @@ public class OnePickServiceImpl implements OnePickService {
             } else if (baseLocation != null) {
                 onePick = onePickRepository.findOnePickByBaseLocation(baseLocation);
             } else {
-                return null;
+                onePick = onePickRepository.findRandomOnePick();
             }
         } while (onePickRepository.existsDistributedOnePickByOnePickIdAndUserId(onePick.getId(), userId));
 
