@@ -3,6 +3,7 @@ package com.gabojago.trip.place.repository;
 import static org.assertj.core.api.Assertions.*;
 
 import com.gabojago.trip.place.domain.Place;
+import com.gabojago.trip.place.dto.response.PlaceDetailResponseDto;
 import com.gabojago.trip.place.dto.response.PlaceResponseDto;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,8 +50,9 @@ class PlaceRepositoryTest {
         PageRequest pageRequest = PageRequest.of(1, 10);
 
         List<PlaceResponseDto> placeResponseDtoList = new ArrayList<>();
-        List<Object[]> placesByFilter = placeRepository.findPlacesByFilter(0, 1, 1, "공원", pageRequest);
-        for(Object[] o : placesByFilter) {
+        List<Object[]> placesByFilter = placeRepository.findPlacesByFilter(0, 1, 1, "공원",
+                pageRequest);
+        for (Object[] o : placesByFilter) {
             PlaceResponseDto from = PlaceResponseDto.from(o);
             placeResponseDtoList.add(from);
             System.out.println(from);
@@ -63,7 +65,7 @@ class PlaceRepositoryTest {
 
         List<PlaceResponseDto> placeResponseDtoList = new ArrayList<>();
         List<Object[]> result = placeRepository.findPlacesByLocation("서울", 0, pageRequest);
-        for(Object[] o : result) {
+        for (Object[] o : result) {
             PlaceResponseDto from = PlaceResponseDto.from(o);
             placeResponseDtoList.add(from);
             System.out.println(from);
@@ -76,11 +78,19 @@ class PlaceRepositoryTest {
         PageRequest pageRequest = PageRequest.of(0, 10);
 
         List<PlaceResponseDto> placeResponseDtoList = new ArrayList<>();
-        List<Object[]> result = placeRepository.findBookmarkedPlacesByUserId(1,pageRequest);
-        for(Object[] o : result) {
+        List<Object[]> result = placeRepository.findBookmarkedPlacesByUserId(1, pageRequest);
+        for (Object[] o : result) {
             PlaceResponseDto from = PlaceResponseDto.from(o);
             placeResponseDtoList.add(from);
             System.out.println(from);
         }
+    }
+
+    @Test
+    void testFindPlaceWithAvgRatingAndCommentCount() {
+        Object[] result = placeRepository.findPlaceWithAvgRatingAndCommentCount(
+                125266);
+        PlaceDetailResponseDto placeDetailResponseDto = PlaceDetailResponseDto.from((Object[]) result[0]);
+        System.out.println("detail : " + placeDetailResponseDto);
     }
 }
