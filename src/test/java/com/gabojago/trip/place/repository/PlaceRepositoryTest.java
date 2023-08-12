@@ -30,7 +30,7 @@ class PlaceRepositoryTest {
     }
 
     @Test
-    public void testfindTop3ScrappedPlacesId() {
+    public void testfindTop3ScrappedPlaces() {
         PageRequest pageRequest = PageRequest.of(0, 3);
 
         List<Integer> top3ScrappedPlacesId = placeRepository.findTop3ScrappedPlacesId(pageRequest);
