@@ -46,8 +46,10 @@ class PlaceRepositoryTest {
 
     @Test
     void findPlacesByFilter() {
+        PageRequest pageRequest = PageRequest.of(1, 10);
+
         List<PlaceResponseDto> placeResponseDtoList = new ArrayList<>();
-        List<Object[]> placesByFilter = placeRepository.findPlacesByFilter(3, 1, 1, "공원");
+        List<Object[]> placesByFilter = placeRepository.findPlacesByFilter(-1, 1, 1, "공원", pageRequest);
         for(Object[] o : placesByFilter) {
             PlaceResponseDto from = PlaceResponseDto.from(o);
             placeResponseDtoList.add(from);
