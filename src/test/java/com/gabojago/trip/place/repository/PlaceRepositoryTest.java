@@ -30,7 +30,7 @@ class PlaceRepositoryTest {
     }
 
     @Test
-    public void testfindTop3ScrappedPlaces() {
+    public void testFindTop3ScrappedPlaces() {
         PageRequest pageRequest = PageRequest.of(0, 3);
 
         List<Integer> top3ScrappedPlacesId = placeRepository.findTop3ScrappedPlacesId(pageRequest);
@@ -45,15 +45,29 @@ class PlaceRepositoryTest {
     }
 
     @Test
-    void findPlacesByFilter() {
+    void testFindPlacesByFilter() {
         PageRequest pageRequest = PageRequest.of(1, 10);
 
         List<PlaceResponseDto> placeResponseDtoList = new ArrayList<>();
-        List<Object[]> placesByFilter = placeRepository.findPlacesByFilter(-1, 1, 1, "공원", pageRequest);
+        List<Object[]> placesByFilter = placeRepository.findPlacesByFilter(0, 1, 1, "공원", pageRequest);
         for(Object[] o : placesByFilter) {
             PlaceResponseDto from = PlaceResponseDto.from(o);
             placeResponseDtoList.add(from);
             System.out.println(from);
         }
+    }
+
+    @Test
+    void testFindPlacesByLocation() {
+        PageRequest pageRequest = PageRequest.of(0, 10);
+
+        List<PlaceResponseDto> placeResponseDtoList = new ArrayList<>();
+        List<Object[]> result = placeRepository.findPlacesByLocation("서울", 0, pageRequest);
+        for(Object[] o : result) {
+            PlaceResponseDto from = PlaceResponseDto.from(o);
+            placeResponseDtoList.add(from);
+            System.out.println(from);
+        }
+
     }
 }
