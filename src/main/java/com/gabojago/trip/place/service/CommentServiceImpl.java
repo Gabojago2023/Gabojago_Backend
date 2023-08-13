@@ -5,6 +5,7 @@ import com.gabojago.trip.place.domain.Place;
 import com.gabojago.trip.place.dto.response.CommentResponseDto;
 import com.gabojago.trip.place.exception.CommentNotFoundException;
 import com.gabojago.trip.place.exception.PlaceNotFoundException;
+import com.gabojago.trip.place.exception.UnauthorizedCommentDeletionException;
 import com.gabojago.trip.place.repository.CommentRepository;
 import com.gabojago.trip.place.repository.PlaceRepository;
 import com.gabojago.trip.user.domain.User;
@@ -63,11 +64,26 @@ public class CommentServiceImpl implements CommentService {
         if (comment == null) {
             throw new CommentNotFoundException("this comment");
         }
-        if(comment.getUser().getId().equals(userId)) {
-            comment.update(newCommentText, newStartRating);
-            commentRepository.save(comment);
-            // 업데이트 날짜 반영?
+        if(!comment.getUser().getId().equals(userId)) {
+            // 댓글 작성자와 주어진 userId가 다를 경우 처리
+            throw new UnauthorizedCommentDeletionException(userId + " : " + commentId);
         }
-        // 댓글을 유저가 작성하지 않은 경우 업데이트 안함.
+        comment.update(newCommentText, newStartRating);
+        commentRepository.save(comment);
+        // 업데이트 날짜 반영?
+
+    }
+
+    @Override
+    public void deleteCommentById(Integer userId, Integer commentId) {
+        Comment comment = commentRepository.findById(commentId).orElse(null);
+        if (comment == null) {
+            throw new CommentNotFoundException("this comment");
+        }
+        if (!comment.getUser().getId().equals(userId)) {
+            // 댓글 작성자와 주어진 userId가 다를 경우 처리
+            throw new UnauthorizedCommentDeletionException(userId + " : " + commentId);
+        }
+        commentRepository.deleteById(commentId);
     }
 }

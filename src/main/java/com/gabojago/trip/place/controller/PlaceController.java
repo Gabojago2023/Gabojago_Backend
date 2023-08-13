@@ -108,10 +108,10 @@ public class PlaceController {
             HttpServletRequest request) {
         // JWT토큰에서 파싱한 유저 id
         // 토큰 정보 없으면 필터 or 인터셉터 에서 401 반환
-        // Integer userId = (Integer) request.getAttribute("userId");
+        Integer userId = (Integer) request.getAttribute("userId");
 
         // 임의의 유저(테스트용)
-        Integer userId = 1;
+        userId = 1;
 
         Map<String, List> result = new HashMap<>();
 
@@ -143,10 +143,10 @@ public class PlaceController {
             HttpServletRequest request) {
         // JWT토큰에서 파싱한 유저 id
         // 토큰 정보 없으면 필터 or 인터셉터 에서 401 반환
-        // Integer userId = (Integer) request.getAttribute("userId");
+        Integer userId = (Integer) request.getAttribute("userId");
 
         // 임의의 유저(테스트용)
-        Integer userId = 1;
+        userId = 1;
 
         placeService.addScrapPlace(placeId, userId);
         return new ResponseEntity<>("", HttpStatus.OK);
@@ -157,10 +157,10 @@ public class PlaceController {
             HttpServletRequest request) {
         // JWT토큰에서 파싱한 유저 id
         // 토큰 정보 없으면 필터 or 인터셉터 에서 401 반환
-        // Integer userId = (Integer) request.getAttribute("userId");
+        Integer userId = (Integer) request.getAttribute("userId");
 
         // 임의의 유저(테스트용)
-        Integer userId = 1;
+        userId = 1;
 
         placeService.removeScrapPlace(placeId, userId);
         return new ResponseEntity<>("", HttpStatus.OK);
@@ -172,10 +172,10 @@ public class PlaceController {
             HttpServletRequest request) {
         // JWT토큰에서 파싱한 유저 id
         // 토큰 정보 없으면 필터 or 인터셉터 에서 401 반환
-        // Integer userId = (Integer) request.getAttribute("userId");
+        Integer userId = (Integer) request.getAttribute("userId");
 
         // 임의의 유저(테스트용)
-        Integer userId = 1;
+        userId = 1;
 
         commentService.addCommentToPlace(placeId, userId, comment.getComment(), comment.getRate());
         return new ResponseEntity<>("", HttpStatus.OK);
@@ -202,20 +202,30 @@ public class PlaceController {
             HttpServletRequest request) {
         // JWT토큰에서 파싱한 유저 id
         // 토큰 정보 없으면 필터 or 인터셉터 에서 401 반환
-        // Integer userId = (Integer) request.getAttribute("userId");
+        Integer userId = (Integer) request.getAttribute("userId");
 
         // 임의의 유저(테스트용. 지울예정)
-        Integer userId = 1;
+        userId = 1;
 
-        if (userId != null) {
-            commentService.updateComment(userId, placeId, commentId, comment.getComment(),
-                    comment.getRate());
-            return new ResponseEntity<>("", HttpStatus.OK);
-        }
+        commentService.updateComment(userId, placeId, commentId, comment.getComment(),
+                comment.getRate());
+        return new ResponseEntity<>("", HttpStatus.OK);
 
-        // 지울 예정
-        else {
-            return new ResponseEntity<>("", HttpStatus.OK);
-        }
+    }
+
+    @DeleteMapping("{placeId}/comment/{commentId}")
+    public ResponseEntity<?> deleteComment(@PathVariable Integer placeId,
+            @PathVariable Integer commentId,
+            HttpServletRequest request) {
+        // JWT토큰에서 파싱한 유저 id
+        // 토큰 정보 없으면 필터 or 인터셉터 에서 401 반환
+        Integer userId = (Integer) request.getAttribute("userId");
+
+        // 임의의 유저(테스트용. 지울예정)
+        userId = 1;
+
+        commentService.deleteCommentById(userId, commentId);
+        return new ResponseEntity<>("", HttpStatus.OK);
+
     }
 }

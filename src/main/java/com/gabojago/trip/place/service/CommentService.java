@@ -10,4 +10,6 @@ public interface CommentService {
     List<CommentResponseDto> getCommentsByPlaceId(Integer placeId);
 
     void updateComment(Integer userId, Integer placeId, Integer commentId, String newCommentText, Integer newStartRating);
+
+    void deleteCommentById(Integer userId, Integer commentId);
 }
