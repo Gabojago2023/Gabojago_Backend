@@ -23,28 +23,34 @@ import lombok.ToString;
 @ToString
 @Getter
 public class Comment {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "place_id")
-	private Place place;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
-	private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "place_id")
+    private Place place;
 
-	private String commentText;
-	private Integer starRating;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
-	@CreationTimestamp
-	private Timestamp createdDate;
+    private String commentText;
+    private Integer starRating;
 
-	public Comment(Place place, User user, String commentText, Integer starRating) {
-		this.place = place;
-		this.user = user;
-		this.commentText = commentText;
-		this.starRating = starRating;
-	}
+    @CreationTimestamp
+    private Timestamp createdDate;
+
+    public Comment(Place place, User user, String commentText, Integer starRating) {
+        this.place = place;
+        this.user = user;
+        this.commentText = commentText;
+        this.starRating = starRating;
+    }
+
+    public void update(String newCommentText, Integer newStarRating) {
+        this.commentText = newCommentText;
+        this.starRating = newStarRating;
+    }
 }
