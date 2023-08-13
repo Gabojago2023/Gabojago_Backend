@@ -20,12 +20,16 @@ public class JwtInterceptor implements HandlerInterceptor {
     private JwtUtil jwtUtil;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
+            Object handler)
             throws Exception {
         final String token = request.getHeader(HEADER_AUTH);
 
         if (token != null && jwtUtil.validateToken(token)) {
             log.info("토큰 사용 가능 : {}", token);
+            // @은정
+            // 여기서 토큰 파싱해서 userId값 불러와줘
+            // request.setAttribute("userId", userId);
             return true;
         } else {
             log.info("토큰 사용 불가능 : {}", token);
