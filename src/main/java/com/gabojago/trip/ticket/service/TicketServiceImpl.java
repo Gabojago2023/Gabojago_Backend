@@ -37,6 +37,12 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
+    public void revertTicket(Ticket ticket) {
+        ticket.setType(1);
+        ticketRepository.save(ticket);
+    }
+
+    @Override
     public Integer countTicketsByUserId(Integer userId) {
         return ticketRepository.countTicketsByUserId(userId);
     }

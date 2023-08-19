@@ -54,4 +54,8 @@ public class Place {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gugun_code")
     private Gugun gugun;
+
+    public Place(Integer id) {
+        this.id = id;
+    }
 }
