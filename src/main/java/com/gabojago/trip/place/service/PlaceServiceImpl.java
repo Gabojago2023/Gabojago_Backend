@@ -73,7 +73,6 @@ public class PlaceServiceImpl implements PlaceService {
         for (Object[] o : result) {
             PlaceResponseDto from = PlaceResponseDto.from(o);
             placeResponseDtoList.add(from);
-            System.out.println(from);
         }
 
         return placeResponseDtoList;
