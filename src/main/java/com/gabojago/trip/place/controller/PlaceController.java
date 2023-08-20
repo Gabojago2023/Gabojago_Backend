@@ -60,11 +60,7 @@ public class PlaceController {
         List<PlaceResponseDto> list = placeService.searchAttractionByKeyword(userId, sidoCode,
                 gugunCode, keyword, pg, spp);
         result.put("places", list);
-        if (list.size() != 0) {
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(result, HttpStatus.NO_CONTENT);
-        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/like-place")
@@ -95,11 +91,7 @@ public class PlaceController {
                 userId, location, pg, spp);
 
         result.put("places", placeResponseDtoList);
-        if (placeResponseDtoList.size() != 0) {
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(result, HttpStatus.NO_CONTENT);
-        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/scrap")
@@ -119,23 +111,16 @@ public class PlaceController {
                 userId, pg, spp);
 
         result.put("places", bookmarkedAttractionsByUserId);
-        if (bookmarkedAttractionsByUserId.size() != 0) {
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(result, HttpStatus.NO_CONTENT);
-        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/{placeId}/detail")
     public ResponseEntity<?> getPlaceDetail(@PathVariable Integer placeId) {
         Map<String, PlaceDetailResponseDto> result = new HashMap<>();
         PlaceDetailResponseDto placeDetailByPlaceId = placeService.getPlaceDetailByPlaceId(placeId);
-        if (placeDetailByPlaceId != null) {
-            result.put("place", placeDetailByPlaceId);
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(result, HttpStatus.NO_CONTENT);
-        }
+
+        result.put("place", placeDetailByPlaceId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping("/{placeId}/scrap")
@@ -188,11 +173,7 @@ public class PlaceController {
         List<CommentResponseDto> commentsByPlaceId = commentService.getCommentsByPlaceId(placeId);
 
         result.put("comments", commentsByPlaceId);
-        if (commentsByPlaceId.size() != 0) {
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(result, HttpStatus.NO_CONTENT);
-        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PutMapping("{placeId}/comment/{commentId}")
