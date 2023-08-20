@@ -12,7 +12,11 @@ import java.util.List;
 @Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer {
     //TODO: http method check
-    private final List<String> PATTERNS = Arrays.asList("/users/**","/articles/**/edit","/like-places/**");
+    private final List<String> PATTERNS = Arrays.asList("/users/**","/articles/**/edit",
+            "/like-places/**",
+            "places/scrap",
+            "places/**/scrap",
+            "places/**/comment/**"); // 조회도 로그인 했을 때만?
 
     private JwtInterceptor jwtInterceptor;
 
@@ -32,7 +36,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
                 .allowedOrigins("http://localhost:3000")
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("*")
-                .allowCredentials(true);;
+                .allowCredentials(true);
 
     }
 

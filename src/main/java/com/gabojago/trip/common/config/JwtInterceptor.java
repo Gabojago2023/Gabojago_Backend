@@ -29,7 +29,8 @@ public class JwtInterceptor implements HandlerInterceptor {
             log.info("토큰 사용 가능 : {}", token);
             // @은정
             // 여기서 토큰 파싱해서 userId값 불러와줘
-            // request.setAttribute("userId", userId);
+            Integer userId = (Integer) jwtUtil.getClaims(token).get("id");
+            request.setAttribute("userId", userId);
             return true;
         } else {
             log.info("토큰 사용 불가능 : {}", token);
