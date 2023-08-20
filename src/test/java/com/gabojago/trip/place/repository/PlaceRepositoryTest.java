@@ -3,6 +3,7 @@ package com.gabojago.trip.place.repository;
 import static org.assertj.core.api.Assertions.*;
 
 import com.gabojago.trip.place.domain.Place;
+import com.gabojago.trip.place.dto.response.PlaceDetailResponseDto;
 import com.gabojago.trip.place.dto.response.PlaceResponseDto;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ class PlaceRepositoryTest {
     }
 
     @Test
-    public void testfindTop3ScrappedPlacesId() {
+    public void testFindTop3ScrappedPlaces() {
         PageRequest pageRequest = PageRequest.of(0, 3);
 
         List<Integer> top3ScrappedPlacesId = placeRepository.findTop3ScrappedPlacesId(pageRequest);
@@ -45,13 +46,51 @@ class PlaceRepositoryTest {
     }
 
     @Test
-    void findPlacesByFilter() {
+    void testFindPlacesByFilter() {
+        PageRequest pageRequest = PageRequest.of(1, 10);
+
         List<PlaceResponseDto> placeResponseDtoList = new ArrayList<>();
-        List<Object[]> placesByFilter = placeRepository.findPlacesByFilter(3, 1, 1, "공원");
-        for(Object[] o : placesByFilter) {
+        List<Object[]> placesByFilter = placeRepository.findPlacesByFilter(0, 1, 1, "공원",
+                pageRequest);
+        for (Object[] o : placesByFilter) {
             PlaceResponseDto from = PlaceResponseDto.from(o);
             placeResponseDtoList.add(from);
             System.out.println(from);
         }
+    }
+
+    @Test
+    void testFindPlacesByLocation() {
+        PageRequest pageRequest = PageRequest.of(0, 10);
+
+        List<PlaceResponseDto> placeResponseDtoList = new ArrayList<>();
+        List<Object[]> result = placeRepository.findPlacesByLocation("서울", 0, pageRequest);
+        for (Object[] o : result) {
+            PlaceResponseDto from = PlaceResponseDto.from(o);
+            placeResponseDtoList.add(from);
+            System.out.println(from);
+        }
+
+    }
+
+    @Test
+    void testFindBookmarkedPlacesByUserId() {
+        PageRequest pageRequest = PageRequest.of(0, 10);
+
+        List<PlaceResponseDto> placeResponseDtoList = new ArrayList<>();
+        List<Object[]> result = placeRepository.findBookmarkedPlacesByUserId(1, pageRequest);
+        for (Object[] o : result) {
+            PlaceResponseDto from = PlaceResponseDto.from(o);
+            placeResponseDtoList.add(from);
+            System.out.println(from);
+        }
+    }
+
+    @Test
+    void testFindPlaceWithAvgRatingAndCommentCount() {
+        Object[] result = placeRepository.findPlaceWithAvgRatingAndCommentCount(
+                125266);
+        PlaceDetailResponseDto placeDetailResponseDto = PlaceDetailResponseDto.from((Object[]) result[0]);
+        System.out.println("detail : " + placeDetailResponseDto);
     }
 }

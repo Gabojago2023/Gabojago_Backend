@@ -36,6 +36,6 @@ auth:
 
 logging:
   level:
-    com.ground.sswm : INFO
+    com.gabojago.trip : DEBUG
     org.hibernate.SQL: INFO
     org.hibernate.type.descriptor.sql.BasicBinder: INFO

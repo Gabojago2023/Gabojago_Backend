@@ -8,7 +8,7 @@ import lombok.ToString;
 
 @ToString
 @Getter
-public class PlaceResponseDto {
+public class PlaceDetailResponseDto {
 
     private final Integer id;
     private final String name;
@@ -21,13 +21,17 @@ public class PlaceResponseDto {
     private final Integer sidoCode;
     private final Integer gugunCode;
     private final String overview;
-    private final Integer isBookmarked;
+
+    private final Double avgRating;
+
+    private final Long commentCnt;
 
     @Builder
-    public PlaceResponseDto(Integer id, String name, BigDecimal longitude, BigDecimal latitude,
+    public PlaceDetailResponseDto(Integer id, String name, BigDecimal longitude,
+            BigDecimal latitude,
             String address, String category, String imgUrl, String imgUrl2, int sidoCode,
             int gugunCode,
-            String overview, int isBookmarked) {
+            String overview, Double avgRating, Long commentCnt) {
         this.id = id;
         this.name = name;
         this.longitude = longitude;
@@ -39,11 +43,12 @@ public class PlaceResponseDto {
         this.sidoCode = sidoCode;
         this.gugunCode = gugunCode;
         this.overview = overview;
-        this.isBookmarked = isBookmarked;
+        this.avgRating = avgRating;
+        this.commentCnt = commentCnt;
     }
 
-    public static PlaceResponseDto from(Object[] o) {
-        return PlaceResponseDto.builder()
+    public static PlaceDetailResponseDto from(Object[] o) {
+        return PlaceDetailResponseDto.builder()
                 .id((Integer) o[0])
                 .name((String) o[1])
                 .longitude((BigDecimal) o[2])
@@ -55,12 +60,13 @@ public class PlaceResponseDto {
                 .sidoCode((Integer) o[8])
                 .gugunCode((Integer) o[9])
                 .overview((String) o[10])
-                .isBookmarked((Integer) o[11])
+                .avgRating(o[11] != null ? (Double) o[11] : 0.0D)
+                .commentCnt((Long) o[12])
                 .build();
     }
 
-    public static PlaceResponseDto from(Place place) {
-        return PlaceResponseDto.builder()
+    public static PlaceDetailResponseDto from(Place place) {
+        return PlaceDetailResponseDto.builder()
                 .id(place.getId())
                 .name(place.getName())
                 .longitude(place.getLongitude())
