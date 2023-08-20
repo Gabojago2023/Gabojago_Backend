@@ -1,15 +1,14 @@
 package com.gabojago.trip.route.domain;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import javax.persistence.*;
-
 import com.gabojago.trip.route.dto.TripRouteCreateDto;
 import com.gabojago.trip.route.dto.TripRouteModifyDto;
+import com.gabojago.trip.user.domain.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import com.gabojago.trip.user.domain.User;
+
+import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor

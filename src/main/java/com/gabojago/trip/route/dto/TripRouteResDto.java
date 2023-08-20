@@ -1,15 +1,11 @@
 package com.gabojago.trip.route.dto;
 
 
+import com.gabojago.trip.route.domain.TripRoute;
+import lombok.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
-
-import com.gabojago.trip.route.domain.TripRoute;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 @ToString
 @Getter
 @Setter

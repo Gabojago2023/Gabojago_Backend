@@ -5,6 +5,9 @@ services:
   app:
     container_name: app
     image: ynwoo/onepick_test
+    build:
+      context: ./
+      dockerfile: Dockerfile
     expose:
       - "8080"
     ports:

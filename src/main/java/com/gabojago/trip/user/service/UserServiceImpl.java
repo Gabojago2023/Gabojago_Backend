@@ -1,11 +1,10 @@
 package com.gabojago.trip.user.service;
 
 import com.gabojago.trip.auth.oauth.OAuthUserInfo;
-import com.gabojago.trip.user.exception.UserNotFoundException;
 import com.gabojago.trip.user.domain.User;
 import com.gabojago.trip.user.domain.UserRepository;
 import com.gabojago.trip.user.dto.UserDto;
-import com.gabojago.trip.user.dto.UserResDto;
+import com.gabojago.trip.user.exception.UserNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
