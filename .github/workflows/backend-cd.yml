@@ -2,14 +2,18 @@ name: Backend Deploy
 
 on:
   push:
-    branches: [ "develop" ]
-  pull_request:
-    branches: [ "develop" ]
+      branches:
+        - develop
   # pull_request:
   #   types:
   #     - closed
   #   branches:
   #     - develop
+  # push:
+  #   branches: [ "develop" ]
+  # pull_request:
+  #   branches: [ "develop" ]
+  
 
   workflow_dispatch:
 
