@@ -45,16 +45,10 @@ public class PlaceController {
     @GetMapping("/keyword")
     public ResponseEntity<?> getPlaceSearchedByKeyword(@RequestParam("sido-code") Integer sidoCode,
             @RequestParam("gugun-code") Integer gugunCode, @RequestParam String keyword,
-            @RequestParam Integer pg, @RequestParam Integer spp,
-            HttpServletRequest request) {
-        // JWT토큰에서 파싱한 유저 id
-        // 로그인 한 유저라면 그 유저의 id
-        Integer userId = (Integer) request.getAttribute("userId");
-
-        // 비로그인 시 0
-        if (userId == null) {
-            userId = 0;
-        }
+            @RequestParam Integer pg, @RequestParam Integer spp) {
+        // 북마크 여부 상관없이
+        // refactoring 1순위
+        Integer userId = 0;
 
         Map<String, List> result = new HashMap<>();
         List<PlaceResponseDto> list = placeService.searchAttractionByKeyword(userId, sidoCode,
@@ -75,16 +69,10 @@ public class PlaceController {
 
     @GetMapping
     public ResponseEntity<?> getPlaceSearchedByLocation(@RequestParam("location") String location,
-            @RequestParam Integer pg, @RequestParam Integer spp,
-            HttpServletRequest request) {
-        // JWT토큰에서 파싱한 유저 id
-        // 로그인 한 유저라면 그 유저의 id
-        Integer userId = (Integer) request.getAttribute("userId");
-
-        // 비로그인 시 0
-        if (userId == null) {
-            userId = 0;
-        }
+            @RequestParam Integer pg, @RequestParam Integer spp) {
+        // 북마크 여부 상관없이
+        // refactoring 1순위
+        Integer userId = 0;
 
         Map<String, List> result = new HashMap<>();
         List<PlaceResponseDto> placeResponseDtoList = placeService.searchAttractionByLocation(
