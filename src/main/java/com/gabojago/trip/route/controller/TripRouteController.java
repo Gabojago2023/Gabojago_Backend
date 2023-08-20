@@ -77,7 +77,7 @@ public class TripRouteController {
         TripRouteResDto tripRouteResDto = TripRouteResDto.from(tripRoute);
         return ResponseEntity.status(HttpStatus.OK).body(tripRouteResDto);
     }
-    @GetMapping("/my") // 내 여행 계획 목록 조회
+    @GetMapping("/my") // 내 여행 계획 목록 조회 (내가 생성자, 참여자)
     public ResponseEntity<?> getMyPlan(@RequestHeader("Authorization") String token){
         Integer userId = authService.getUserIdFromToken(token);
         User user = userService.getUser(userId);

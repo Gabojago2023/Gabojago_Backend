@@ -59,6 +59,7 @@ public class TripRouteServiceImpl implements TripRouteService{
     public List<TripRoute> getMyTripRoutes(User user) {
         List<TripRoute> tripRoutes =
                 tripRouteRepository.findByUser(user.getId());
+
         return tripRoutes;
     }
 
