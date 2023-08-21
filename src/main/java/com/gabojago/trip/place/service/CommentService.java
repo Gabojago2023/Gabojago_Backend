@@ -4,12 +4,14 @@ import com.gabojago.trip.place.dto.response.CommentResponseDto;
 import java.util.List;
 
 public interface CommentService {
+
     void addCommentToPlace(Integer placeId, Integer userId, String commentText,
             Integer starRating);
 
-    List<CommentResponseDto> getCommentsByPlaceId(Integer placeId);
+    List<CommentResponseDto> getCommentsByPlaceId(Integer placeId, Integer pg, Integer spp);
 
-    void updateComment(Integer userId, Integer placeId, Integer commentId, String newCommentText, Integer newStartRating);
+    void updateComment(Integer userId, Integer placeId, Integer commentId, String newCommentText,
+            Integer newStartRating);
 
     void deleteCommentById(Integer userId, Integer commentId);
 }

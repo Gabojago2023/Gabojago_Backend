@@ -154,11 +154,14 @@ public class PlaceController {
         return new ResponseEntity<>("", HttpStatus.OK);
     }
 
-    @GetMapping("{placeId}/comment")
-    public ResponseEntity<?> getCommentsByPlaceId(@PathVariable Integer placeId) {
+    @GetMapping("{placeId}/comments")
+    public ResponseEntity<?> getCommentsByPlaceId(@PathVariable Integer placeId,
+            @RequestParam Integer pg,
+            @RequestParam Integer spp) {
         Map<String, List<CommentResponseDto>> result = new HashMap<>();
 
-        List<CommentResponseDto> commentsByPlaceId = commentService.getCommentsByPlaceId(placeId);
+        List<CommentResponseDto> commentsByPlaceId = commentService.getCommentsByPlaceId(placeId,
+                pg, spp);
 
         result.put("comments", commentsByPlaceId);
         return new ResponseEntity<>(result, HttpStatus.OK);

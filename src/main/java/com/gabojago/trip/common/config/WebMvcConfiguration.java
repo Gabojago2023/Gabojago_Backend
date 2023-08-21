@@ -16,7 +16,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
             "/like-places/**",
             "places/scrap",
             "places/**/scrap",
-            "places/**/comment/**"); // 조회도 로그인 했을 때만?
+            "places/**/comment/**"); // 조회도 로그인 했을 때만? -> comments 조회는 /comments로
 
     private JwtInterceptor jwtInterceptor;
 

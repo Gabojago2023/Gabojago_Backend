@@ -13,6 +13,7 @@ import com.gabojago.trip.user.domain.UserRepository;
 import com.gabojago.trip.user.exception.UserNotFoundException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,23 +49,27 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentResponseDto> getCommentsByPlaceId(Integer placeId) {
+    public List<CommentResponseDto> getCommentsByPlaceId(Integer placeId,
+            Integer pg, Integer spp) {
+        PageRequest pageRequest = PageRequest.of(pg - 1, spp);
+
         Place place = placeRepository.findById(placeId).orElse(null);
         if (place == null) {
             throw new PlaceNotFoundException(placeId.toString());
         }
-        return commentRepository.findCommentsByPlaceId(placeId);
+        return commentRepository.findCommentsByPlaceId(placeId, pageRequest);
     }
 
     @Override
     @Transactional
-    public void updateComment(Integer userId, Integer placeId, Integer commentId, String newCommentText,
+    public void updateComment(Integer userId, Integer placeId, Integer commentId,
+            String newCommentText,
             Integer newStartRating) {
         Comment comment = commentRepository.findById(commentId).orElse(null);
         if (comment == null) {
             throw new CommentNotFoundException("this comment");
         }
-        if(!comment.getUser().getId().equals(userId)) {
+        if (!comment.getUser().getId().equals(userId)) {
             // 댓글 작성자와 주어진 userId가 다를 경우 처리
             throw new UnauthorizedCommentDeletionException(userId + " : " + commentId);
         }
