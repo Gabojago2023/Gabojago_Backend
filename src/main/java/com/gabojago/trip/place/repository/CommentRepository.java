@@ -3,6 +3,7 @@ package com.gabojago.trip.place.repository;
 import com.gabojago.trip.place.domain.Comment;
 import com.gabojago.trip.place.dto.response.CommentResponseDto;
 import java.util.List;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,5 +18,5 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
             "INNER JOIN User u on c.user.id = u.id " +
             "WHERE c.place.id = :placeId " +
             "ORDER BY c.createdDate DESC")
-    List<CommentResponseDto> findCommentsByPlaceId(@Param("placeId") Integer placeId);
+    List<CommentResponseDto> findCommentsByPlaceId(@Param("placeId") Integer placeId, Pageable pageable);
 }
