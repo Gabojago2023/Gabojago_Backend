@@ -3,7 +3,9 @@ package com.gabojago.trip.user.service;
 import com.gabojago.trip.auth.oauth.OAuthUserInfo;
 import com.gabojago.trip.user.domain.User;
 import com.gabojago.trip.user.domain.UserRepository;
+import com.gabojago.trip.user.dto.NicknameDto;
 import com.gabojago.trip.user.dto.UserDto;
+import com.gabojago.trip.user.exception.NicknameAlreadyExistException;
 import com.gabojago.trip.user.exception.UserNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -34,18 +36,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int modifyUser(int userId, UserDto userReqDto) {
-        User user = userRepository.findById(userId).orElseThrow(
-            () -> new UserNotFoundException("" + userId)
-        );
-        if (userReqDto.getNickname() != null) {
-            user.setNickname(userReqDto.getNickname());
+    public void modifyUser(Integer id, String nickname, String imagePath) {
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new UserNotFoundException("" + id));
+
+        // 닉네임 바꾸는 경우
+        if (nickname != null && !nickname.isBlank()) {
+            // 다른 사람이 바꾸고자하는 닉네임 이미 사용하고 있음
+            User findUser = userRepository.findByNickname(nickname);
+            // 만약 유저 닉네임이 중복이라면 함수 종료
+            if (findUser != null && findUser.getId()!=id) {
+                throw new NicknameAlreadyExistException("이미 사용중인 닉네임 입니다.");
+            }
+            user.setNickname(nickname);
         }
-        if (userReqDto.getImage() != null) {
-            user.setImage(userReqDto.getImage());
+        // 이미지 바꾸는 경우
+        if (imagePath != null && !imagePath.isBlank()) {
+            user.setImage(imagePath);
         }
-        return userRepository.save(user).getId();
+        // DB에 저장한다.
+        userRepository.save(user);
     }
+
+
 
     @Override
     public List<UserDto> getAllUser() {
@@ -79,5 +92,11 @@ public class UserServiceImpl implements UserService {
             .isAdmin(false)
             .build();
         return userRepository.save(newUser);
+    }
+
+    @Override
+    public NicknameDto isNicknameAvailable(Integer userId , String nickname){
+        boolean isAvailable = userRepository.existsByNicknameAndIdNot(nickname,userId);
+        return new NicknameDto(nickname, isAvailable);
     }
 }

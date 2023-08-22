@@ -1,15 +1,22 @@
 package com.gabojago.trip.user.controller;
 
 
+import com.gabojago.trip.auth.service.AuthService;
+import com.gabojago.trip.image.util.FileManageUtil;
 import com.gabojago.trip.user.domain.User;
+import com.gabojago.trip.user.dto.NicknameDto;
 import com.gabojago.trip.user.dto.UserDto;
 import com.gabojago.trip.user.dto.UserResDto;
+import com.gabojago.trip.user.exception.NicknameAlreadyExistException;
 import com.gabojago.trip.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Slf4j
@@ -18,9 +25,14 @@ import java.util.List;
 public class UserController {
 
     private UserService userService;
+    private AuthService authService;
+    private  FileManageUtil fileManageUtil;
 
-    public UserController(UserService userService) {
+
+    public UserController(UserService userService, AuthService authService, FileManageUtil fileManageUtil) {
         this.userService = userService;
+        this.authService = authService;
+        this.fileManageUtil = fileManageUtil;
     }
     @Deprecated
     @PostMapping
@@ -36,6 +48,13 @@ public class UserController {
         return new ResponseEntity<>(userDtoList, HttpStatus.OK);
     }
 
+    @GetMapping("/nickname-available")
+    public ResponseEntity<NicknameDto> isAvailable(@RequestHeader("Authorization") String token, @RequestBody String nickname){
+        Integer userId = authService.getUserIdFromToken(token);
+        NicknameDto nicknameDto = userService.isNicknameAvailable(userId, nickname);
+        return new ResponseEntity<>(nicknameDto, HttpStatus.OK);
+    }
+
     @GetMapping("/{userId}")
     public ResponseEntity<UserResDto> get(@PathVariable int userId) {
         User user = userService.getUser(userId);
@@ -43,11 +62,31 @@ public class UserController {
         return new ResponseEntity<>(userResDto, HttpStatus.OK);
     }
 
-    @PutMapping("/{userId}")
-    public ResponseEntity<?> modify(@PathVariable int userId, @RequestBody UserDto userDto) {
-        userService.modifyUser(userId,userDto);
-        return new ResponseEntity<>("", HttpStatus.OK);
+    @PutMapping
+    public ResponseEntity<?> modify(@RequestHeader("Authorization") String token,
+                                    @RequestPart(value = "file", required = false) MultipartFile multipartFile,
+                                    @RequestPart(value = "fileType", required = false) String fileType,
+                                    @RequestPart(value = "nickname", required = false) String nickname)
+            throws NicknameAlreadyExistException {
+//        log.debug("[PUT] /user : file " + multipartFile.getOriginalFilename());
+        log.debug("[PUT] /user : fileType " + fileType);
+        log.debug("[PUT] /user : nickname " + URLDecoder.decode(nickname, StandardCharsets.UTF_8));
+
+        Integer id = authService.getUserIdFromToken(token);
+
+        String filePath = null;
+        if (fileType != null && !fileType.isBlank() && multipartFile != null
+                && !multipartFile.isEmpty()) {
+            filePath = fileManageUtil.uploadFile(fileType, multipartFile);
+        }
+
+        log.debug("[filePath]>>>> " + filePath);
+
+        userService.modifyUser(id, URLDecoder.decode(nickname, StandardCharsets.UTF_8), filePath);
+
+        return new ResponseEntity<>("닉네임 수정 성공", HttpStatus.OK);
     }
+
     @DeleteMapping("/{userId}")
     public ResponseEntity<?> delete(@PathVariable int userId) {
         userService.delete(userId);
