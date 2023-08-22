@@ -1,6 +1,7 @@
 package com.gabojago.trip.user.controller;
 
 
+import com.gabojago.trip.auth.exception.UserUnAuthorizedException;
 import com.gabojago.trip.auth.service.AuthService;
 import com.gabojago.trip.image.util.FileManageUtil;
 import com.gabojago.trip.user.domain.User;
@@ -56,8 +57,11 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserResDto> get(@PathVariable int userId) {
+    public ResponseEntity<UserResDto> get(@RequestHeader("Authorization") String token, @PathVariable int userId) {
+        Integer id = authService.getUserIdFromToken(token);
+        User logined = userService.getUser(id);
         User user = userService.getUser(userId);
+        if(logined.getId()!=user.getId()) throw new UserUnAuthorizedException("볼 수 있는 권한이 없습니다");
         UserResDto userResDto = UserResDto.from(user);
         return new ResponseEntity<>(userResDto, HttpStatus.OK);
     }
