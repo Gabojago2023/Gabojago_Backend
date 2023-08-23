@@ -27,5 +27,5 @@ public interface TripRouteService {
 
     List<TripRoute> getMyTripRoutes(User user);
 
-    List<TripRouteResDto> getTripRouteByPlaceId(Integer placeId);
+    List<TripRouteResDto> getTripRouteByPlaceId(Integer placeId,Integer userId);
 }

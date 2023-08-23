@@ -28,19 +28,22 @@ public class TripRouteController {
     private final AuthService authService;
     private final UserService userService;
 
-    @GetMapping
-    public ResponseEntity<?> getPlan(@RequestHeader("Authorization") String token,@RequestParam Integer placeId){
-        List<TripRouteResDto> tripRoute = tripRouteService.getTripRouteByPlaceId(placeId);
+    @GetMapping // 해당 장소가 포함된 여행 계획 목록 조회 -> 볼 수 있는 권한이 있는지 확인해야 함
+    public ResponseEntity<?> getPlanContainPlace(@RequestHeader("Authorization") String token,@RequestParam Integer placeId){
+        User owner = userService.getUser(authService.getUserIdFromToken(token));
+
+        List<TripRouteResDto> tripRoute = tripRouteService.getTripRouteByPlaceId(placeId,owner.getId());
+
         return ResponseEntity.status(HttpStatus.OK).body(tripRoute);
     }
-    @PostMapping
+    @PostMapping // 여행 계획 등록
     public ResponseEntity<?> addPlan(@RequestHeader("Authorization") String token, @RequestBody TripRouteCreateDto tripRouteCreateDto) {
         Integer userId = authService.getUserIdFromToken(token);
         tripRouteService.add(userService.getUser(userId), tripRouteCreateDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/{planId}")
+    @DeleteMapping("/{planId}") // 여행 계획 삭제
     public ResponseEntity<?> deletePlan(@RequestHeader("Authorization") String token, @PathVariable Integer planId) {
         Integer userId = authService.getUserIdFromToken(token);
         User user = userService.getUser(userId);
@@ -53,7 +56,7 @@ public class TripRouteController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PutMapping("/{planId}")
+    @PutMapping("/{planId}") // 여행 계획 수정
     public ResponseEntity<?> editPlan(@RequestHeader("Authorization") String token,
                                       @PathVariable Integer planId,
                                       @RequestBody TripRouteModifyDto tripRouteModifyDto) {
@@ -68,13 +71,13 @@ public class TripRouteController {
         tripRouteService.edit(tripRouteModifyDto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
-    @GetMapping("/{planId}")
+    @GetMapping("/{planId}") // 특정 여행 계획 조회
     public ResponseEntity<?> searchPlan(@PathVariable Integer planId){
         TripRoute tripRoute =  tripRouteService.getTripRouteById(planId);
         TripRouteResDto tripRouteResDto = TripRouteResDto.from(tripRoute);
         return ResponseEntity.status(HttpStatus.OK).body(tripRouteResDto);
     }
-    @GetMapping("/my")
+    @GetMapping("/my") // 내 여행 계획 목록 조회 (내가 생성자, 참여자)
     public ResponseEntity<?> getMyPlan(@RequestHeader("Authorization") String token){
         Integer userId = authService.getUserIdFromToken(token);
         User user = userService.getUser(userId);

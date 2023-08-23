@@ -59,13 +59,27 @@ public class TripRouteServiceImpl implements TripRouteService{
     public List<TripRoute> getMyTripRoutes(User user) {
         List<TripRoute> tripRoutes =
                 tripRouteRepository.findByUser(user.getId());
+
         return tripRoutes;
     }
 
     @Override
-    public List<TripRouteResDto> getTripRouteByPlaceId(Integer placeId) {
+    public List<TripRouteResDto> getTripRouteByPlaceId(Integer placeId,Integer userId) {
         List<TripRouteResDto> tripRoutes =
-                tripRouteRepository.findByPlaceId(placeId);
+                tripRouteRepository.findByPlaceId(placeId)
+                        .stream().filter(x-> x.getUser().getId()==userId || x.isPublic()==true || isCompanion(x.getId(), userId))
+                        .map(TripRouteResDto::from)
+                        .toList();
+
         return tripRoutes;
+    }
+    private boolean isCompanion(Integer tripRouteId, Integer userId){
+        List<Companion> companions = getCompanions(tripRouteId);
+        for(Companion companion: companions){
+            if(companion.getCreator().getId()==userId){
+                return true;
+            }
+        }
+        return false;
     }
 }
