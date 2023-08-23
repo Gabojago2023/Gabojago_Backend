@@ -9,9 +9,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -19,6 +21,7 @@ import org.hibernate.annotations.CreationTimestamp;
 @NoArgsConstructor
 @ToString
 @Getter
+@Setter
 public class DistributedOnePick {
 
     @Id
@@ -39,4 +42,10 @@ public class DistributedOnePick {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Builder
+    public DistributedOnePick(Double rate, OnePick onePick, User user) {
+        this.rate = rate;
+        this.onePick = onePick;
+        this.user = user;
+    }
 }
