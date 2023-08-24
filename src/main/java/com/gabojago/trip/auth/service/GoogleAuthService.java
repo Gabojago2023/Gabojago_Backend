@@ -16,16 +16,26 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Value;
+
 
 @Slf4j
 @Service
 public class GoogleAuthService implements SocialAuthService {
-    private String GOOGLE_TOKEN_REQUEST_URL="https://oauth2.googleapis.com";
-    private String CLIENT_ID="";
-    private String CLIENT_SECRET="";
-    private String REDIRECT_URI="http://localhost:3000";
+    @Value("${auth.google.token-req-url}")
+    private  String GOOGLE_TOKEN_REQUEST_URL;
+
+    @Value("${auth.google.client-id}")
+    private  String GOOGLE_CLIENT_ID;
+
+    @Value("${auth.google.client-secret}")
+    private  String GOOGLE_CLIENT_SECRET;
+
+    @Value("${auth.google.redirect-url}")
+    private  String GOOGLE_REDIRECT_URI ;
     @Autowired
     private RestTemplate restTemplate;
+
 
 
     @Override
@@ -91,10 +101,11 @@ public class GoogleAuthService implements SocialAuthService {
         Map<String, Object> params = new HashMap<>();
         params.put("grant_type", "authorization_code");
         params.put("code", code);
-        params.put("client_id", CLIENT_ID);
-        params.put("client_secret", CLIENT_SECRET);
-        params.put("redirect_uri", REDIRECT_URI);
+        params.put("client_id", GOOGLE_CLIENT_ID);
+        params.put("client_secret", GOOGLE_CLIENT_SECRET);
+        params.put("redirect_uri", GOOGLE_REDIRECT_URI);
         return params;
+
     }
 
 

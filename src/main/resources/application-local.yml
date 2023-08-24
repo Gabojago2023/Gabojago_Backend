@@ -37,6 +37,7 @@ auth:
       - email
       - profile
     token-req-url : https://oauth2.googleapis.com
+    redirect-url: http://localhost:3000
   kakao:
     client-id: ${KAKAO_CLIENT_ID}
     client-secret: ${KAKAO_CLIENT_SECRET}
@@ -44,7 +45,11 @@ auth:
       - profile_nickname
       - profile_image
       - account_email
-  redirect-url: http://localhost:3000
+    token-req-url: https://kauth.kakao.com/oauth/token
+    user-info-request-url: https://kapi.kakao.com/v2/user/me
+    redirect-url-sign: http://localhost:3000/kakao/sign
+    redirect-url-login: http://localhost:3000/kakao/login
+
 
 logging:
   level:
