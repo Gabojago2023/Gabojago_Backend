@@ -18,17 +18,17 @@ custom:
   jwt:
     secret: ${JWT_SECRET}
 # S3 사용 설정
-cloud:
-  aws:
-    credentials:
-      accessKey: ${CLOUD_AWS_CREDENTIALS_ACCESS_KEY}       # AWS IAM AccessKey 적기
-      secretKey: ${CLOUD_AWS_CREDENTIALS_SECRET_KEY}  # AWS IAM SecretKey 적기
-    s3:
-      bucket: gabojago-image
-    region:
-      static: ap-northeast-2
-    stack:
-      auto: false
+# cloud:
+#   aws:
+#     credentials:
+#       accessKey: ${CLOUD_AWS_CREDENTIALS_ACCESS_KEY}       # AWS IAM AccessKey 적기
+#       secretKey: ${CLOUD_AWS_CREDENTIALS_SECRET_KEY}  # AWS IAM SecretKey 적기
+#     s3:
+#       bucket: gabojago-image
+#     region:
+#       static: ap-northeast-2
+#     stack:
+#       auto: false
 auth:
   google:
     client-id: ${GOOGLE_CLIENT_ID}
