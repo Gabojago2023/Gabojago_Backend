@@ -11,12 +11,14 @@ import javax.persistence.ManyToOne;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @NoArgsConstructor
 @Getter
+@Setter
 @ToString
 public class Ticket {
 
@@ -33,5 +35,8 @@ public class Ticket {
     @JoinColumn(name = "user_id")
     private User user;
 
-
+    public Ticket(User user, Integer type) {
+        this.user = user;
+        this.type = type;
+    }
 }

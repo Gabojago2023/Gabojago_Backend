@@ -31,6 +31,11 @@ public class User {
     private String provider;
     private String providerId;
     private int streak;
+
+    public User(Integer id) {
+        this.id = id;
+    }
+
     @Builder
     public User(Integer id, String email, String password, String image, Boolean isAdmin,
         String name,

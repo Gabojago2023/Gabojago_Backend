@@ -3,6 +3,7 @@ package com.gabojago.trip.user.service;
 
 import com.gabojago.trip.auth.oauth.OAuthUserInfo;
 import com.gabojago.trip.user.domain.User;
+import com.gabojago.trip.user.dto.NicknameDto;
 import com.gabojago.trip.user.dto.UserDto;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public interface UserService {
 
   User getUser(int userId);
 
-  int modifyUser(int userId, UserDto userReqDto);
+  void modifyUser(Integer id, String nickname, String imagePath);
 
   List<UserDto> getAllUser();
 
@@ -22,4 +23,6 @@ public interface UserService {
     User getUserByProviderId(String provider, String providerId);
 
   User addOAuthUser(OAuthUserInfo oauthUser);
+
+  NicknameDto isNicknameAvailable(Integer userId, String nickname);
 }

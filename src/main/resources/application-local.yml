@@ -1,0 +1,58 @@
+spring:
+  datasource:
+    url: ${LOCAL_DATASOURCE_URL}
+    username: ${LOCAL_DATASOURCE_USERNAME}
+    password: ${LOCAL_DATASOURCE_PASSWORD}
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: validate
+
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+
+# jwt 설정
+custom:
+  jwt:
+    secret: ${JWT_SECRET}
+# S3 사용 설정
+cloud:
+  aws:
+    credentials:
+      accessKey: ${CLOUD_AWS_CREDENTIALS_ACCESS_KEY}       # AWS IAM AccessKey 적기
+      secretKey: ${CLOUD_AWS_CREDENTIALS_SECRET_KEY}  # AWS IAM SecretKey 적기
+    s3:
+      bucket: gabojago-image
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+auth:
+  google:
+    client-id: ${GOOGLE_CLIENT_ID}
+    client-secret: ${GOOGLE_CLIENT_SECRET}
+    scope:
+      - email
+      - profile
+    token-req-url : https://oauth2.googleapis.com
+    redirect-url: http://localhost:3000
+  kakao:
+    client-id: ${KAKAO_CLIENT_ID}
+    client-secret: ${KAKAO_CLIENT_SECRET}
+    scope:
+      - profile_nickname
+      - profile_image
+      - account_email
+    token-req-url: https://kauth.kakao.com/oauth/token
+    user-info-request-url: https://kapi.kakao.com/v2/user/me
+    redirect-url-sign: http://localhost:3000/kakao/sign
+    redirect-url-login: http://localhost:3000/kakao/login
+
+
+logging:
+  level:
+    com.ground.sswm : DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

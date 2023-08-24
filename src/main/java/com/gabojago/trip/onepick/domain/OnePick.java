@@ -1,5 +1,6 @@
 package com.gabojago.trip.onepick.domain;
 
+import com.gabojago.trip.onepick.dto.OnePickDto;
 import com.gabojago.trip.place.domain.Place;
 import com.gabojago.trip.user.domain.User;
 import java.sql.Timestamp;
@@ -42,5 +43,15 @@ public class OnePick {
 
     private Integer category;
     private Integer baseLocation;
+
+    public static OnePick from(OnePickDto dto, User user) {
+        OnePick entity = new OnePick();
+        entity.description = dto.getDescription();
+        entity.place = new Place(dto.getPlaceId());
+        entity.category = dto.getCategory();
+        entity.baseLocation = dto.getBaseLocation();
+        entity.user = user;
+        return entity;
+    }
 
 }

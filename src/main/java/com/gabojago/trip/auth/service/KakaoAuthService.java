@@ -16,17 +16,33 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Value;
+
 
 @Slf4j
 @Service
 public class KakaoAuthService implements SocialAuthService {
-    private String KAKAO_TOKEN_REQUEST_URL = "https://kauth.kakao.com/oauth/token";
-    private String KAKAO_USER_INFO_REQUEST_URL = "https://kapi.kakao.com/v2/user/me";
-    private String CLIENT_ID = ""; //rest api 키
-    private String CLIENT_SECRET = "";//보안-> 코드
-    private String REDIRECT_URI = "http://localhost:3000";
+    @Value("${auth.kakao.token-req-url}")
+    private String KAKAO_TOKEN_REQUEST_URL;
+    @Value("${auth.kakao.user-info-request-url}")
+    private String KAKAO_USER_INFO_REQUEST_URL;
+
+    @Value("${auth.kakao.client-id}")
+    private String CLIENT_ID ;
+
+    @Value("${auth.kakao.client-secret}")
+    private String CLIENT_SECRET;
+
+    @Value("${auth.kakao.redirect-url-sign}")
+    private String REDIRECT_URI_SIGN ;
+
+    @Value("${auth.kakao.redirect-url-login}")
+    private String REDIRECT_URI_LOGIN ;
+
     @Autowired
     private RestTemplate restTemplate;
+
+
 
 
     @Override
@@ -126,7 +142,7 @@ public class KakaoAuthService implements SocialAuthService {
         params.put("grant_type", "authorization_code");
         params.put("client_id", CLIENT_ID);
         params.put("client_secret", CLIENT_SECRET);
-        params.put("redirect_uri", REDIRECT_URI);
+        params.put("redirect_uri", REDIRECT_URI_SIGN);
         params.put("code", code);
         return params;
     }
