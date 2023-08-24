@@ -4,11 +4,13 @@ import com.gabojago.trip.place.dto.request.CommentWithRatingDto;
 import com.gabojago.trip.place.dto.response.CommentResponseDto;
 import com.gabojago.trip.place.dto.response.PlaceDetailResponseDto;
 import com.gabojago.trip.place.dto.response.PlaceResponseDto;
+import com.gabojago.trip.place.dto.response.RandomImageResponseDto;
 import com.gabojago.trip.place.service.CommentService;
 import com.gabojago.trip.place.service.PlaceService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -198,6 +200,19 @@ public class PlaceController {
 
         commentService.deleteCommentById(userId, commentId);
         return new ResponseEntity<>("", HttpStatus.OK);
+    }
 
+    @GetMapping("random-images")
+    public ResponseEntity<?> getRandomImages() {
+        List<RandomImageResponseDto> randomImages = placeService.getRandomImages();
+
+        List<String> urls = randomImages.stream()
+                .map(RandomImageResponseDto::getImgUrl)
+                .collect(Collectors.toList());
+
+        Map<String, List> result = new HashMap<>();
+        result.put("images", urls);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
