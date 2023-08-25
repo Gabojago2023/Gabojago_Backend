@@ -6,6 +6,7 @@ import com.gabojago.trip.auth.service.AuthService;
 import com.gabojago.trip.image.util.FileManageUtil;
 import com.gabojago.trip.user.domain.User;
 import com.gabojago.trip.user.dto.NicknameDto;
+import com.gabojago.trip.user.dto.RandomNicknameDto;
 import com.gabojago.trip.user.dto.UserDto;
 import com.gabojago.trip.user.dto.UserResDto;
 import com.gabojago.trip.user.exception.NicknameAlreadyExistException;
@@ -47,6 +48,11 @@ public class UserController {
     public ResponseEntity<List<UserDto>> getAll() {  //FOR Test
         List<UserDto> userDtoList = userService.getAllUser();
         return new ResponseEntity<>(userDtoList, HttpStatus.OK);
+    }
+    @GetMapping("/nickname-random")
+    public ResponseEntity<RandomNicknameDto> randomNickname(){
+        RandomNicknameDto randomNickname = userService.getRandomNickname();
+        return new ResponseEntity<>(randomNickname,HttpStatus.OK);
     }
 
     @GetMapping("/nickname-available")

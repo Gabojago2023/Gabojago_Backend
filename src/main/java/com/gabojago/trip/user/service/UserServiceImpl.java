@@ -4,6 +4,7 @@ import com.gabojago.trip.auth.oauth.OAuthUserInfo;
 import com.gabojago.trip.user.domain.User;
 import com.gabojago.trip.user.domain.UserRepository;
 import com.gabojago.trip.user.dto.NicknameDto;
+import com.gabojago.trip.user.dto.RandomNicknameDto;
 import com.gabojago.trip.user.dto.UserDto;
 import com.gabojago.trip.user.exception.NicknameAlreadyExistException;
 import com.gabojago.trip.user.exception.UserNotFoundException;
@@ -98,5 +99,12 @@ public class UserServiceImpl implements UserService {
     public NicknameDto isNicknameAvailable(Integer userId , String nickname){
         boolean isAvailable = userRepository.existsByNicknameAndIdNot(nickname,userId);
         return new NicknameDto(nickname, isAvailable);
+    }
+
+    @Override
+    public RandomNicknameDto getRandomNickname() {
+        User user = userRepository.findRandomUser();
+        RandomNicknameDto nicknameDto = new RandomNicknameDto(user.getId(),user.getNickname());
+        return nicknameDto;
     }
 }
