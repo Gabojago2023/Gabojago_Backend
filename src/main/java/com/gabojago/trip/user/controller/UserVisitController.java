@@ -1,5 +1,6 @@
 package com.gabojago.trip.user.controller;
 
+import com.gabojago.trip.auth.service.AuthService;
 import com.gabojago.trip.user.dto.UserVisitDto;
 import com.gabojago.trip.user.service.UserVisitService;
 import java.util.List;
@@ -8,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,9 +21,23 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserVisitController {
 
     private UserVisitService userVisitService;
+    private final AuthService authService;
 
-    public UserVisitController(UserVisitService userVisitService) {
+    public UserVisitController(UserVisitService userVisitService, AuthService authService) {
         this.userVisitService = userVisitService;
+        this.authService = authService;
+    }
+
+    @PostMapping
+//    public ResponseEntity<?> addUserVisit(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> addUserVisit() {
+//        Integer userId = authService.getUserIdFromToken(token);
+        Integer userId = 2;
+
+        log.debug("[POST] /attendance " + userId);
+        userVisitService.addUserVisit(userId);
+
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -29,7 +46,7 @@ public class UserVisitController {
         List<UserVisitDto> visits = userVisitService.getAllUserVisit(id);
 
         if ("all".equals(type)) {
-            return new ResponseEntity<>(visits.size(), HttpStatus.OK);
+            return new ResponseEntity<>(visits, HttpStatus.OK);
         } else if ("continuity".equals(type)) {
             int count = 0;
             // if no visits, return 0 <- should not be executed ideally
