@@ -129,13 +129,13 @@ public class OnePickController {
     }
 
     // 내가 뽑은 원픽 평가 점수 수정
-    @PutMapping("/rate")
+    @PutMapping("/random")
 //    public ResponseEntity<?> rateOnePick(@RequestHeader("Authorization") String token, @RequestBody DistributedRateDto distributedRateDto) {
     public ResponseEntity<?> rateOnePick(@RequestBody DistributedRateDto distributedRateDto) {
         log.debug("[PUT] /one-pick/rate", distributedRateDto);
         //        Integer userId = authService.getUserIdFromToken(token);
 
-        onePickService.rateDistributedOnePick(distributedRateDto.getDistributedId(), distributedRateDto.getRate());
+        onePickService.rateDistributedOnePick(distributedRateDto);
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 }

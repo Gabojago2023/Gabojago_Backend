@@ -5,8 +5,9 @@ spring:
     password: ${LOCAL_DATASOURCE_PASSWORD}
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
 
     properties:
       hibernate:

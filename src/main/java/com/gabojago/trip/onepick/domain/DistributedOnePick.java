@@ -31,6 +31,9 @@ public class DistributedOnePick {
 
     private Double rate;
 
+    @Column(length = 255)
+    private String description;
+
     @CreationTimestamp
     private Timestamp createdAt;
 
