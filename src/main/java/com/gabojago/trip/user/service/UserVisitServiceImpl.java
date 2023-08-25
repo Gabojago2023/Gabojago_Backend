@@ -1,5 +1,6 @@
 package com.gabojago.trip.user.service;
 
+import com.gabojago.trip.ticket.service.TicketService;
 import com.gabojago.trip.user.domain.User;
 import com.gabojago.trip.user.domain.UserVisit;
 import com.gabojago.trip.user.domain.UserVisitRepository;
@@ -15,10 +16,12 @@ import org.springframework.stereotype.Service;
 public class UserVisitServiceImpl implements UserVisitService {
 
     private final UserVisitRepository userVisitRepository;
+    private final TicketService ticketService;
 
     @Autowired
-    public UserVisitServiceImpl(UserVisitRepository userVisitRepository) {
+    public UserVisitServiceImpl(UserVisitRepository userVisitRepository, TicketService ticketService) {
         this.userVisitRepository = userVisitRepository;
+        this.ticketService = ticketService;
     }
 
     public List<UserVisitDto> getAllUserVisit(Integer userId) {
@@ -37,6 +40,9 @@ public class UserVisitServiceImpl implements UserVisitService {
             visit.setUser(new User(userId));
             visit.setLastVisit(today);
             userVisitRepository.save(visit);
+
+            // 티켓 발급
+            ticketService.addTicket(userId);
         }
     }
 
