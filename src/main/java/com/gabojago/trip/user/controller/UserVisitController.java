@@ -46,7 +46,7 @@ public class UserVisitController {
         List<UserVisitDto> visits = userVisitService.getAllUserVisit(id);
 
         if ("all".equals(type)) {
-            return new ResponseEntity<>(visits, HttpStatus.OK);
+            return new ResponseEntity<>(visits.stream().map(UserVisitDto::getLastVisit).toList(), HttpStatus.OK);
         } else if ("continuity".equals(type)) {
             int count = 0;
             // if no visits, return 0 <- should not be executed ideally
@@ -69,7 +69,7 @@ public class UserVisitController {
                 }
             }
 
-            return new ResponseEntity<>(count, HttpStatus.OK);
+            return new ResponseEntity<>(count+1, HttpStatus.OK);
 
         } else {
             return ResponseEntity.badRequest().build();
