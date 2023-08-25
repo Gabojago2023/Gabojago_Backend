@@ -10,6 +10,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("select u from User u where u.nickname = :nickname")
     User findByNickname(String nickname);
     boolean existsByNicknameAndIdNot(String nickname, Integer id);
-    @Query(value = "SELECT u FROM User u join OnePick op on u.id = op.user.id order by RAND() limit 1 where ", nativeQuery = true)
+    @Query(value = "SELECT u FROM User u join OnePick op on u.id = op.user.id order by RAND() limit 1", nativeQuery = true)
     User findRandomUser();
 }
