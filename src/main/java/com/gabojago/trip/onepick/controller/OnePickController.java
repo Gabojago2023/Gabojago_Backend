@@ -135,7 +135,13 @@ public class OnePickController {
         log.debug("[PUT] /one-pick/rate", distributedRateDto);
         //        Integer userId = authService.getUserIdFromToken(token);
 
-        onePickService.rateDistributedOnePick(distributedRateDto);
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        try {
+            onePickService.rateDistributedOnePick(distributedRateDto);
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
+
     }
 }
