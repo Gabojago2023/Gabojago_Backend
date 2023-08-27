@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,10 +37,9 @@ public class OnePickController {
 
     // 나의 모든 원픽 장소 조회
     @GetMapping
-//    public ResponseEntity<List<OnePickDto>> getAllOnePicks(@RequestHeader("Authorization") String token) {
-    public ResponseEntity<List<OnePickDto>> getAllOnePicks() {
-        //        Integer userId = authService.getUserIdFromToken(onePickDto.getToken());
-        Integer userId = 2;
+    public ResponseEntity<List<OnePickDto>> getAllOnePicks(@RequestHeader("Authorization") String token) {
+        Integer userId = authService.getUserIdFromToken(token);
+
 
         List<OnePick> allOnePicks = onePickService.getAllValidOnePicksByUserId(userId);
 
@@ -54,13 +54,11 @@ public class OnePickController {
 
     // 원픽 장소 등록
     @PostMapping
-//    public ResponseEntity<?> registerOnePick(@RequestHeader("Authorization") String token, @RequestBody OnePickDto onePickDto) {
-    public ResponseEntity<?> registerOnePick(@RequestBody OnePickDto onePickDto) {
+    public ResponseEntity<?> registerOnePick(@RequestHeader("Authorization") String token, @RequestBody OnePickDto onePickDto) {
         log.debug("[POST] /one-pick", onePickDto);
 
         // check if logged in
-//        Integer userId = authService.getUserIdFromToken(onePickDto.getToken());
-        Integer userId = 2;
+        Integer userId = authService.getUserIdFromToken(token);
 
         // register one pick
         try {
@@ -83,14 +81,11 @@ public class OnePickController {
 
     // 티켓 소비해서 원픽 뽑기
     @GetMapping("/random")
-//    public ResponseEntity<OnePickDto> getOnePick(@RequestHeader("Authorization") String token, @RequestParam(required = false) String category, @RequestParam(required = false) String location) {
-    public ResponseEntity<OnePickDto> getOnePick(@RequestParam(required = false) Integer category,
-            @RequestParam(required = false) Integer location) {
+    public ResponseEntity<OnePickDto> getOnePick(@RequestHeader("Authorization") String token, @RequestParam(required = false) String category, @RequestParam(required = false) String location) {
         log.debug("[GET] /one-pick/random", category, location);
 
         // check if logged in
-//        Integer userId = authService.getUserIdFromToken(token);
-        Integer userId = 3;
+        Integer userId = authService.getUserIdFromToken(token);
 
         // check if ticket exists
         Integer ticketCount = ticketService.countTicketsByUserId(userId);
@@ -114,10 +109,8 @@ public class OnePickController {
     }
 
     @GetMapping("/random-all")
-//    public ResponseEntity<List<DistributedOnePick>> getDistributedOnePick(@RequestHeader("Authorization") String token) {
-    public ResponseEntity<List<DistributedOnePickDto>> getDistributedOnePick() {
-//        Integer userId = authService.getUserIdFromToken(token);
-        Integer userId = 3;
+    public ResponseEntity<List<DistributedOnePickDto>> getDistributedOnePick(@RequestHeader("Authorization") String token) {
+        Integer userId = authService.getUserIdFromToken(token);
 
         List<DistributedOnePick> allRandoms = onePickService.getAllDistributedOnePick(userId);
         List<DistributedOnePickDto> response = new ArrayList<>();
@@ -129,13 +122,18 @@ public class OnePickController {
     }
 
     // 내가 뽑은 원픽 평가 점수 수정
-    @PutMapping("/rate")
-//    public ResponseEntity<?> rateOnePick(@RequestHeader("Authorization") String token, @RequestBody DistributedRateDto distributedRateDto) {
-    public ResponseEntity<?> rateOnePick(@RequestBody DistributedRateDto distributedRateDto) {
+    @PutMapping("/random")
+    public ResponseEntity<?> rateOnePick(@RequestHeader("Authorization") String token, @RequestBody DistributedRateDto distributedRateDto) {
         log.debug("[PUT] /one-pick/rate", distributedRateDto);
-        //        Integer userId = authService.getUserIdFromToken(token);
+        Integer userId = authService.getUserIdFromToken(token);
 
-        onePickService.rateDistributedOnePick(distributedRateDto.getDistributedId(), distributedRateDto.getRate());
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        try {
+            onePickService.rateDistributedOnePick(distributedRateDto);
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
+
     }
 }

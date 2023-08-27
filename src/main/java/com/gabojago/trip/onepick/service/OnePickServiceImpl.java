@@ -2,6 +2,7 @@ package com.gabojago.trip.onepick.service;
 
 import com.gabojago.trip.onepick.domain.DistributedOnePick;
 import com.gabojago.trip.onepick.domain.OnePick;
+import com.gabojago.trip.onepick.dto.DistributedRateDto;
 import com.gabojago.trip.onepick.repository.DistributedOnePickRepository;
 import com.gabojago.trip.onepick.repository.OnePickRepository;
 import com.gabojago.trip.user.domain.User;
@@ -114,10 +115,17 @@ public class OnePickServiceImpl implements OnePickService {
 
 
     // 내가 뽑은 원픽 장소 평가
-    public void rateDistributedOnePick(Integer distributedOnePickId, Double rate) {
+    public void rateDistributedOnePick(DistributedRateDto distributedRateDto) {
 
-        DistributedOnePick distributedOnePick = distributedOnePickRepository.findById(distributedOnePickId).get();
-        distributedOnePick.setRate(rate);
+        DistributedOnePick distributedOnePick = distributedOnePickRepository.findById(distributedRateDto.getDistributedId()).get();
+
+        if (distributedRateDto.getRate() != null) {
+            distributedOnePick.setRate(distributedRateDto.getRate());
+        }
+        if (distributedRateDto.getDescription() != null) {
+            distributedOnePick.setDescription(distributedRateDto.getDescription());
+        }
+
         distributedOnePickRepository.save(distributedOnePick);
 
     }
