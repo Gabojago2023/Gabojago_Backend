@@ -29,10 +29,8 @@ public class UserVisitController {
     }
 
     @PostMapping
-//    public ResponseEntity<?> addUserVisit(@RequestHeader("Authorization") String token) {
-    public ResponseEntity<?> addUserVisit() {
-//        Integer userId = authService.getUserIdFromToken(token);
-        Integer userId = 2;
+    public ResponseEntity<?> addUserVisit(@RequestHeader("Authorization") String token) {
+        Integer userId = authService.getUserIdFromToken(token);
 
         log.debug("[POST] /attendance " + userId);
         userVisitService.addUserVisit(userId);
