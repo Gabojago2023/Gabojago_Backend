@@ -73,15 +73,26 @@ public class OnePickController {
 
     // 나의 원픽 업데이트
     @PutMapping
-    public ResponseEntity<?> updateOnePick(@RequestBody OnePickDto onePickDto) {
+    public ResponseEntity<?> updateOnePick(@RequestHeader("Authorization") String token, @RequestBody OnePickDto onePickDto) {
         log.debug("[PUT] /one-pick", onePickDto);
 
-        return registerOnePick(onePickDto);
+        // check if logged in
+        Integer userId = authService.getUserIdFromToken(token);
+
+        // register one pick
+        try {
+            onePickService.addOnePick(OnePick.from(onePickDto, new User(userId)));
+            return new ResponseEntity<>(null, HttpStatus.CREATED);
+
+        } catch (Exception e) {
+            // non-existing place id
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     // 티켓 소비해서 원픽 뽑기
     @GetMapping("/random")
-    public ResponseEntity<OnePickDto> getOnePick(@RequestHeader("Authorization") String token, @RequestParam(required = false) String category, @RequestParam(required = false) String location) {
+    public ResponseEntity<OnePickDto> getOnePick(@RequestHeader("Authorization") String token, @RequestParam(required = false) Integer category, @RequestParam(required = false) Integer location) {
         log.debug("[GET] /one-pick/random", category, location);
 
         // check if logged in
