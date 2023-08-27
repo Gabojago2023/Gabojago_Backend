@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
 
-    @Query("SELECT new com.gabojago.trip.place.dto.response.CommentResponseDto(c.id, c.place.id, u.nickname, c.commentText, c.starRating, " +
+    @Query("SELECT new com.gabojago.trip.place.dto.response.CommentResponseDto(c.id, c.place.id, u.id, u.nickname, c.commentText, c.starRating, " +
             "CASE WHEN FUNCTION('date_format', c.createdDate, '%Y%m%d') = FUNCTION('date_format', CURRENT_TIMESTAMP, '%Y%m%d') " +
             "THEN FUNCTION('date_format', c.createdDate, '%H:%i:%s') " +
             "ELSE FUNCTION('date_format', c.createdDate, '%y.%m.%d') END) " +

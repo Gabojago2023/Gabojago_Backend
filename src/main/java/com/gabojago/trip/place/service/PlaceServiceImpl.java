@@ -4,6 +4,7 @@ import com.gabojago.trip.place.domain.Place;
 import com.gabojago.trip.place.domain.PlaceScrap;
 import com.gabojago.trip.place.dto.response.PlaceDetailResponseDto;
 import com.gabojago.trip.place.dto.response.PlaceResponseDto;
+import com.gabojago.trip.place.dto.response.RandomImageResponseDto;
 import com.gabojago.trip.place.exception.PlaceAlreadyExistsException;
 import com.gabojago.trip.place.exception.PlaceNotFoundException;
 import com.gabojago.trip.place.exception.PlaceScrapNotFoundException;
@@ -134,5 +135,11 @@ public class PlaceServiceImpl implements PlaceService {
             User user = new User(userId);
             placeScrapRepository.deleteByPlaceAndUser(place, user);
         }
+    }
+
+    @Override
+    public List<RandomImageResponseDto> getRandomImages() {
+        PageRequest pageRequest = PageRequest.of(0, 3);
+        return placeRepository.findRandomImages(pageRequest);
     }
 }
