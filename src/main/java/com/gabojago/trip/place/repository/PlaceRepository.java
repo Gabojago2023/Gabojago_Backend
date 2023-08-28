@@ -51,7 +51,6 @@ public interface PlaceRepository extends JpaRepository<Place, Integer> {
             + "LEFT JOIN Comment c ON p.id = c.place.id WHERE p.id = :placeId")
     Object[] findPlaceWithAvgRatingAndCommentCount(@Param("placeId") Integer placeId);
 
-    // @Query(value = "select img_url from place where img_url != '' order by rand() limit 3", nativeQuery = true)
     @Query(value = "SELECT new com.gabojago.trip.place.dto.response.RandomImageResponseDto(p.imgUrl) FROM Place p WHERE p.imgUrl <> '' ORDER BY FUNCTION('RAND')")
     List<RandomImageResponseDto> findRandomImages(Pageable pageable);
 }
