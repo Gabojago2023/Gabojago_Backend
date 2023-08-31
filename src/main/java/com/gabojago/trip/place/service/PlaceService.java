@@ -3,6 +3,7 @@ package com.gabojago.trip.place.service;
 import com.gabojago.trip.place.dto.response.PlaceDetailResponseDto;
 import com.gabojago.trip.place.dto.response.PlaceResponseDto;
 import com.gabojago.trip.place.dto.response.RandomImageResponseDto;
+import com.gabojago.trip.place.dto.response.SidoResponseDto;
 import java.util.List;
 
 public interface PlaceService {
@@ -26,4 +27,6 @@ public interface PlaceService {
     void removeScrapPlace(Integer placeId, Integer userId);
 
     List<RandomImageResponseDto> getRandomImages();
+
+    List<SidoResponseDto> getSidoList();
 }

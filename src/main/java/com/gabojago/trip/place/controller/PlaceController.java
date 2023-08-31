@@ -5,6 +5,7 @@ import com.gabojago.trip.place.dto.response.CommentResponseDto;
 import com.gabojago.trip.place.dto.response.PlaceDetailResponseDto;
 import com.gabojago.trip.place.dto.response.PlaceResponseDto;
 import com.gabojago.trip.place.dto.response.RandomImageResponseDto;
+import com.gabojago.trip.place.dto.response.SidoResponseDto;
 import com.gabojago.trip.place.service.CommentService;
 import com.gabojago.trip.place.service.PlaceService;
 import java.util.HashMap;
@@ -214,5 +215,11 @@ public class PlaceController {
         result.put("images", urls);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("sido-list")
+    public ResponseEntity<?> getSidoList() {
+        List<SidoResponseDto> sidoList = placeService.getSidoList();
+        return new ResponseEntity<>(sidoList, HttpStatus.OK);
     }
 }

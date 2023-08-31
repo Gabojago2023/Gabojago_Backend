@@ -5,15 +5,18 @@ import com.gabojago.trip.place.domain.PlaceScrap;
 import com.gabojago.trip.place.dto.response.PlaceDetailResponseDto;
 import com.gabojago.trip.place.dto.response.PlaceResponseDto;
 import com.gabojago.trip.place.dto.response.RandomImageResponseDto;
+import com.gabojago.trip.place.dto.response.SidoResponseDto;
 import com.gabojago.trip.place.exception.PlaceAlreadyExistsException;
 import com.gabojago.trip.place.exception.PlaceNotFoundException;
 import com.gabojago.trip.place.exception.PlaceScrapNotFoundException;
 import com.gabojago.trip.place.repository.PlaceRepository;
 import com.gabojago.trip.place.repository.PlaceScrapRepository;
+import com.gabojago.trip.place.repository.SidoRepository;
 import com.gabojago.trip.user.domain.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -24,12 +27,14 @@ public class PlaceServiceImpl implements PlaceService {
 
     private final PlaceRepository placeRepository;
     private final PlaceScrapRepository placeScrapRepository;
+    private final SidoRepository sidoRepository;
 
     @Autowired
     public PlaceServiceImpl(PlaceRepository placeRepository,
-            PlaceScrapRepository placeScrapRepository) {
+            PlaceScrapRepository placeScrapRepository, SidoRepository sidoRepository) {
         this.placeRepository = placeRepository;
         this.placeScrapRepository = placeScrapRepository;
+        this.sidoRepository = sidoRepository;
     }
 
     @Override
@@ -141,5 +146,12 @@ public class PlaceServiceImpl implements PlaceService {
     public List<RandomImageResponseDto> getRandomImages() {
         PageRequest pageRequest = PageRequest.of(0, 3);
         return placeRepository.findRandomImages(pageRequest);
+    }
+
+    @Override
+    public List<SidoResponseDto> getSidoList() {
+        return sidoRepository.findAll().stream()
+                .map(SidoResponseDto::new)
+                .collect(Collectors.toList());
     }
 }
