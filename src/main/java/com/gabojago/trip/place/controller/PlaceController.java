@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -86,8 +87,9 @@ public class PlaceController {
     }
 
     @GetMapping("/scrap")
-    public ResponseEntity<?> getBookmarkedPlacesByUserId(@RequestParam Integer pg,
-            @RequestParam Integer spp,
+    public ResponseEntity<?> getBookmarkedPlacesByUserId(
+            @RequestParam(required = false) Integer cursor,
+            @RequestParam Integer size,
             HttpServletRequest request) {
         // JWT토큰에서 파싱한 유저 id
         // 토큰 정보 없으면 필터 or 인터셉터 에서 401 반환
@@ -96,12 +98,18 @@ public class PlaceController {
         // 임의의 유저(테스트용)
         userId = 1;
 
-        Map<String, List> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
 
-        List<PlaceResponseDto> bookmarkedAttractionsByUserId = placeService.getBookmarkedAttractionsByUserId(
-                userId, pg, spp);
+        Slice<PlaceResponseDto> bookmarkedAttractionsByUserId = placeService.getBookmarkedAttractionsByUserId(
+                userId, cursor, size);
 
-        result.put("places", bookmarkedAttractionsByUserId);
+        Boolean hasNext = bookmarkedAttractionsByUserId.hasNext();
+
+        result.put("places", bookmarkedAttractionsByUserId.getContent());
+        result.put("hasNext", hasNext);
+        Integer nextCursor = hasNext ? bookmarkedAttractionsByUserId.getContent().get(size - 1).getPsId() : null;
+        result.put("nextCursor", nextCursor);
+
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

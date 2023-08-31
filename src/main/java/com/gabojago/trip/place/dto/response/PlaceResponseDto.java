@@ -21,13 +21,15 @@ public class PlaceResponseDto {
     private final Integer sidoCode;
     private final Integer gugunCode;
     private final String overview;
+
+    private final Integer psId;
     private final Integer isBookmarked;
 
     @Builder
     public PlaceResponseDto(Integer id, String name, BigDecimal longitude, BigDecimal latitude,
             String address, String category, String imgUrl, String imgUrl2, int sidoCode,
             int gugunCode,
-            String overview, int isBookmarked) {
+            String overview, int psId, int isBookmarked) {
         this.id = id;
         this.name = name;
         this.longitude = longitude;
@@ -39,6 +41,7 @@ public class PlaceResponseDto {
         this.sidoCode = sidoCode;
         this.gugunCode = gugunCode;
         this.overview = overview;
+        this.psId = psId;
         this.isBookmarked = isBookmarked;
     }
 
@@ -55,7 +58,8 @@ public class PlaceResponseDto {
                 .sidoCode((Integer) o[8])
                 .gugunCode((Integer) o[9])
                 .overview((String) o[10])
-                .isBookmarked((Integer) o[11])
+                .psId((Integer) o[11])
+                .isBookmarked((Integer) o[12])
                 .build();
     }
 
