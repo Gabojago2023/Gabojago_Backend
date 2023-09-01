@@ -1,14 +1,14 @@
 package com.gabojago.trip.place.service;
 
 import com.gabojago.trip.place.dto.response.CommentResponseDto;
-import java.util.List;
+import org.springframework.data.domain.Slice;
 
 public interface CommentService {
 
     void addCommentToPlace(Integer placeId, Integer userId, String commentText,
             Integer starRating);
 
-    List<CommentResponseDto> getCommentsByPlaceId(Integer placeId, Integer pg, Integer spp);
+    Slice<CommentResponseDto> getCommentsByPlaceId(Integer placeId, Integer cursor, Integer size);
 
     void updateComment(Integer userId, Integer placeId, Integer commentId, String newCommentText,
             Integer newStartRating);
