@@ -144,7 +144,20 @@ public class OnePickController {
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-
-
     }
+
+    // 내가 뽑은 원픽 좋아요
+    @PostMapping("/like")
+    public ResponseEntity<?> likeOnePick(@RequestHeader("Authorization") String token, @RequestParam("id") Integer distributedOnePickId) {
+        log.debug("[POST] /one-pick/like", distributedOnePickId);
+        Integer userId = authService.getUserIdFromToken(token);
+
+        try {
+            onePickService.likeDistributedOnePick(distributedOnePickId);
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }

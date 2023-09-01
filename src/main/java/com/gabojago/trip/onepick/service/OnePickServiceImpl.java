@@ -129,4 +129,13 @@ public class OnePickServiceImpl implements OnePickService {
         distributedOnePickRepository.save(distributedOnePick);
 
     }
+
+    // 내가 뽑은 원픽 좋아요 추가
+    public void likeDistributedOnePick(Integer distributedOnePickId) {
+        DistributedOnePick distributedOnePick = distributedOnePickRepository.findById(distributedOnePickId).get();
+        if (distributedOnePick.getLiked() == null)
+            distributedOnePick.setLiked(false);
+        distributedOnePick.setLiked(!distributedOnePick.getLiked());
+        distributedOnePickRepository.save(distributedOnePick);
+    }
 }
