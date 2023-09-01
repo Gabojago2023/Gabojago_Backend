@@ -6,6 +6,7 @@ import com.gabojago.trip.onepick.domain.OnePick;
 import com.gabojago.trip.onepick.dto.DistributedOnePickDto;
 import com.gabojago.trip.onepick.dto.DistributedRateDto;
 import com.gabojago.trip.onepick.dto.OnePickDto;
+import com.gabojago.trip.onepick.dto.RankedOnePickDto;
 import com.gabojago.trip.onepick.service.OnePickService;
 import com.gabojago.trip.ticket.domain.Ticket;
 import com.gabojago.trip.ticket.service.TicketService;
@@ -144,7 +145,31 @@ public class OnePickController {
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-
-
     }
+
+    // 내가 뽑은 원픽 좋아요
+    @PostMapping("/like")
+    public ResponseEntity<?> likeOnePick(@RequestHeader("Authorization") String token, @RequestParam("id") Integer distributedOnePickId) {
+        log.debug("[POST] /one-pick/like", distributedOnePickId);
+        Integer userId = authService.getUserIdFromToken(token);
+
+        try {
+            onePickService.likeDistributedOnePick(distributedOnePickId);
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    // 카테고리 별 좋아요를 가장 많이 받은 원픽 조회
+    @GetMapping("/rank")
+    public ResponseEntity<RankedOnePickDto> getRanking(@RequestParam("category") Integer category) {
+
+        RankedOnePickDto response = onePickService.getMostLikedOnePick(category);
+        if (response == null)
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 }

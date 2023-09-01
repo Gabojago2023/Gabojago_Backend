@@ -14,14 +14,16 @@ public class DistributedOnePickDto {
     private Timestamp createdAt;
     private OnePickDto onePickDto;
     private String description;
+    private Boolean liked;
 
     @Builder
-    public DistributedOnePickDto(Integer id, Double rate, Timestamp createdAt, OnePickDto onePickDto, String description) {
+    public DistributedOnePickDto(Integer id, Double rate, Timestamp createdAt, OnePickDto onePickDto, String description, Boolean liked) {
         this.id = id;
         this.rate = rate;
         this.createdAt = createdAt;
         this.onePickDto = onePickDto;
         this.description = description;
+        this.liked = liked;
     }
 
     public static DistributedOnePickDto from (DistributedOnePick distributedOnePick) {
@@ -31,6 +33,7 @@ public class DistributedOnePickDto {
                 .createdAt(distributedOnePick.getCreatedAt())
                 .onePickDto(OnePickDto.from(distributedOnePick.getOnePick()))
                 .description(distributedOnePick.getDescription())
+                .liked(distributedOnePick.getLiked())
                 .build();
     }
 }

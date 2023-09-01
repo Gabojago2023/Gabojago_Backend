@@ -3,6 +3,7 @@ package com.gabojago.trip.onepick.service;
 import com.gabojago.trip.onepick.domain.DistributedOnePick;
 import com.gabojago.trip.onepick.domain.OnePick;
 import com.gabojago.trip.onepick.dto.DistributedRateDto;
+import com.gabojago.trip.onepick.dto.RankedOnePickDto;
 import java.util.List;
 
 public interface OnePickService {
@@ -23,4 +24,8 @@ public interface OnePickService {
     // 내가 뽑은 원픽 장소 평가
     void rateDistributedOnePick(DistributedRateDto distributedRateDto);
 
+    // 내가 뽑은 원픽 좋아요 추가
+    void likeDistributedOnePick(Integer distributedOnePickId);
+
+    RankedOnePickDto getMostLikedOnePick(Integer category);
 }
