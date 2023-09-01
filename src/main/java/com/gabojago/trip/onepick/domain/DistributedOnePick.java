@@ -45,6 +45,8 @@ public class DistributedOnePick {
     @JoinColumn(name = "user_id")
     private User user;
 
+    private Integer category;
+
     private Boolean liked;
 
     @Builder
@@ -52,5 +54,6 @@ public class DistributedOnePick {
         this.rate = rate;
         this.onePick = onePick;
         this.user = user;
+        this.category = onePick.getCategory();
     }
 }
