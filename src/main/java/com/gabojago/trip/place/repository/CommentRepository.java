@@ -19,7 +19,7 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
             "FROM Comment c " +
             "INNER JOIN User u on c.user.id = u.id " +
             "WHERE c.place.id = :placeId " +
-            "ORDER BY c.createdDate DESC")
+            "ORDER BY c.id DESC")
     List<CommentResponseDto> findCommentsByPlaceId(@Param("placeId") Integer placeId,
             Pageable pageable);
 
@@ -33,7 +33,7 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
             "INNER JOIN User u on c.user.id = u.id " +
             "WHERE c.place.id = :placeId " +
             "AND c.id < :cursor " +
-            "ORDER BY c.createdDate DESC")
+            "ORDER BY c.id DESC")
     List<CommentResponseDto> findNextCommentsByPlaceId(@Param("placeId") Integer placeId,
             @Param("cursor") Integer cursor, Pageable pageable);
 }
