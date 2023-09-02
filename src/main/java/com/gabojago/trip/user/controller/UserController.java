@@ -116,7 +116,6 @@ public class UserController {
     public ResponseEntity<?> sendEmail(@RequestBody UserDto userDto) {
         MailDto mailDto = userService.createMailAndChangePassword(userDto.getEmail());
         log.debug("보낸 메일 정보: " + mailDto);
-        System.out.println(mailDto);
         userService.mailSend(mailDto);
         return new ResponseEntity<>("", HttpStatus.OK);
     }
