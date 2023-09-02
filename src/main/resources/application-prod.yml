@@ -12,6 +12,15 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
+  mail:
+    host: ${YNWOO_EMAIL_HOST}
+    port: 465
+    username: ${YNWOO_EMAIL_ADDRESS}
+    password: ${YNWOO_EMAIL_PASSWORD}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.ssl.enable: true
+      mail.smtp.ssl.trust: ${YNWOO_EMAIL_HOST}
 
 # jwt 설정
 custom:

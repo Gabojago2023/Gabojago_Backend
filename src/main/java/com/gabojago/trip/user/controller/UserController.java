@@ -5,6 +5,7 @@ import com.gabojago.trip.auth.exception.UserUnAuthorizedException;
 import com.gabojago.trip.auth.service.AuthService;
 import com.gabojago.trip.image.util.FileManageUtil;
 import com.gabojago.trip.user.domain.User;
+import com.gabojago.trip.user.dto.MailDto;
 import com.gabojago.trip.user.dto.NicknameDto;
 import com.gabojago.trip.user.dto.RandomNicknameDto;
 import com.gabojago.trip.user.dto.UserDto;
@@ -28,14 +29,16 @@ public class UserController {
 
     private UserService userService;
     private AuthService authService;
-    private  FileManageUtil fileManageUtil;
+    private FileManageUtil fileManageUtil;
 
 
-    public UserController(UserService userService, AuthService authService, FileManageUtil fileManageUtil) {
+    public UserController(UserService userService, AuthService authService,
+            FileManageUtil fileManageUtil) {
         this.userService = userService;
         this.authService = authService;
         this.fileManageUtil = fileManageUtil;
     }
+
     @Deprecated
     @PostMapping
     public ResponseEntity<?> add(@RequestBody UserDto userDto) {   //FOR Test
@@ -43,40 +46,46 @@ public class UserController {
         userService.addUser(userDto);
         return new ResponseEntity<>("", HttpStatus.OK);
     }
+
     @Deprecated
     @GetMapping
     public ResponseEntity<List<UserDto>> getAll() {  //FOR Test
         List<UserDto> userDtoList = userService.getAllUser();
         return new ResponseEntity<>(userDtoList, HttpStatus.OK);
     }
+
     @GetMapping("/nickname-random")
-    public ResponseEntity<RandomNicknameDto> randomNickname(){
+    public ResponseEntity<RandomNicknameDto> randomNickname() {
         RandomNicknameDto randomNickname = userService.getRandomNickname();
-        return new ResponseEntity<>(randomNickname,HttpStatus.OK);
+        return new ResponseEntity<>(randomNickname, HttpStatus.OK);
     }
 
     @GetMapping("/nickname-available")
-    public ResponseEntity<NicknameDto> isAvailable(@RequestHeader("Authorization") String token, @RequestBody String nickname){
+    public ResponseEntity<NicknameDto> isAvailable(@RequestHeader("Authorization") String token,
+            @RequestBody String nickname) {
         Integer userId = authService.getUserIdFromToken(token);
         NicknameDto nicknameDto = userService.isNicknameAvailable(userId, nickname);
         return new ResponseEntity<>(nicknameDto, HttpStatus.OK);
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserResDto> get(@RequestHeader("Authorization") String token, @PathVariable int userId) {
+    public ResponseEntity<UserResDto> get(@RequestHeader("Authorization") String token,
+            @PathVariable int userId) {
         Integer id = authService.getUserIdFromToken(token);
         User logined = userService.getUser(id);
         User user = userService.getUser(userId);
-        if(logined.getId()!=user.getId()) throw new UserUnAuthorizedException("볼 수 있는 권한이 없습니다");
+        if (logined.getId() != user.getId()) {
+            throw new UserUnAuthorizedException("볼 수 있는 권한이 없습니다");
+        }
         UserResDto userResDto = UserResDto.from(user);
         return new ResponseEntity<>(userResDto, HttpStatus.OK);
     }
 
     @PutMapping
     public ResponseEntity<?> modify(@RequestHeader("Authorization") String token,
-                                    @RequestPart(value = "file", required = false) MultipartFile multipartFile,
-                                    @RequestPart(value = "fileType", required = false) String fileType,
-                                    @RequestPart(value = "nickname", required = false) String nickname)
+            @RequestPart(value = "file", required = false) MultipartFile multipartFile,
+            @RequestPart(value = "fileType", required = false) String fileType,
+            @RequestPart(value = "nickname", required = false) String nickname)
             throws NicknameAlreadyExistException {
 //        log.debug("[PUT] /user : file " + multipartFile.getOriginalFilename());
         log.debug("[PUT] /user : fileType " + fileType);
@@ -100,6 +109,15 @@ public class UserController {
     @DeleteMapping("/{userId}")
     public ResponseEntity<?> delete(@PathVariable int userId) {
         userService.delete(userId);
+        return new ResponseEntity<>("", HttpStatus.OK);
+    }
+
+    @PutMapping("/find-password")
+    public ResponseEntity<?> sendEmail(@RequestBody UserDto userDto) {
+        MailDto mailDto = userService.createMailAndChangePassword(userDto.getEmail());
+        log.debug("보낸 메일 정보: " + mailDto);
+        System.out.println(mailDto);
+        userService.mailSend(mailDto);
         return new ResponseEntity<>("", HttpStatus.OK);
     }
 }
