@@ -3,9 +3,11 @@ package com.gabojago.trip.user.dto;
 import com.gabojago.trip.user.domain.User;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter@Setter
+@NoArgsConstructor
 public class UserDto {
     private String nickname;
     private String email;
