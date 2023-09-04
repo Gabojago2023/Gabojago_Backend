@@ -9,9 +9,10 @@ import org.springframework.data.domain.Slice;
 
 public interface PlaceService {
 
-    List<PlaceResponseDto> searchAttractionByKeyword(Integer userId, Integer sidoCode,
+    Slice<PlaceResponseDto> searchAttractionByKeyword(Integer userId, Integer sidoCode,
             Integer gugunCode,
-            String keyword, Integer pg, Integer spp);
+            String keyword, Integer cursor,
+            Integer size);
 
     List<PlaceResponseDto> searchTop3ScrappedPlaces(Integer top);
 

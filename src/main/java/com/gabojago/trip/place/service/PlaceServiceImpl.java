@@ -42,18 +42,41 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public List<PlaceResponseDto> searchAttractionByKeyword(Integer userId, Integer sidoCode,
-            Integer gugunCode, String keyword, Integer pg, Integer spp) {
-        PageRequest pageRequest = PageRequest.of(pg - 1, spp);
+    public Slice<PlaceResponseDto> searchAttractionByKeyword(Integer userId, Integer sidoCode,
+            Integer gugunCode, String keyword, Integer cursor,
+            Integer size) {
+        Pageable pageable = Pageable.ofSize(size + 1);
 
         List<PlaceResponseDto> placeResponseDtoList = new ArrayList<>();
-        List<Object[]> placesByFilter = placeRepository.findPlacesByFilter(userId, sidoCode,
-                gugunCode, keyword, pageRequest);
-        for (Object[] o : placesByFilter) {
-            PlaceResponseDto from = PlaceResponseDto.from(o);
-            placeResponseDtoList.add(from);
+
+        if (cursor == null) {
+            List<Object[]> result = placeRepository.findPlacesByFilter(userId, sidoCode,
+                    gugunCode, keyword, pageable);
+            for (Object[] o : result) {
+                PlaceResponseDto from = PlaceResponseDto.from2(o);
+                placeResponseDtoList.add(from);
+            }
+            pageable = Pageable.ofSize(size);
+            return checkLastPage2(pageable, placeResponseDtoList);
+        } else {
+            List<Object[]> result = placeRepository.findNextPlacesByFilter(userId, sidoCode,
+                    gugunCode, keyword, cursor,
+                    pageable);
+            for (Object[] o : result) {
+                PlaceResponseDto from = PlaceResponseDto.from2(o);
+                placeResponseDtoList.add(from);
+            }
+            pageable = Pageable.ofSize(size);
+            return checkLastPage2(pageable, placeResponseDtoList);
         }
-        return placeResponseDtoList;
+
+//        List<Object[]> placesByFilter = placeRepository.findPlacesByFilter(userId, sidoCode,
+//                gugunCode, keyword, pageRequest);
+//        for (Object[] o : placesByFilter) {
+//            PlaceResponseDto from = PlaceResponseDto.from(o);
+//            placeResponseDtoList.add(from);
+//        }
+//        return placeResponseDtoList;
     }
 
     @Override
@@ -82,7 +105,8 @@ public class PlaceServiceImpl implements PlaceService {
         List<PlaceResponseDto> placeResponseDtoList = new ArrayList<>();
 
         if (cursor == null) {
-            List<Object[]> result = placeRepository.findPlacesByLocation(location, userId, pageable);
+            List<Object[]> result = placeRepository.findPlacesByLocation(location, userId,
+                    pageable);
             for (Object[] o : result) {
                 PlaceResponseDto from = PlaceResponseDto.from2(o);
                 placeResponseDtoList.add(from);
@@ -90,7 +114,8 @@ public class PlaceServiceImpl implements PlaceService {
             pageable = Pageable.ofSize(size);
             return checkLastPage2(pageable, placeResponseDtoList);
         } else {
-            List<Object[]> result = placeRepository.findNextPlacesByLocation(location, userId, cursor,
+            List<Object[]> result = placeRepository.findNextPlacesByLocation(location, userId,
+                    cursor,
                     pageable);
             for (Object[] o : result) {
                 PlaceResponseDto from = PlaceResponseDto.from2(o);
@@ -135,6 +160,7 @@ public class PlaceServiceImpl implements PlaceService {
             return checkLastPage2(pageable, placeResponseDtoList);
         }
     }
+
     private Slice<PlaceResponseDto> checkLastPage2(Pageable pageable,
             List<PlaceResponseDto> placeList) {
         boolean hasNext = false; //다음으로 가져올 데이터가 있는 지 여부를 알려줌

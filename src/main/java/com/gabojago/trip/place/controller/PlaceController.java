@@ -51,15 +51,25 @@ public class PlaceController {
     @GetMapping("/keyword")
     public ResponseEntity<?> getPlaceSearchedByKeyword(@RequestParam("sido-code") Integer sidoCode,
             @RequestParam("gugun-code") Integer gugunCode, @RequestParam String keyword,
-            @RequestParam Integer pg, @RequestParam Integer spp) {
+            @RequestParam(required = false) Integer cursor,
+            @RequestParam Integer size) {
         // 북마크 여부 상관없이
         // refactoring 1순위
         Integer userId = 0;
 
-        Map<String, List> result = new HashMap<>();
-        List<PlaceResponseDto> list = placeService.searchAttractionByKeyword(userId, sidoCode,
-                gugunCode, keyword, pg, spp);
-        result.put("places", list);
+        Map<String, Object> result = new HashMap<>();
+
+        Slice<PlaceResponseDto> list = placeService.searchAttractionByKeyword(userId, sidoCode,
+                gugunCode, keyword, cursor, size);
+
+        Boolean hasNext = list.hasNext();
+
+        result.put("places", list.getContent());
+        result.put("hasNext", hasNext);
+        Integer nextCursor =
+                hasNext ? list.getContent().get(size - 1).getId() : null;
+        result.put("nextCursor", nextCursor);
+
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -83,7 +93,8 @@ public class PlaceController {
 
         Map<String, Object> result = new HashMap<>();
 
-        Slice<PlaceResponseDto> placeResponseDtos = placeService.searchAttractionByLocation(userId, location, cursor, size);
+        Slice<PlaceResponseDto> placeResponseDtos = placeService.searchAttractionByLocation(userId,
+                location, cursor, size);
 
         Boolean hasNext = placeResponseDtos.hasNext();
 
