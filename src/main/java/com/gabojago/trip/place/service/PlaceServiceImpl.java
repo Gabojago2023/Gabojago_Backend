@@ -3,6 +3,7 @@ package com.gabojago.trip.place.service;
 import com.gabojago.trip.place.domain.Place;
 import com.gabojago.trip.place.domain.PlaceScrap;
 import com.gabojago.trip.place.dto.response.CommentResponseDto;
+import com.gabojago.trip.place.dto.response.GugunResponseDto;
 import com.gabojago.trip.place.dto.response.PlaceDetailResponseDto;
 import com.gabojago.trip.place.dto.response.PlaceResponseDto;
 import com.gabojago.trip.place.dto.response.RandomImageResponseDto;
@@ -10,6 +11,7 @@ import com.gabojago.trip.place.dto.response.SidoResponseDto;
 import com.gabojago.trip.place.exception.PlaceAlreadyExistsException;
 import com.gabojago.trip.place.exception.PlaceNotFoundException;
 import com.gabojago.trip.place.exception.PlaceScrapNotFoundException;
+import com.gabojago.trip.place.repository.GugunRepository;
 import com.gabojago.trip.place.repository.PlaceRepository;
 import com.gabojago.trip.place.repository.PlaceScrapRepository;
 import com.gabojago.trip.place.repository.SidoRepository;
@@ -32,13 +34,16 @@ public class PlaceServiceImpl implements PlaceService {
     private final PlaceRepository placeRepository;
     private final PlaceScrapRepository placeScrapRepository;
     private final SidoRepository sidoRepository;
+    private final GugunRepository gugunRepository;
 
     @Autowired
     public PlaceServiceImpl(PlaceRepository placeRepository,
-            PlaceScrapRepository placeScrapRepository, SidoRepository sidoRepository) {
+            PlaceScrapRepository placeScrapRepository, SidoRepository sidoRepository,
+            GugunRepository gugunRepository) {
         this.placeRepository = placeRepository;
         this.placeScrapRepository = placeScrapRepository;
         this.sidoRepository = sidoRepository;
+        this.gugunRepository = gugunRepository;
     }
 
     @Override
@@ -238,5 +243,18 @@ public class PlaceServiceImpl implements PlaceService {
         return sidoRepository.findAll().stream()
                 .map(SidoResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<GugunResponseDto> getGugunInSido(Integer sidoId) {
+        List<GugunResponseDto> gugunResponseDtos = new ArrayList<>();
+
+        List<Object[]> gugunByIdSidoOrderById = gugunRepository.findGugunByIdSidoOrderById(sidoId);
+        for(Object[] o : gugunByIdSidoOrderById) {
+            GugunResponseDto gugunResponseDto = new GugunResponseDto((Integer) o[0], (String) o[1]);
+            gugunResponseDtos.add(gugunResponseDto);
+        }
+
+        return gugunResponseDtos;
     }
 }

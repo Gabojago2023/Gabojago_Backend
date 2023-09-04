@@ -1,5 +1,6 @@
 package com.gabojago.trip.place.service;
 
+import com.gabojago.trip.place.dto.response.GugunResponseDto;
 import com.gabojago.trip.place.dto.response.PlaceDetailResponseDto;
 import com.gabojago.trip.place.dto.response.PlaceResponseDto;
 import com.gabojago.trip.place.dto.response.RandomImageResponseDto;
@@ -32,4 +33,6 @@ public interface PlaceService {
     List<RandomImageResponseDto> getRandomImages();
 
     List<SidoResponseDto> getSidoList();
+
+    List<GugunResponseDto> getGugunInSido(Integer sidoId);
 }
