@@ -22,9 +22,21 @@ public interface PlaceRepository extends JpaRepository<Place, Integer> {
             + "FROM Place p "
             + "LEFT JOIN PlaceScrap ps ON p.id = ps.place.id AND ps.user.id = :userId "
             + "WHERE p.address LIKE CONCAT('%', :location, '%') "
-            + "ORDER BY CASE WHEN ps.user.id IS NOT NULL THEN 1 ELSE 0 END DESC, p.id")
+            + "ORDER BY p.id")
+//            + "ORDER BY CASE WHEN ps.user.id IS NOT NULL THEN 1 ELSE 0 END DESC, p.id")
     List<Object[]> findPlacesByLocation(@Param("location") String location,
             @Param("userId") Integer userId, Pageable pageable);
+
+    @Query("SELECT p.id, p.name, p.longitude, p.latitude, p.address, p.category, p.imgUrl, p.imgUrl2, p.sido.sidoCode, p.gugun.gugunCode, p.overview, "
+            + "CASE WHEN ps.user.id IS NOT NULL THEN 1 ELSE 0 END AS isBookmarked "
+            + "FROM Place p "
+            + "LEFT JOIN PlaceScrap ps ON p.id = ps.place.id AND ps.user.id = :userId "
+            + "WHERE p.address LIKE CONCAT('%', :location, '%') "
+            + "AND p.id > :cursor "
+            + "ORDER BY p.id")
+//            + "ORDER BY CASE WHEN ps.user.id IS NOT NULL THEN 1 ELSE 0 END DESC, p.id")
+    List<Object[]> findNextPlacesByLocation(@Param("location") String location,
+            @Param("userId") Integer userId, @Param("cursor") Integer cursor, Pageable pageable);
 
     @Query("SELECT p.id, p.name, p.longitude, p.latitude, p.address, p.category, p.imgUrl, p.imgUrl2, p.sido.sidoCode, p.gugun.gugunCode, p.overview, "
             + "CASE WHEN ps.user.id IS NOT NULL THEN 1 ELSE 0 END AS isBookmarked "
@@ -36,6 +48,18 @@ public interface PlaceRepository extends JpaRepository<Place, Integer> {
     List<Object[]> findPlacesByFilter(@Param("userId") Integer userId,
             @Param("sidoCode") Integer sidoCode, @Param("gugunCode") Integer gugunCode,
             @Param("keyword") String keyword, Pageable pageable);
+
+    @Query("SELECT p.id, p.name, p.longitude, p.latitude, p.address, p.category, p.imgUrl, p.imgUrl2, p.sido.sidoCode, p.gugun.gugunCode, p.overview, "
+            + "CASE WHEN ps.user.id IS NOT NULL THEN 1 ELSE 0 END AS isBookmarked "
+            + "FROM Place p "
+            + "LEFT JOIN PlaceScrap ps ON p.id = ps.place.id AND ps.user.id = :userId "
+            + "WHERE p.sido.sidoCode = :sidoCode " + "AND p.gugun.gugunCode = :gugunCode "
+            + "AND p.name LIKE CONCAT('%', :keyword, '%') "
+            + "AND p.id > :cursor "
+            + "ORDER BY p.id")
+    List<Object[]> findNextPlacesByFilter(@Param("userId") Integer userId,
+            @Param("sidoCode") Integer sidoCode, @Param("gugunCode") Integer gugunCode,
+            @Param("keyword") String keyword, @Param("cursor") Integer cursor, Pageable pageable);
 
     @Query("SELECT p.id, p.name, p.longitude, p.latitude, p.address, p.category, p.imgUrl, p.imgUrl2, p.sido.sidoCode, p.gugun.gugunCode, p.overview, ps.id, "
             + "CASE WHEN ps.user.id IS NOT NULL THEN 1 ELSE 0 END AS isBookmarked "

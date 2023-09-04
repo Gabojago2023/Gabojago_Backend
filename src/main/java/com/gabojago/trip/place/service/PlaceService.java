@@ -9,14 +9,16 @@ import org.springframework.data.domain.Slice;
 
 public interface PlaceService {
 
-    List<PlaceResponseDto> searchAttractionByKeyword(Integer userId, Integer sidoCode,
+    Slice<PlaceResponseDto> searchAttractionByKeyword(Integer userId, Integer sidoCode,
             Integer gugunCode,
-            String keyword, Integer pg, Integer spp);
+            String keyword, Integer cursor,
+            Integer size);
 
     List<PlaceResponseDto> searchTop3ScrappedPlaces(Integer top);
 
-    List<PlaceResponseDto> searchAttractionByLocation(Integer userId, String location, Integer pg,
-            Integer spp);
+    Slice<PlaceResponseDto> searchAttractionByLocation(Integer userId, String location,
+            Integer cursor,
+            Integer size);
 
     Slice<PlaceResponseDto> getBookmarkedAttractionsByUserId(Integer userId, Integer cursor,
             Integer size);
@@ -24,7 +26,7 @@ public interface PlaceService {
     PlaceDetailResponseDto getPlaceDetailByPlaceId(Integer placeId);
 
     void addScrapPlace(Integer placeId, Integer userId);
-    
+
     void removeScrapPlace(Integer placeId, Integer userId);
 
     List<RandomImageResponseDto> getRandomImages();
