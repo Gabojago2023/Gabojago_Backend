@@ -2,6 +2,7 @@ package com.gabojago.trip.place.service;
 
 import com.gabojago.trip.place.domain.Place;
 import com.gabojago.trip.place.domain.PlaceScrap;
+import com.gabojago.trip.place.dto.response.CommentResponseDto;
 import com.gabojago.trip.place.dto.response.PlaceDetailResponseDto;
 import com.gabojago.trip.place.dto.response.PlaceResponseDto;
 import com.gabojago.trip.place.dto.response.RandomImageResponseDto;
@@ -19,6 +20,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -85,17 +89,51 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public List<PlaceResponseDto> getBookmarkedAttractionsByUserId(Integer userId, Integer pg,
-            Integer spp) {
-        PageRequest pageRequest = PageRequest.of(pg - 1, spp);
+    public Slice<PlaceResponseDto> getBookmarkedAttractionsByUserId(Integer userId, Integer cursor,
+            Integer size) {
+        Pageable pageable = Pageable.ofSize(size + 1);
 
         List<PlaceResponseDto> placeResponseDtoList = new ArrayList<>();
-        List<Object[]> result = placeRepository.findBookmarkedPlacesByUserId(userId, pageRequest);
-        for (Object[] o : result) {
-            PlaceResponseDto from = PlaceResponseDto.from(o);
-            placeResponseDtoList.add(from);
+
+        if (cursor == null) {
+            List<Object[]> result = placeRepository.findBookmarkedPlacesByUserId(userId, pageable);
+            for (Object[] o : result) {
+                PlaceResponseDto from = PlaceResponseDto.from(o);
+                placeResponseDtoList.add(from);
+            }
+            pageable = Pageable.ofSize(size);
+            return checkLastPage2(pageable, placeResponseDtoList);
+        } else {
+            List<Object[]> result = placeRepository.findNextBookmarkedPlacesByUserId(userId, cursor,
+                    pageable);
+            for (Object[] o : result) {
+                PlaceResponseDto from = PlaceResponseDto.from(o);
+                placeResponseDtoList.add(from);
+            }
+            pageable = Pageable.ofSize(size);
+            return checkLastPage2(pageable, placeResponseDtoList);
         }
-        return placeResponseDtoList;
+    }
+    private Slice<PlaceResponseDto> checkLastPage2(Pageable pageable,
+            List<PlaceResponseDto> placeList) {
+        boolean hasNext = false; //다음으로 가져올 데이터가 있는 지 여부를 알려줌
+        if (placeList.size() > pageable.getPageSize()) {
+            hasNext = true; //읽어 올 데이터가 있다면 true를 반환
+            placeList.remove(pageable.getPageSize());
+        }
+
+        return new SliceImpl<>(placeList, pageable, hasNext);
+    }
+
+    private Slice<CommentResponseDto> checkLastPage(Pageable pageable,
+            List<CommentResponseDto> commentList) {
+        boolean hasNext = false; //다음으로 가져올 데이터가 있는 지 여부를 알려줌
+        if (commentList.size() > pageable.getPageSize()) {
+            hasNext = true; //읽어 올 데이터가 있다면 true를 반환
+            commentList.remove(pageable.getPageSize());
+        }
+
+        return new SliceImpl<>(commentList, pageable, hasNext);
     }
 
     @Override

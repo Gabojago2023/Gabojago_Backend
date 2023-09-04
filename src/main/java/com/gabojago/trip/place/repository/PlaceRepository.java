@@ -37,11 +37,21 @@ public interface PlaceRepository extends JpaRepository<Place, Integer> {
             @Param("sidoCode") Integer sidoCode, @Param("gugunCode") Integer gugunCode,
             @Param("keyword") String keyword, Pageable pageable);
 
-    @Query("SELECT p.id, p.name, p.longitude, p.latitude, p.address, p.category, p.imgUrl, p.imgUrl2, p.sido.sidoCode, p.gugun.gugunCode, p.overview, "
+    @Query("SELECT p.id, p.name, p.longitude, p.latitude, p.address, p.category, p.imgUrl, p.imgUrl2, p.sido.sidoCode, p.gugun.gugunCode, p.overview, ps.id, "
             + "CASE WHEN ps.user.id IS NOT NULL THEN 1 ELSE 0 END AS isBookmarked "
             + "FROM Place p " + "JOIN PlaceScrap ps ON p.id = ps.place.id "
-            + "WHERE ps.user.id = :userId")
+            + "WHERE ps.user.id = :userId "
+            + "ORDER BY ps.id DESC")
     List<Object[]> findBookmarkedPlacesByUserId(@Param("userId") Integer userId, Pageable pageable);
+
+    @Query("SELECT p.id, p.name, p.longitude, p.latitude, p.address, p.category, p.imgUrl, p.imgUrl2, p.sido.sidoCode, p.gugun.gugunCode, p.overview, ps.id, "
+            + "CASE WHEN ps.user.id IS NOT NULL THEN 1 ELSE 0 END AS isBookmarked "
+            + "FROM Place p " + "JOIN PlaceScrap ps ON p.id = ps.place.id "
+            + "WHERE ps.user.id = :userId "
+            + "AND ps.id < :cursor "
+            + "ORDER BY ps.id DESC")
+    List<Object[]> findNextBookmarkedPlacesByUserId(@Param("userId") Integer userId,
+            @Param("cursor") Integer cursor, Pageable pageable);
 
     @Query("SELECT p.id, p.name, p.longitude, p.latitude, p.address, p.category, p.imgUrl, p.imgUrl2, "
             + "p.sido.sidoCode, p.gugun.gugunCode, p.overview, "

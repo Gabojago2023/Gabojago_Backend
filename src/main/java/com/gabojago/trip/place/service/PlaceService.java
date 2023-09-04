@@ -5,6 +5,7 @@ import com.gabojago.trip.place.dto.response.PlaceResponseDto;
 import com.gabojago.trip.place.dto.response.RandomImageResponseDto;
 import com.gabojago.trip.place.dto.response.SidoResponseDto;
 import java.util.List;
+import org.springframework.data.domain.Slice;
 
 public interface PlaceService {
 
@@ -17,8 +18,8 @@ public interface PlaceService {
     List<PlaceResponseDto> searchAttractionByLocation(Integer userId, String location, Integer pg,
             Integer spp);
 
-    List<PlaceResponseDto> getBookmarkedAttractionsByUserId(Integer userId, Integer pg,
-            Integer spp);
+    Slice<PlaceResponseDto> getBookmarkedAttractionsByUserId(Integer userId, Integer cursor,
+            Integer size);
 
     PlaceDetailResponseDto getPlaceDetailByPlaceId(Integer placeId);
 
