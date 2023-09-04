@@ -2,6 +2,7 @@ package com.gabojago.trip.place.controller;
 
 import com.gabojago.trip.place.dto.request.CommentWithRatingDto;
 import com.gabojago.trip.place.dto.response.CommentResponseDto;
+import com.gabojago.trip.place.dto.response.GugunResponseDto;
 import com.gabojago.trip.place.dto.response.PlaceDetailResponseDto;
 import com.gabojago.trip.place.dto.response.PlaceResponseDto;
 import com.gabojago.trip.place.dto.response.RandomImageResponseDto;
@@ -47,7 +48,10 @@ public class PlaceController {
 //
 //        return new ResponseEntity<>("", HttpStatus.OK);
 //    }
-
+    @GetMapping("/gugun/{sidoId}")
+    public ResponseEntity<List<GugunResponseDto>> gugun(@PathVariable Integer sidoId) {
+        return new ResponseEntity<>(placeService.getGugunInSido(sidoId), HttpStatus.OK);
+    }
     @GetMapping("/keyword")
     public ResponseEntity<?> getPlaceSearchedByKeyword(@RequestParam("sido-code") Integer sidoCode,
             @RequestParam("gugun-code") Integer gugunCode, @RequestParam String keyword,
