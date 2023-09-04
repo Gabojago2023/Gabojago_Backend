@@ -74,18 +74,39 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public List<PlaceResponseDto> searchAttractionByLocation(Integer userId, String location,
-            Integer pg, Integer spp) {
-        PageRequest pageRequest = PageRequest.of(pg - 1, spp);
+    public Slice<PlaceResponseDto> searchAttractionByLocation(Integer userId, String location,
+            Integer cursor,
+            Integer size) {
+        Pageable pageable = Pageable.ofSize(size + 1);
 
         List<PlaceResponseDto> placeResponseDtoList = new ArrayList<>();
-        List<Object[]> result = placeRepository.findPlacesByLocation(location, userId, pageRequest);
-        for (Object[] o : result) {
-            PlaceResponseDto from = PlaceResponseDto.from(o);
-            placeResponseDtoList.add(from);
+
+        if (cursor == null) {
+            List<Object[]> result = placeRepository.findPlacesByLocation(location, userId, pageable);
+            for (Object[] o : result) {
+                PlaceResponseDto from = PlaceResponseDto.from2(o);
+                placeResponseDtoList.add(from);
+            }
+            pageable = Pageable.ofSize(size);
+            return checkLastPage2(pageable, placeResponseDtoList);
+        } else {
+            List<Object[]> result = placeRepository.findNextPlacesByLocation(location, userId, cursor,
+                    pageable);
+            for (Object[] o : result) {
+                PlaceResponseDto from = PlaceResponseDto.from2(o);
+                placeResponseDtoList.add(from);
+            }
+            pageable = Pageable.ofSize(size);
+            return checkLastPage2(pageable, placeResponseDtoList);
         }
 
-        return placeResponseDtoList;
+//        List<Object[]> result = placeRepository.findPlacesByLocation(location, userId, pageRequest);
+//        for (Object[] o : result) {
+//            PlaceResponseDto from = PlaceResponseDto.from(o);
+//            placeResponseDtoList.add(from);
+//        }
+//
+//        return placeResponseDtoList;
     }
 
     @Override

@@ -63,6 +63,24 @@ public class PlaceResponseDto {
                 .build();
     }
 
+    public static PlaceResponseDto from2(Object[] o) {
+        return PlaceResponseDto.builder()
+                .id((Integer) o[0])
+                .name((String) o[1])
+                .longitude((BigDecimal) o[2])
+                .latitude((BigDecimal) o[3])
+                .address((String) o[4])
+                .category((String) o[5])
+                .imgUrl((String) o[6])
+                .imgUrl2((String) o[7])
+                .sidoCode((Integer) o[8])
+                .gugunCode((Integer) o[9])
+                .overview((String) o[10])
+//                .psId((Integer) o[11])
+                .isBookmarked((Integer) o[11])
+                .build();
+    }
+
     public static PlaceResponseDto from(Place place) {
         return PlaceResponseDto.builder()
                 .id(place.getId())

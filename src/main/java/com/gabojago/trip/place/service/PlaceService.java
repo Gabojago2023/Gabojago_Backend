@@ -15,8 +15,9 @@ public interface PlaceService {
 
     List<PlaceResponseDto> searchTop3ScrappedPlaces(Integer top);
 
-    List<PlaceResponseDto> searchAttractionByLocation(Integer userId, String location, Integer pg,
-            Integer spp);
+    Slice<PlaceResponseDto> searchAttractionByLocation(Integer userId, String location,
+            Integer cursor,
+            Integer size);
 
     Slice<PlaceResponseDto> getBookmarkedAttractionsByUserId(Integer userId, Integer cursor,
             Integer size);
@@ -24,7 +25,7 @@ public interface PlaceService {
     PlaceDetailResponseDto getPlaceDetailByPlaceId(Integer placeId);
 
     void addScrapPlace(Integer placeId, Integer userId);
-    
+
     void removeScrapPlace(Integer placeId, Integer userId);
 
     List<RandomImageResponseDto> getRandomImages();

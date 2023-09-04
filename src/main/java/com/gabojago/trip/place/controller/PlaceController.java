@@ -75,16 +75,24 @@ public class PlaceController {
 
     @GetMapping
     public ResponseEntity<?> getPlaceSearchedByLocation(@RequestParam("location") String location,
-            @RequestParam Integer pg, @RequestParam Integer spp) {
+            @RequestParam(required = false) Integer cursor,
+            @RequestParam Integer size) {
         // 북마크 여부 상관없이
         // refactoring 1순위
         Integer userId = 0;
 
-        Map<String, List> result = new HashMap<>();
-        List<PlaceResponseDto> placeResponseDtoList = placeService.searchAttractionByLocation(
-                userId, location, pg, spp);
+        Map<String, Object> result = new HashMap<>();
 
-        result.put("places", placeResponseDtoList);
+        Slice<PlaceResponseDto> placeResponseDtos = placeService.searchAttractionByLocation(userId, location, cursor, size);
+
+        Boolean hasNext = placeResponseDtos.hasNext();
+
+        result.put("places", placeResponseDtos.getContent());
+        result.put("hasNext", hasNext);
+        Integer nextCursor =
+                hasNext ? placeResponseDtos.getContent().get(size - 1).getId() : null;
+        result.put("nextCursor", nextCursor);
+
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -109,7 +117,8 @@ public class PlaceController {
 
         result.put("places", bookmarkedAttractionsByUserId.getContent());
         result.put("hasNext", hasNext);
-        Integer nextCursor = hasNext ? bookmarkedAttractionsByUserId.getContent().get(size - 1).getPsId() : null;
+        Integer nextCursor =
+                hasNext ? bookmarkedAttractionsByUserId.getContent().get(size - 1).getPsId() : null;
         result.put("nextCursor", nextCursor);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
