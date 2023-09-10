@@ -8,13 +8,15 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserResDto {
+    private Integer id;
     private String name;
     private String nickname;
     private String email;
     private String image;
 
     @Builder
-    public UserResDto(String name, String nickname, String email, String image) {
+    public UserResDto(Integer id, String name, String nickname, String email, String image) {
+        this.id = id;
         this.name = name;
         this.nickname = nickname;
         this.email = email;
@@ -23,6 +25,7 @@ public class UserResDto {
 
     public static UserResDto from(User user) {
         return UserResDto.builder()
+                .id(user.getId())
             .name(user.getName())
             .nickname(user.getNickname())
             .email(user.getEmail())
