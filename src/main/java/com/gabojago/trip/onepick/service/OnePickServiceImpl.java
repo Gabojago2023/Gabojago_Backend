@@ -8,6 +8,7 @@ import com.gabojago.trip.onepick.dto.RankedOnePickDto;
 import com.gabojago.trip.onepick.repository.DistributedOnePickRepository;
 import com.gabojago.trip.onepick.repository.OnePickRepository;
 import com.gabojago.trip.user.domain.User;
+import com.gabojago.trip.user.service.UserService;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -26,10 +27,12 @@ public class OnePickServiceImpl implements OnePickService {
 
     private final OnePickRepository onePickRepository;
     private final DistributedOnePickRepository distributedOnePickRepository;
+    private final UserService userService;
 
-    public OnePickServiceImpl(OnePickRepository onePickRepository, DistributedOnePickRepository distributedOnePickRepository) {
+    public OnePickServiceImpl(OnePickRepository onePickRepository, DistributedOnePickRepository distributedOnePickRepository, UserService userService) {
         this.onePickRepository = onePickRepository;
         this.distributedOnePickRepository = distributedOnePickRepository;
+        this.userService = userService;
     }
 
     // 나의 모든 원픽 중 가장 최근 것만 조회
@@ -171,9 +174,11 @@ public class OnePickServiceImpl implements OnePickService {
 
         OnePick mostLikedOnePick = onePickRepository.findById(mostLikedPostId).get();
         OnePickDto onePickDto = OnePickDto.from(mostLikedOnePick);
-
+        Integer userId = mostLikedOnePick.getUser().getId();
+        User user = userService.getUser(userId);
         return  RankedOnePickDto.builder()
-                .userId(mostLikedOnePick.getUser().getId())
+                .userId(userId)
+                .userProfileImage(user.getImage())
                 .onePickDto(onePickDto)
                 .likedCount(mostLikedPostLikes)
                 .build();
