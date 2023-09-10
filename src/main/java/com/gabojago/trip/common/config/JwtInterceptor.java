@@ -24,7 +24,7 @@ public class JwtInterceptor implements HandlerInterceptor {
             Object handler)
             throws Exception {
         final String token = request.getHeader(HEADER_AUTH);
-
+        log.debug("유저 토큰:" + token);
         if (token != null && jwtUtil.validateToken(token)) {
             log.info("토큰 사용 가능 : {}", token);
             // @은정

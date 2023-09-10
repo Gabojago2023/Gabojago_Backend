@@ -119,9 +119,9 @@ public class PlaceController {
         // JWT토큰에서 파싱한 유저 id
         // 토큰 정보 없으면 필터 or 인터셉터 에서 401 반환
         Integer userId = (Integer) request.getAttribute("userId");
-
+        log.debug("유저 id :" + userId);
         // 임의의 유저(테스트용)
-        userId = 1;
+        // userId = 1;
 
         Map<String, Object> result = new HashMap<>();
 

@@ -14,7 +14,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     //TODO: http method check
     private final List<String> PATTERNS = Arrays.asList("/users/**","/articles/**/edit",
             "/like-places/**",
-            "places/scrap",
+            "/places/scrap/**",
             "places/**/scrap",
             "places/**/comment/**"); // 조회도 로그인 했을 때만? -> comments 조회는 /comments로
 
@@ -26,7 +26,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        // registry.addInterceptor(jwtInterceptor).addPathPatterns(PATTERNS);
+        registry.addInterceptor(jwtInterceptor).addPathPatterns(PATTERNS);
     }
 
     @Override
