@@ -107,8 +107,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public RandomNicknameDto getRandomNickname() {
-        User user = userRepository.findRandomUser();
-        RandomNicknameDto nicknameDto = new RandomNicknameDto(user.getId(), user.getNickname());
+        List<User> user = userRepository.findAllUser();
+        int maxCnt = user.size();
+        int randIdx = (int)(Math.random() * maxCnt);
+        RandomNicknameDto nicknameDto = new RandomNicknameDto(user.get(randIdx).getId(), user.get(randIdx).getNickname());
         return nicknameDto;
     }
 

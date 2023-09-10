@@ -1,4 +1,5 @@
 package com.gabojago.trip.user.domain;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -11,8 +12,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     User findByNickname(String nickname);
     boolean existsByNicknameAndIdNot(String nickname, Integer id);
 
-    @Query(value = "SELECT u FROM User u where u.id = (select op.user.id from OnePick op ORDER BY RAND())")
-    User findRandomUser();
+    @Query(value = "SELECT u FROM User u")
+    List<User> findAllUser();
 
     User findByEmail(String email);
 }

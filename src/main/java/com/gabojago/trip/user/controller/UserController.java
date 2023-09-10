@@ -47,12 +47,7 @@ public class UserController {
         return new ResponseEntity<>("", HttpStatus.OK);
     }
 
-    @Deprecated
-    @GetMapping
-    public ResponseEntity<List<UserDto>> getAll() {  //FOR Test
-        List<UserDto> userDtoList = userService.getAllUser();
-        return new ResponseEntity<>(userDtoList, HttpStatus.OK);
-    }
+
 
     @GetMapping("/nickname-random")
     public ResponseEntity<RandomNicknameDto> randomNickname() {
@@ -68,16 +63,11 @@ public class UserController {
         return new ResponseEntity<>(nicknameDto, HttpStatus.OK);
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<UserResDto> get(@RequestHeader("Authorization") String token,
-            @PathVariable int userId) {
+    @GetMapping
+    public ResponseEntity<UserResDto> get(@RequestHeader("Authorization") String token) {
         Integer id = authService.getUserIdFromToken(token);
         User logined = userService.getUser(id);
-        User user = userService.getUser(userId);
-        if (logined.getId() != user.getId()) {
-            throw new UserUnAuthorizedException("볼 수 있는 권한이 없습니다");
-        }
-        UserResDto userResDto = UserResDto.from(user);
+        UserResDto userResDto = UserResDto.from(logined);
         return new ResponseEntity<>(userResDto, HttpStatus.OK);
     }
 
