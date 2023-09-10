@@ -34,7 +34,7 @@ public class AuthServiceImpl implements AuthService {
         claims.put("isAdmin", user.getIsAdmin());
         String accessToken = jwtUtil.generateToken("access-token", claims, 1000 * 60 * 60 * 1);//1시간
         String refreshToken = jwtUtil.generateToken("refresh-token", claims, 1000 * 60 * 60 * 10); // DB에 넣어서 관리
-        return new JwtDto(accessToken, refreshToken);
+        return new JwtDto(accessToken, refreshToken, user.getId());
     }
 
     @Override
