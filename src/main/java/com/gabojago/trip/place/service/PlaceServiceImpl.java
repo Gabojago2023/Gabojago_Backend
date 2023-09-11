@@ -16,6 +16,7 @@ import com.gabojago.trip.place.repository.PlaceRepository;
 import com.gabojago.trip.place.repository.PlaceScrapRepository;
 import com.gabojago.trip.place.repository.SidoRepository;
 import com.gabojago.trip.user.domain.User;
+import com.gabojago.trip.user.domain.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,15 +36,18 @@ public class PlaceServiceImpl implements PlaceService {
     private final PlaceScrapRepository placeScrapRepository;
     private final SidoRepository sidoRepository;
     private final GugunRepository gugunRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     public PlaceServiceImpl(PlaceRepository placeRepository,
             PlaceScrapRepository placeScrapRepository, SidoRepository sidoRepository,
-            GugunRepository gugunRepository) {
+            GugunRepository gugunRepository,
+            UserRepository userRepository) {
         this.placeRepository = placeRepository;
         this.placeScrapRepository = placeScrapRepository;
         this.sidoRepository = sidoRepository;
         this.gugunRepository = gugunRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -198,17 +202,15 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public void addScrapPlace(Integer placeId, Integer userId) {
         Optional<Place> byId = placeRepository.findById(placeId);
-
-        PlaceScrap isExisting = placeScrapRepository.findByPlaceIdAndUserId(placeId,
-                userId);
+        Optional<User> byId1 = userRepository.findById((userId));
+        Optional<PlaceScrap> byPlaceIdAndUserId = placeScrapRepository.findByPlaceIdAndUserId(
+                placeId, userId);
         if (byId.isEmpty()) {
             throw new PlaceNotFoundException(placeId.toString());
-        } else if (isExisting != null) {
+        } else if (byPlaceIdAndUserId.isPresent()) {
             throw new PlaceAlreadyExistsException(userId.toString() + " : " + placeId);
         } else {
-            Place place = new Place(placeId);
-            User user = new User(userId);
-            PlaceScrap placeScrap = new PlaceScrap(place, user);
+            PlaceScrap placeScrap = new PlaceScrap(byId.get(), byId1.get());
             placeScrapRepository.save(placeScrap);
         }
     }
@@ -218,12 +220,12 @@ public class PlaceServiceImpl implements PlaceService {
     public void removeScrapPlace(Integer placeId, Integer userId) {
         Optional<Place> byId = placeRepository.findById(placeId);
 
-        PlaceScrap isExisting = placeScrapRepository.findByPlaceIdAndUserId(placeId,
-                userId);
+        Optional<PlaceScrap> byPlaceIdAndUserId = placeScrapRepository.findByPlaceIdAndUserId(
+                placeId, userId);
 
         if (byId.isEmpty()) {
             throw new PlaceNotFoundException(placeId.toString());
-        } else if (isExisting == null) {
+        } else if (byPlaceIdAndUserId.isEmpty()) {
             throw new PlaceScrapNotFoundException(userId.toString() + " : " + placeId);
         } else {
             Place place = new Place(placeId);
@@ -250,7 +252,7 @@ public class PlaceServiceImpl implements PlaceService {
         List<GugunResponseDto> gugunResponseDtos = new ArrayList<>();
 
         List<Object[]> gugunByIdSidoOrderById = gugunRepository.findGugunByIdSidoOrderById(sidoId);
-        for(Object[] o : gugunByIdSidoOrderById) {
+        for (Object[] o : gugunByIdSidoOrderById) {
             GugunResponseDto gugunResponseDto = new GugunResponseDto((Integer) o[0], (String) o[1]);
             gugunResponseDtos.add(gugunResponseDto);
         }

@@ -67,7 +67,7 @@ public class PlaceController {
             @RequestParam Integer size) {
         log.debug(token);
         Integer userId;
-        if (token != null) {
+        if (token != null && !token.equals("")) {
             userId = authService.getUserIdFromToken(token);
         } else {
             // 북마크 여부 상관없이
@@ -108,7 +108,7 @@ public class PlaceController {
             @RequestParam Integer size) {
         log.debug(token);
         Integer userId;
-        if (token != null) {
+        if (token != null && !token.equals("")) {
             userId = authService.getUserIdFromToken(token);
         } else {
             // 북마크 여부 상관없이
