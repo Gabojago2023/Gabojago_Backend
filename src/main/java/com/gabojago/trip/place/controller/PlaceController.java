@@ -60,7 +60,7 @@ public class PlaceController {
 
     @GetMapping("/keyword")
     public ResponseEntity<?> getPlaceSearchedByKeyword(
-            @RequestHeader("Authorization") String token,
+            @RequestHeader(value = "Authorization", required=false) String token,
             @RequestParam("sido-code") Integer sidoCode,
             @RequestParam("gugun-code") Integer gugunCode, @RequestParam String keyword,
             @RequestParam(required = false) Integer cursor,
@@ -102,7 +102,7 @@ public class PlaceController {
 
     @GetMapping
     public ResponseEntity<?> getPlaceSearchedByLocation(
-            @RequestHeader("Authorization") String token,
+            @RequestHeader(value = "Authorization", required=false) String token,
             @RequestParam("location") String location,
             @RequestParam(required = false) Integer cursor,
             @RequestParam Integer size) {
