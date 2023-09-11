@@ -15,10 +15,10 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     private final List<String> PATTERNS = Arrays.asList("/users/**","/articles/**/edit",
             "/like-places/**",
             "/places/scrap/**",
-            "places/**/scrap",
+            "places/**/scrap/**",
             "places/**/comment/**"); // 조회도 로그인 했을 때만? -> comments 조회는 /comments로
 
-    private JwtInterceptor jwtInterceptor;
+    private final JwtInterceptor jwtInterceptor;
 
     public WebMvcConfiguration(JwtInterceptor jwtInterceptor) {
         this.jwtInterceptor = jwtInterceptor;

@@ -1,5 +1,6 @@
 package com.gabojago.trip.place.controller;
 
+import com.gabojago.trip.auth.service.AuthService;
 import com.gabojago.trip.place.dto.request.CommentWithRatingDto;
 import com.gabojago.trip.place.dto.response.CommentResponseDto;
 import com.gabojago.trip.place.dto.response.GugunResponseDto;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,14 +38,17 @@ public class PlaceController {
 
     private final PlaceService placeService;
     private final CommentService commentService;
+    private final AuthService authService;
 
     @Autowired
-    public PlaceController(PlaceService placeService, CommentService commentService) {
+    public PlaceController(PlaceService placeService, CommentService commentService,
+            AuthService authService) {
         this.placeService = placeService;
         this.commentService = commentService;
+        this.authService = authService;
     }
 
-//    @GetMapping
+    //    @GetMapping
 //    public ResponseEntity<?> getPlaceAll() {
 //
 //        return new ResponseEntity<>("", HttpStatus.OK);
@@ -52,14 +57,22 @@ public class PlaceController {
     public ResponseEntity<List<GugunResponseDto>> gugun(@PathVariable Integer sidoId) {
         return new ResponseEntity<>(placeService.getGugunInSido(sidoId), HttpStatus.OK);
     }
+
     @GetMapping("/keyword")
-    public ResponseEntity<?> getPlaceSearchedByKeyword(@RequestParam("sido-code") Integer sidoCode,
+    public ResponseEntity<?> getPlaceSearchedByKeyword(
+            @RequestHeader("Authorization") String token,
+            @RequestParam("sido-code") Integer sidoCode,
             @RequestParam("gugun-code") Integer gugunCode, @RequestParam String keyword,
             @RequestParam(required = false) Integer cursor,
             @RequestParam Integer size) {
-        // 북마크 여부 상관없이
-        // refactoring 1순위
-        Integer userId = 0;
+        log.debug(token);
+        Integer userId;
+        if (token != null) {
+            userId = authService.getUserIdFromToken(token);
+        } else {
+            // 북마크 여부 상관없이
+            userId = 0;
+        }
 
         Map<String, Object> result = new HashMap<>();
 
@@ -88,12 +101,19 @@ public class PlaceController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getPlaceSearchedByLocation(@RequestParam("location") String location,
+    public ResponseEntity<?> getPlaceSearchedByLocation(
+            @RequestHeader("Authorization") String token,
+            @RequestParam("location") String location,
             @RequestParam(required = false) Integer cursor,
             @RequestParam Integer size) {
-        // 북마크 여부 상관없이
-        // refactoring 1순위
-        Integer userId = 0;
+        log.debug(token);
+        Integer userId;
+        if (token != null) {
+            userId = authService.getUserIdFromToken(token);
+        } else {
+            // 북마크 여부 상관없이
+            userId = 0;
+        }
 
         Map<String, Object> result = new HashMap<>();
 
@@ -156,7 +176,7 @@ public class PlaceController {
         Integer userId = (Integer) request.getAttribute("userId");
 
         // 임의의 유저(테스트용)
-        userId = 1;
+//        userId = 1;
 
         placeService.addScrapPlace(placeId, userId);
         return new ResponseEntity<>("", HttpStatus.OK);
@@ -170,7 +190,7 @@ public class PlaceController {
         Integer userId = (Integer) request.getAttribute("userId");
 
         // 임의의 유저(테스트용)
-        userId = 1;
+//        userId = 1;
 
         placeService.removeScrapPlace(placeId, userId);
         return new ResponseEntity<>("", HttpStatus.OK);
@@ -185,7 +205,7 @@ public class PlaceController {
         Integer userId = (Integer) request.getAttribute("userId");
 
         // 임의의 유저(테스트용)
-        userId = 1;
+//        userId = 1;
 
         commentService.addCommentToPlace(placeId, userId, comment.getComment(), comment.getRate());
         return new ResponseEntity<>("", HttpStatus.OK);
@@ -219,7 +239,7 @@ public class PlaceController {
         Integer userId = (Integer) request.getAttribute("userId");
 
         // 임의의 유저(테스트용. 지울예정)
-        userId = 1;
+//        userId = 1;
 
         commentService.updateComment(userId, placeId, commentId, comment.getComment(),
                 comment.getRate());
@@ -236,7 +256,7 @@ public class PlaceController {
         Integer userId = (Integer) request.getAttribute("userId");
 
         // 임의의 유저(테스트용. 지울예정)
-        userId = 1;
+//        userId = 1;
 
         commentService.deleteCommentById(userId, commentId);
         return new ResponseEntity<>("", HttpStatus.OK);
