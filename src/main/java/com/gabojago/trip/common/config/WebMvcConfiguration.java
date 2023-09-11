@@ -15,8 +15,8 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     private final List<String> PATTERNS = Arrays.asList("/users/**","/articles/**/edit",
             "/like-places/**",
             "/places/scrap/**",
-            "places/**/scrap/**",
-            "places/**/comment/**"); // 조회도 로그인 했을 때만? -> comments 조회는 /comments로
+            "/places/**/scrap/**",
+            "/places/**/comment/**"); // 조회도 로그인 했을 때만? -> comments 조회는 /comments로
 
     private final JwtInterceptor jwtInterceptor;
 
