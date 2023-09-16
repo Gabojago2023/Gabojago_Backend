@@ -18,7 +18,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
             "/places/scrap/**",
             "/places/**/scrap/**",
             "/places/**/comment/**"); // 조회도 로그인 했을 때만? -> comments 조회는 /comments로
-
+    private final List<String> EXCLUDE_PATTERNS = Arrays.asList("/users/nickname-random");
     private final JwtInterceptor jwtInterceptor;
 
     public WebMvcConfiguration(JwtInterceptor jwtInterceptor) {
@@ -27,7 +27,10 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(jwtInterceptor).addPathPatterns(PATTERNS);
+        registry.addInterceptor(jwtInterceptor)
+                .addPathPatterns(PATTERNS)
+                .excludePathPatterns(EXCLUDE_PATTERNS);
+
     }
 
     @Override
