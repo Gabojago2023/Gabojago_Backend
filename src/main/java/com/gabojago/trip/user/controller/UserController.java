@@ -63,10 +63,9 @@ public class UserController {
         return new ResponseEntity<>(nicknameDto, HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<UserResDto> get(@RequestHeader("Authorization") String token) {
-        Integer id = authService.getUserIdFromToken(token);
-        User logined = userService.getUser(id);
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserResDto> get(@PathVariable int userId) {
+        User logined = userService.getUser(userId);
         UserResDto userResDto = UserResDto.from(logined);
         return new ResponseEntity<>(userResDto, HttpStatus.OK);
     }
