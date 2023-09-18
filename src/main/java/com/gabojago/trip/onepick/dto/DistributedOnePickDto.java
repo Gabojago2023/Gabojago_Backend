@@ -1,6 +1,7 @@
 package com.gabojago.trip.onepick.dto;
 
 import com.gabojago.trip.onepick.domain.DistributedOnePick;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class DistributedOnePickDto {
+
     private Integer id;
     private Double rate;
     private Timestamp createdAt;
@@ -17,7 +19,8 @@ public class DistributedOnePickDto {
     private Boolean liked;
 
     @Builder
-    public DistributedOnePickDto(Integer id, Double rate, Timestamp createdAt, OnePickDto onePickDto, String description, Boolean liked) {
+    public DistributedOnePickDto(Integer id, Double rate, Timestamp createdAt,
+            OnePickDto onePickDto, String description, Boolean liked) {
         this.id = id;
         this.rate = rate;
         this.createdAt = createdAt;
@@ -26,7 +29,7 @@ public class DistributedOnePickDto {
         this.liked = liked;
     }
 
-    public static DistributedOnePickDto from (DistributedOnePick distributedOnePick) {
+    public static DistributedOnePickDto from(DistributedOnePick distributedOnePick) {
         return DistributedOnePickDto.builder()
                 .id(distributedOnePick.getId())
                 .rate(distributedOnePick.getRate())
@@ -36,4 +39,5 @@ public class DistributedOnePickDto {
                 .liked(distributedOnePick.getLiked())
                 .build();
     }
+
 }

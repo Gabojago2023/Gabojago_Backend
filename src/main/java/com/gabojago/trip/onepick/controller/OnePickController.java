@@ -12,7 +12,9 @@ import com.gabojago.trip.ticket.domain.Ticket;
 import com.gabojago.trip.ticket.service.TicketService;
 import com.gabojago.trip.user.domain.User;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -40,7 +42,6 @@ public class OnePickController {
     @GetMapping
     public ResponseEntity<List<OnePickDto>> getAllOnePicks(@RequestHeader("Authorization") String token) {
         Integer userId = authService.getUserIdFromToken(token);
-
 
         List<OnePick> allOnePicks = onePickService.getAllValidOnePicksByUserId(userId);
 
@@ -168,6 +169,20 @@ public class OnePickController {
         RankedOnePickDto response = onePickService.getMostLikedOnePick(category);
         if (response == null)
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    // 카테고리마다 가장 좋아요가 많은 유저 호출
+    @GetMapping("/rankers")
+    public ResponseEntity<Map<Integer, RankedOnePickDto>> getRankers() {
+        Map<Integer, RankedOnePickDto> response = new HashMap();
+
+        for (int category=1; category<=3; ++category) {
+            RankedOnePickDto onePick = onePickService.getMostLikedOnePick(category);
+            response.put(category, onePick);
+        }
+
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
