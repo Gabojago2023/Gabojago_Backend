@@ -41,7 +41,6 @@ public class OnePickController {
     public ResponseEntity<List<OnePickDto>> getAllOnePicks(@RequestHeader("Authorization") String token) {
         Integer userId = authService.getUserIdFromToken(token);
 
-
         List<OnePick> allOnePicks = onePickService.getAllValidOnePicksByUserId(userId);
 
         List<OnePickDto> onePickDtos = new ArrayList<>();
