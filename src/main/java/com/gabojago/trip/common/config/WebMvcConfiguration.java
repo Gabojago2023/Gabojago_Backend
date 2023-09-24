@@ -37,7 +37,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         // TODO: setting pattern CORS
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000", "http://ec2-52-79-171-146.ap-northeast-2.compute.amazonaws.com","http://one-pick-go.com")
+                .allowedOrigins("http://localhost:3000", "http://ec2-52-79-171-146.ap-northeast-2.compute.amazonaws.com","http://one-pick-go.com","https://one-pick-go.com")
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("*")
                 .allowCredentials(true);
