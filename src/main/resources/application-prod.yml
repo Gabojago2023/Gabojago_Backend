@@ -37,7 +37,7 @@ auth:
       - email
       - profile
     token-req-url : https://oauth2.googleapis.com
-    redirect-url: http://localhost:3000
+    redirect-url: https://one-pick-go.com
   kakao:
     client-id: ${KAKAO_CLIENT_ID}
     client-secret: ${KAKAO_CLIENT_SECRET}
@@ -47,8 +47,8 @@ auth:
       - account_email
     token-req-url : https://kauth.kakao.com/oauth/token
     user-info-request-url: https://kapi.kakao.com/v2/user/me
-    redirect-url-sign: http://localhost:3000/kakao/sign
-    redirect-url-login: http://localhost:3000/kakao/login
+    redirect-url-sign: https://one-pick-go.com/kakao/sign
+    redirect-url-login: https://one-pick-go.com/kakao/login
 
 logging:
   level:
