@@ -13,7 +13,9 @@ import com.gabojago.trip.user.domain.UserRepository;
 import com.gabojago.trip.user.exception.UserNotFoundException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,15 +51,38 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentResponseDto> getCommentsByPlaceId(Integer placeId,
-            Integer pg, Integer spp) {
-        PageRequest pageRequest = PageRequest.of(pg - 1, spp);
-
+    public Slice<CommentResponseDto> getCommentsByPlaceId(Integer placeId,
+            Integer cursor, Integer size) {
+        // 장소가 존재하지 않는 경우 예외처리
         Place place = placeRepository.findById(placeId).orElse(null);
         if (place == null) {
             throw new PlaceNotFoundException(placeId.toString());
         }
-        return commentRepository.findCommentsByPlaceId(placeId, pageRequest);
+
+        Pageable pageable = Pageable.ofSize(size + 1);
+
+        if (cursor == null) {
+            List<CommentResponseDto> commentList = commentRepository.findCommentsByPlaceId(placeId,
+                    pageable);
+            pageable = Pageable.ofSize(size);
+            return checkLastPage(pageable, commentList);
+        } else {
+            List<CommentResponseDto> commentList = commentRepository.findNextCommentsByPlaceId(
+                    placeId, cursor, pageable);
+            pageable = Pageable.ofSize(size);
+            return checkLastPage(pageable, commentList);
+        }
+    }
+
+    private Slice<CommentResponseDto> checkLastPage(Pageable pageable,
+            List<CommentResponseDto> commentList) {
+        boolean hasNext = false; //다음으로 가져올 데이터가 있는 지 여부를 알려줌
+        if (commentList.size() > pageable.getPageSize()) {
+            hasNext = true; //읽어 올 데이터가 있다면 true를 반환
+            commentList.remove(pageable.getPageSize());
+        }
+
+        return new SliceImpl<>(commentList, pageable, hasNext);
     }
 
     @Override

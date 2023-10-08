@@ -1,16 +1,23 @@
 package com.gabojago.trip.place.controller;
 
+import com.gabojago.trip.auth.service.AuthService;
 import com.gabojago.trip.place.dto.request.CommentWithRatingDto;
 import com.gabojago.trip.place.dto.response.CommentResponseDto;
+import com.gabojago.trip.place.dto.response.GugunResponseDto;
 import com.gabojago.trip.place.dto.response.PlaceDetailResponseDto;
 import com.gabojago.trip.place.dto.response.PlaceResponseDto;
+import com.gabojago.trip.place.dto.response.RandomImageResponseDto;
+import com.gabojago.trip.place.dto.response.SidoResponseDto;
 import com.gabojago.trip.place.service.CommentService;
 import com.gabojago.trip.place.service.PlaceService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,41 +26,67 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequestMapping("/places")
 public class PlaceController {
 
     private final PlaceService placeService;
     private final CommentService commentService;
+    private final AuthService authService;
 
     @Autowired
-    public PlaceController(PlaceService placeService, CommentService commentService) {
+    public PlaceController(PlaceService placeService, CommentService commentService,
+            AuthService authService) {
         this.placeService = placeService;
         this.commentService = commentService;
+        this.authService = authService;
     }
 
-//    @GetMapping
+    //    @GetMapping
 //    public ResponseEntity<?> getPlaceAll() {
 //
 //        return new ResponseEntity<>("", HttpStatus.OK);
 //    }
+    @GetMapping("/gugun/{sidoId}")
+    public ResponseEntity<List<GugunResponseDto>> gugun(@PathVariable Integer sidoId) {
+        return new ResponseEntity<>(placeService.getGugunInSido(sidoId), HttpStatus.OK);
+    }
 
     @GetMapping("/keyword")
-    public ResponseEntity<?> getPlaceSearchedByKeyword(@RequestParam("sido-code") Integer sidoCode,
+    public ResponseEntity<?> getPlaceSearchedByKeyword(
+            @RequestHeader(value = "Authorization", required=false) String token,
+            @RequestParam("sido-code") Integer sidoCode,
             @RequestParam("gugun-code") Integer gugunCode, @RequestParam String keyword,
-            @RequestParam Integer pg, @RequestParam Integer spp) {
-        // 북마크 여부 상관없이
-        // refactoring 1순위
-        Integer userId = 0;
+            @RequestParam(required = false) Integer cursor,
+            @RequestParam Integer size) {
+        log.debug(token);
+        Integer userId;
+        if (token != null && !token.equals("")) {
+            userId = authService.getUserIdFromToken(token);
+        } else {
+            // 북마크 여부 상관없이
+            userId = 0;
+        }
 
-        Map<String, List> result = new HashMap<>();
-        List<PlaceResponseDto> list = placeService.searchAttractionByKeyword(userId, sidoCode,
-                gugunCode, keyword, pg, spp);
-        result.put("places", list);
+        Map<String, Object> result = new HashMap<>();
+
+        Slice<PlaceResponseDto> list = placeService.searchAttractionByKeyword(userId, sidoCode,
+                gugunCode, keyword, cursor, size);
+
+        Boolean hasNext = list.hasNext();
+
+        result.put("places", list.getContent());
+        result.put("hasNext", hasNext);
+        Integer nextCursor =
+                hasNext ? list.getContent().get(size - 1).getId() : null;
+        result.put("nextCursor", nextCursor);
+
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -68,37 +101,61 @@ public class PlaceController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getPlaceSearchedByLocation(@RequestParam("location") String location,
-            @RequestParam Integer pg, @RequestParam Integer spp) {
-        // 북마크 여부 상관없이
-        // refactoring 1순위
-        Integer userId = 0;
+    public ResponseEntity<?> getPlaceSearchedByLocation(
+            @RequestHeader(value = "Authorization", required=false) String token,
+            @RequestParam("location") String location,
+            @RequestParam(required = false) Integer cursor,
+            @RequestParam Integer size) {
+        log.debug(token);
+        Integer userId;
+        if (token != null && !token.equals("")) {
+            userId = authService.getUserIdFromToken(token);
+        } else {
+            // 북마크 여부 상관없이
+            userId = 0;
+        }
 
-        Map<String, List> result = new HashMap<>();
-        List<PlaceResponseDto> placeResponseDtoList = placeService.searchAttractionByLocation(
-                userId, location, pg, spp);
+        Map<String, Object> result = new HashMap<>();
 
-        result.put("places", placeResponseDtoList);
+        Slice<PlaceResponseDto> placeResponseDtos = placeService.searchAttractionByLocation(userId,
+                location, cursor, size);
+
+        Boolean hasNext = placeResponseDtos.hasNext();
+
+        result.put("places", placeResponseDtos.getContent());
+        result.put("hasNext", hasNext);
+        Integer nextCursor =
+                hasNext ? placeResponseDtos.getContent().get(size - 1).getId() : null;
+        result.put("nextCursor", nextCursor);
+
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/scrap")
-    public ResponseEntity<?> getBookmarkedPlacesByUserId(@RequestParam Integer pg,
-            @RequestParam Integer spp,
+    public ResponseEntity<?> getBookmarkedPlacesByUserId(
+            @RequestParam(required = false) Integer cursor,
+            @RequestParam Integer size,
             HttpServletRequest request) {
         // JWT토큰에서 파싱한 유저 id
         // 토큰 정보 없으면 필터 or 인터셉터 에서 401 반환
         Integer userId = (Integer) request.getAttribute("userId");
-
+        log.debug("유저 id :" + userId);
         // 임의의 유저(테스트용)
-        userId = 1;
+        // userId = 1;
 
-        Map<String, List> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
 
-        List<PlaceResponseDto> bookmarkedAttractionsByUserId = placeService.getBookmarkedAttractionsByUserId(
-                userId, pg, spp);
+        Slice<PlaceResponseDto> bookmarkedAttractionsByUserId = placeService.getBookmarkedAttractionsByUserId(
+                userId, cursor, size);
 
-        result.put("places", bookmarkedAttractionsByUserId);
+        Boolean hasNext = bookmarkedAttractionsByUserId.hasNext();
+
+        result.put("places", bookmarkedAttractionsByUserId.getContent());
+        result.put("hasNext", hasNext);
+        Integer nextCursor =
+                hasNext ? bookmarkedAttractionsByUserId.getContent().get(size - 1).getPsId() : null;
+        result.put("nextCursor", nextCursor);
+
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -119,7 +176,7 @@ public class PlaceController {
         Integer userId = (Integer) request.getAttribute("userId");
 
         // 임의의 유저(테스트용)
-        userId = 1;
+//        userId = 1;
 
         placeService.addScrapPlace(placeId, userId);
         return new ResponseEntity<>("", HttpStatus.OK);
@@ -133,7 +190,7 @@ public class PlaceController {
         Integer userId = (Integer) request.getAttribute("userId");
 
         // 임의의 유저(테스트용)
-        userId = 1;
+//        userId = 1;
 
         placeService.removeScrapPlace(placeId, userId);
         return new ResponseEntity<>("", HttpStatus.OK);
@@ -148,7 +205,7 @@ public class PlaceController {
         Integer userId = (Integer) request.getAttribute("userId");
 
         // 임의의 유저(테스트용)
-        userId = 1;
+//        userId = 1;
 
         commentService.addCommentToPlace(placeId, userId, comment.getComment(), comment.getRate());
         return new ResponseEntity<>("", HttpStatus.OK);
@@ -156,14 +213,19 @@ public class PlaceController {
 
     @GetMapping("{placeId}/comments")
     public ResponseEntity<?> getCommentsByPlaceId(@PathVariable Integer placeId,
-            @RequestParam Integer pg,
-            @RequestParam Integer spp) {
-        Map<String, List<CommentResponseDto>> result = new HashMap<>();
+            @RequestParam(required = false) Integer cursor,
+            @RequestParam Integer size) {
+        Map<String, Object> result = new HashMap<>();
 
-        List<CommentResponseDto> commentsByPlaceId = commentService.getCommentsByPlaceId(placeId,
-                pg, spp);
+        Slice<CommentResponseDto> commentsByPlaceId = commentService.getCommentsByPlaceId(placeId,
+                cursor, size);
 
-        result.put("comments", commentsByPlaceId);
+        Boolean hasNext = commentsByPlaceId.hasNext();
+        result.put("comments", commentsByPlaceId.getContent());
+        result.put("hasNext", hasNext);
+
+        Integer nextCursor = hasNext ? commentsByPlaceId.getContent().get(size - 1).getId() : null;
+        result.put("nextCursor", nextCursor);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -177,7 +239,7 @@ public class PlaceController {
         Integer userId = (Integer) request.getAttribute("userId");
 
         // 임의의 유저(테스트용. 지울예정)
-        userId = 1;
+//        userId = 1;
 
         commentService.updateComment(userId, placeId, commentId, comment.getComment(),
                 comment.getRate());
@@ -194,10 +256,29 @@ public class PlaceController {
         Integer userId = (Integer) request.getAttribute("userId");
 
         // 임의의 유저(테스트용. 지울예정)
-        userId = 1;
+//        userId = 1;
 
         commentService.deleteCommentById(userId, commentId);
         return new ResponseEntity<>("", HttpStatus.OK);
+    }
 
+    @GetMapping("random-images")
+    public ResponseEntity<?> getRandomImages() {
+        List<RandomImageResponseDto> randomImages = placeService.getRandomImages();
+
+        List<String> urls = randomImages.stream()
+                .map(RandomImageResponseDto::getImgUrl)
+                .collect(Collectors.toList());
+
+        Map<String, List> result = new HashMap<>();
+        result.put("images", urls);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("sido-list")
+    public ResponseEntity<?> getSidoList() {
+        List<SidoResponseDto> sidoList = placeService.getSidoList();
+        return new ResponseEntity<>(sidoList, HttpStatus.OK);
     }
 }

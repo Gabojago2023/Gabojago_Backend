@@ -8,4 +8,5 @@ import lombok.NoArgsConstructor;
 public class DistributedRateDto {
     private Integer distributedId;
     private Double rate;
+    private String description;
 }

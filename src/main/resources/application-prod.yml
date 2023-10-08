@@ -6,29 +6,38 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
 
     properties:
       hibernate:
         format_sql: true
         show_sql: true
+  mail:
+    host: ${YNWOO_EMAIL_HOST}
+    port: 465
+    username: ${YNWOO_EMAIL_ADDRESS}
+    password: ${YNWOO_EMAIL_PASSWORD}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.ssl.enable: true
+      mail.smtp.ssl.trust: ${YNWOO_EMAIL_HOST}
 
 # jwt 설정
 custom:
   jwt:
     secret: ${JWT_SECRET}
 # S3 사용 설정
-# cloud:
-#   aws:
-#     credentials:
-#       accessKey: ${CLOUD_AWS_CREDENTIALS_ACCESS_KEY}       # AWS IAM AccessKey 적기
-#       secretKey: ${CLOUD_AWS_CREDENTIALS_SECRET_KEY}  # AWS IAM SecretKey 적기
-#     s3:
-#       bucket: gabojago-image
-#     region:
-#       static: ap-northeast-2
-#     stack:
-#       auto: false
+cloud:
+   aws:
+     credentials:
+       accessKey: ${CLOUD_AWS_CREDENTIALS_ACCESS_KEY}       # AWS IAM AccessKey 적기
+       secretKey: ${CLOUD_AWS_CREDENTIALS_SECRET_KEY}  # AWS IAM SecretKey 적기
+     s3:
+       bucket: gabojago-image
+     region:
+       static: ap-northeast-2
+     stack:
+       auto: false
 auth:
   google:
     client-id: ${GOOGLE_CLIENT_ID}
