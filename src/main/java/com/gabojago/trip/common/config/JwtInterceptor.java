@@ -2,6 +2,7 @@ package com.gabojago.trip.common.config;
 
 import com.gabojago.trip.auth.exception.InvalidTokenException;
 import com.gabojago.trip.auth.jwt.JwtUtil;
+import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -9,6 +10,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 
 @Slf4j
 @Component
@@ -21,21 +23,29 @@ public class JwtInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
-            Object handler)
+                             Object handler)
             throws Exception {
+
+        log.debug("request : " + request.getHeader(HEADER_AUTH));
+
         final String token = request.getHeader(HEADER_AUTH);
 
-        if (token != null && jwtUtil.validateToken(token)) {
-            log.info("토큰 사용 가능 : {}", token);
-            // @은정
-            // 여기서 토큰 파싱해서 userId값 불러와줘
-            Integer userId = (Integer) jwtUtil.getClaims(token).get("id");
-            request.setAttribute("userId", userId);
-            return true;
-        } else {
-            log.info("토큰 사용 불가능 : {}", token);
+        log.debug("Interceptor token = " + token);
+
+        if(token == null || token.isBlank()){
             throw new InvalidTokenException("토큰 잘못됨");
         }
 
+        try{
+            if (jwtUtil.validateToken(token)) {
+                log.info("토큰 사용 가능 : {}", token);
+                return true;
+            }
+        }catch (JwtException e){
+            log.info("토큰 사용 불가능 : {}",token);
+
+        }
+
+        throw new InvalidTokenException("토큰 잘못됨");
     }
 }
