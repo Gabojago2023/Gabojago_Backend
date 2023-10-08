@@ -29,6 +29,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         // TODO: setting pattern CORS
         registry.addMapping("/**")
+                .allowedOriginPatterns("*")
                 .allowedOrigins("http://localhost:3000","https://one-pick-go.com")
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("*")
