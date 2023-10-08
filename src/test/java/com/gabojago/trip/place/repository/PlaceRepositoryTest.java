@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.*;
 import com.gabojago.trip.place.domain.Place;
 import com.gabojago.trip.place.dto.response.PlaceDetailResponseDto;
 import com.gabojago.trip.place.dto.response.PlaceResponseDto;
+import com.gabojago.trip.place.dto.response.RandomImageResponseDto;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -92,5 +93,15 @@ class PlaceRepositoryTest {
                 125266);
         PlaceDetailResponseDto placeDetailResponseDto = PlaceDetailResponseDto.from((Object[]) result[0]);
         System.out.println("detail : " + placeDetailResponseDto);
+    }
+
+    @Test
+    void findRandomImages() {
+        PageRequest pageRequest = PageRequest.of(0, 3);
+
+        List<RandomImageResponseDto> randomImages = placeRepository.findRandomImages(pageRequest);
+        for(RandomImageResponseDto randomImage : randomImages) {
+            System.out.println(randomImage.getImgUrl());
+        }
     }
 }

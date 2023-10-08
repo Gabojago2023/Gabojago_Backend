@@ -1,6 +1,7 @@
 package com.gabojago.trip.place.repository;
 
 import com.gabojago.trip.place.domain.Place;
+import com.gabojago.trip.place.dto.response.RandomImageResponseDto;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,9 +22,21 @@ public interface PlaceRepository extends JpaRepository<Place, Integer> {
             + "FROM Place p "
             + "LEFT JOIN PlaceScrap ps ON p.id = ps.place.id AND ps.user.id = :userId "
             + "WHERE p.address LIKE CONCAT('%', :location, '%') "
-            + "ORDER BY CASE WHEN ps.user.id IS NOT NULL THEN 1 ELSE 0 END DESC, p.id")
+            + "ORDER BY p.id")
+//            + "ORDER BY CASE WHEN ps.user.id IS NOT NULL THEN 1 ELSE 0 END DESC, p.id")
     List<Object[]> findPlacesByLocation(@Param("location") String location,
             @Param("userId") Integer userId, Pageable pageable);
+
+    @Query("SELECT p.id, p.name, p.longitude, p.latitude, p.address, p.category, p.imgUrl, p.imgUrl2, p.sido.sidoCode, p.gugun.gugunCode, p.overview, "
+            + "CASE WHEN ps.user.id IS NOT NULL THEN 1 ELSE 0 END AS isBookmarked "
+            + "FROM Place p "
+            + "LEFT JOIN PlaceScrap ps ON p.id = ps.place.id AND ps.user.id = :userId "
+            + "WHERE p.address LIKE CONCAT('%', :location, '%') "
+            + "AND p.id > :cursor "
+            + "ORDER BY p.id")
+//            + "ORDER BY CASE WHEN ps.user.id IS NOT NULL THEN 1 ELSE 0 END DESC, p.id")
+    List<Object[]> findNextPlacesByLocation(@Param("location") String location,
+            @Param("userId") Integer userId, @Param("cursor") Integer cursor, Pageable pageable);
 
     @Query("SELECT p.id, p.name, p.longitude, p.latitude, p.address, p.category, p.imgUrl, p.imgUrl2, p.sido.sidoCode, p.gugun.gugunCode, p.overview, "
             + "CASE WHEN ps.user.id IS NOT NULL THEN 1 ELSE 0 END AS isBookmarked "
@@ -38,9 +51,31 @@ public interface PlaceRepository extends JpaRepository<Place, Integer> {
 
     @Query("SELECT p.id, p.name, p.longitude, p.latitude, p.address, p.category, p.imgUrl, p.imgUrl2, p.sido.sidoCode, p.gugun.gugunCode, p.overview, "
             + "CASE WHEN ps.user.id IS NOT NULL THEN 1 ELSE 0 END AS isBookmarked "
+            + "FROM Place p "
+            + "LEFT JOIN PlaceScrap ps ON p.id = ps.place.id AND ps.user.id = :userId "
+            + "WHERE p.sido.sidoCode = :sidoCode " + "AND p.gugun.gugunCode = :gugunCode "
+            + "AND p.name LIKE CONCAT('%', :keyword, '%') "
+            + "AND p.id > :cursor "
+            + "ORDER BY p.id")
+    List<Object[]> findNextPlacesByFilter(@Param("userId") Integer userId,
+            @Param("sidoCode") Integer sidoCode, @Param("gugunCode") Integer gugunCode,
+            @Param("keyword") String keyword, @Param("cursor") Integer cursor, Pageable pageable);
+
+    @Query("SELECT p.id, p.name, p.longitude, p.latitude, p.address, p.category, p.imgUrl, p.imgUrl2, p.sido.sidoCode, p.gugun.gugunCode, p.overview, ps.id, "
+            + "CASE WHEN ps.user.id IS NOT NULL THEN 1 ELSE 0 END AS isBookmarked "
             + "FROM Place p " + "JOIN PlaceScrap ps ON p.id = ps.place.id "
-            + "WHERE ps.user.id = :userId")
+            + "WHERE ps.user.id = :userId "
+            + "ORDER BY ps.id DESC")
     List<Object[]> findBookmarkedPlacesByUserId(@Param("userId") Integer userId, Pageable pageable);
+
+    @Query("SELECT p.id, p.name, p.longitude, p.latitude, p.address, p.category, p.imgUrl, p.imgUrl2, p.sido.sidoCode, p.gugun.gugunCode, p.overview, ps.id, "
+            + "CASE WHEN ps.user.id IS NOT NULL THEN 1 ELSE 0 END AS isBookmarked "
+            + "FROM Place p " + "JOIN PlaceScrap ps ON p.id = ps.place.id "
+            + "WHERE ps.user.id = :userId "
+            + "AND ps.id < :cursor "
+            + "ORDER BY ps.id DESC")
+    List<Object[]> findNextBookmarkedPlacesByUserId(@Param("userId") Integer userId,
+            @Param("cursor") Integer cursor, Pageable pageable);
 
     @Query("SELECT p.id, p.name, p.longitude, p.latitude, p.address, p.category, p.imgUrl, p.imgUrl2, "
             + "p.sido.sidoCode, p.gugun.gugunCode, p.overview, "
@@ -49,4 +84,7 @@ public interface PlaceRepository extends JpaRepository<Place, Integer> {
             + "FROM Place p "
             + "LEFT JOIN Comment c ON p.id = c.place.id WHERE p.id = :placeId")
     Object[] findPlaceWithAvgRatingAndCommentCount(@Param("placeId") Integer placeId);
+
+    @Query(value = "SELECT new com.gabojago.trip.place.dto.response.RandomImageResponseDto(p.imgUrl) FROM Place p WHERE p.imgUrl <> '' ORDER BY FUNCTION('RAND')")
+    List<RandomImageResponseDto> findRandomImages(Pageable pageable);
 }

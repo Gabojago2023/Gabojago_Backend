@@ -1,5 +1,6 @@
 package com.gabojago.trip.ticket.controller;
 
+import com.gabojago.trip.auth.service.AuthService;
 import com.gabojago.trip.ticket.service.TicketService;
 import java.util.HashMap;
 import lombok.extern.slf4j.Slf4j;
@@ -20,31 +21,29 @@ import org.springframework.web.bind.annotation.RestController;
 public class TicketController {
 
     private final TicketService ticketService;
+    private final AuthService authService;
 
-    public TicketController(TicketService ticketService) {
+    public TicketController(TicketService ticketService, AuthService authService) {
         this.ticketService = ticketService;
+        this.authService = authService;
     }
 
     @PostMapping("/purchase")
-//    public ResponseEntity<?> purchaseTicket(@RequestHeader("Authorization") String token) {
-    public ResponseEntity<?> purchaseTicket() {
-        //        Integer userId = authService.getUserIdFromToken(token);
-        Integer id = 2;
+    public ResponseEntity<?> purchaseTicket(@RequestHeader("Authorization") String token) {
+        Integer userId = authService.getUserIdFromToken(token);
 
-        log.debug("[POST] /ticket/purchase " + id);
+        log.debug("[POST] /ticket/purchase " + userId);
         // 여기서 추가적인 결제 인증 로직이 필요할 수 있음
-        ticketService.addTicket(id);
+        ticketService.addTicket(userId);
         return new ResponseEntity<>("", HttpStatus.OK);
     }
 
     @GetMapping("/count")
-//    public ResponseEntity<?> getTicketCount(@RequestHeader("Authorization") String token) {
-    public ResponseEntity<?> getTicketCount() {
-        //        Integer userId = authService.getUserIdFromToken(token);
-        Integer id = 2;
+    public ResponseEntity<?> getTicketCount(@RequestHeader("Authorization") String token) {
+        Integer userId = authService.getUserIdFromToken(token);
 
-        log.debug("[GET] /ticket/count/" + id);
-        Integer count = ticketService.countTicketsByUserId(id);
+        log.debug("[GET] /ticket/count/" + userId);
+        Integer count = ticketService.countTicketsByUserId(userId);
         return new ResponseEntity<>(count, HttpStatus.OK);
     }
 }

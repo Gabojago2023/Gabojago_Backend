@@ -5,8 +5,9 @@ spring:
     password: ${LOCAL_DATASOURCE_PASSWORD}
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
 
     properties:
       hibernate:
@@ -53,6 +54,6 @@ auth:
 
 logging:
   level:
-    com.ground.sswm : DEBUG
+    com.gabojago.trip: DEBUG
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE

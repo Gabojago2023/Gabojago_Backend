@@ -6,4 +6,5 @@ import java.util.List;
 public interface UserVisitService {
     List<UserVisitDto> getAllUserVisit(Integer userId);
 
+    void addUserVisit(Integer userId);
 }

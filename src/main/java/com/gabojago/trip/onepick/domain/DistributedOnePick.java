@@ -31,6 +31,9 @@ public class DistributedOnePick {
 
     private Double rate;
 
+    @Column(length = 255)
+    private String description;
+
     @CreationTimestamp
     private Timestamp createdAt;
 
@@ -42,10 +45,15 @@ public class DistributedOnePick {
     @JoinColumn(name = "user_id")
     private User user;
 
+    private Integer category;
+
+    private Boolean liked;
+
     @Builder
     public DistributedOnePick(Double rate, OnePick onePick, User user) {
         this.rate = rate;
         this.onePick = onePick;
         this.user = user;
+        this.category = onePick.getCategory();
     }
 }

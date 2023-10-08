@@ -2,15 +2,21 @@ package com.gabojago.trip.onepick.service;
 
 import com.gabojago.trip.onepick.domain.DistributedOnePick;
 import com.gabojago.trip.onepick.domain.OnePick;
+import com.gabojago.trip.onepick.dto.DistributedRateDto;
+import com.gabojago.trip.onepick.dto.OnePickDto;
+import com.gabojago.trip.onepick.dto.RankedOnePickDto;
 import com.gabojago.trip.onepick.repository.DistributedOnePickRepository;
 import com.gabojago.trip.onepick.repository.OnePickRepository;
 import com.gabojago.trip.user.domain.User;
+import com.gabojago.trip.user.service.UserService;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -21,10 +27,12 @@ public class OnePickServiceImpl implements OnePickService {
 
     private final OnePickRepository onePickRepository;
     private final DistributedOnePickRepository distributedOnePickRepository;
+    private final UserService userService;
 
-    public OnePickServiceImpl(OnePickRepository onePickRepository, DistributedOnePickRepository distributedOnePickRepository) {
+    public OnePickServiceImpl(OnePickRepository onePickRepository, DistributedOnePickRepository distributedOnePickRepository, UserService userService) {
         this.onePickRepository = onePickRepository;
         this.distributedOnePickRepository = distributedOnePickRepository;
+        this.userService = userService;
     }
 
     // 나의 모든 원픽 중 가장 최근 것만 조회
@@ -114,11 +122,66 @@ public class OnePickServiceImpl implements OnePickService {
 
 
     // 내가 뽑은 원픽 장소 평가
-    public void rateDistributedOnePick(Integer distributedOnePickId, Double rate) {
+    public void rateDistributedOnePick(DistributedRateDto distributedRateDto) {
 
-        DistributedOnePick distributedOnePick = distributedOnePickRepository.findById(distributedOnePickId).get();
-        distributedOnePick.setRate(rate);
+        DistributedOnePick distributedOnePick = distributedOnePickRepository.findById(distributedRateDto.getDistributedId()).get();
+
+        if (distributedRateDto.getRate() != null) {
+            distributedOnePick.setRate(distributedRateDto.getRate());
+        }
+        if (distributedRateDto.getDescription() != null) {
+            distributedOnePick.setDescription(distributedRateDto.getDescription());
+        }
+
         distributedOnePickRepository.save(distributedOnePick);
+
+    }
+
+    // 내가 뽑은 원픽 좋아요 추가
+    public void likeDistributedOnePick(Integer distributedOnePickId) {
+        DistributedOnePick distributedOnePick = distributedOnePickRepository.findById(distributedOnePickId).get();
+        if (distributedOnePick.getLiked() == null)
+            distributedOnePick.setLiked(false);
+        distributedOnePick.setLiked(!distributedOnePick.getLiked());
+        distributedOnePickRepository.save(distributedOnePick);
+    }
+
+    // 가장 많은 좋아요를 받은 원픽 조회
+    public RankedOnePickDto getMostLikedOnePick(Integer category) {
+        List<DistributedOnePick> onePickList = distributedOnePickRepository.findAllByCategory(category);
+        Map<Integer, Integer> onePickLikedCount = new HashMap<>();
+        PriorityQueue<Integer> heap = new PriorityQueue<>(Comparator.reverseOrder());
+
+        for (DistributedOnePick distributedOnePick : onePickList) {
+            if (distributedOnePick.getLiked() == null || !distributedOnePick.getLiked())
+                continue;
+            Integer id = distributedOnePick.getOnePick().getId();
+            onePickLikedCount.put(id, onePickLikedCount.getOrDefault(id, 0)+1);
+        }
+
+        if (onePickLikedCount.isEmpty())
+            return null;
+
+        PriorityQueue<Map.Entry<Integer, Integer>> maxLikesHeap = new PriorityQueue<>(
+                (a, b) -> b.getValue() - a.getValue()
+        );
+
+        maxLikesHeap.addAll(onePickLikedCount.entrySet());
+
+        Map.Entry<Integer, Integer> mostLikedPost = maxLikesHeap.poll();
+        Integer mostLikedPostId = mostLikedPost.getKey();
+        Integer mostLikedPostLikes = mostLikedPost.getValue();
+
+        OnePick mostLikedOnePick = onePickRepository.findById(mostLikedPostId).get();
+        OnePickDto onePickDto = OnePickDto.from(mostLikedOnePick);
+        Integer userId = mostLikedOnePick.getUser().getId();
+        User user = userService.getUser(userId);
+        return  RankedOnePickDto.builder()
+                .userId(userId)
+                .userProfileImage(user.getImage())
+                .onePickDto(onePickDto)
+                .likedCount(mostLikedPostLikes)
+                .build();
 
     }
 }
