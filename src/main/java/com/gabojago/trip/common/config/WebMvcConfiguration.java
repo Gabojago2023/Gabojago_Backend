@@ -13,13 +13,10 @@ import java.util.List;
 @Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer {
     //TODO: http method check
-    private final List<String> PATTERNS = Arrays.asList("/users/**","/articles/**/edit",
-            "/like-places/**",
-            "/places/scrap/**",
-            "/places/**/scrap/**",
-            "/places/**/comment/**"); // 조회도 로그인 했을 때만? -> comments 조회는 /comments로
-    private final List<String> EXCLUDE_PATTERNS = Arrays.asList("/users/nickname-random");
-    private final JwtInterceptor jwtInterceptor;
+
+    private final List<String> PATTERNS = Arrays.asList(""); // 조회도 로그인 했을 때만? -> comments 조회는 /comments로
+
+    private JwtInterceptor jwtInterceptor;
 
     public WebMvcConfiguration(JwtInterceptor jwtInterceptor) {
         this.jwtInterceptor = jwtInterceptor;
@@ -27,17 +24,16 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(jwtInterceptor)
-                .addPathPatterns(PATTERNS)
-                .excludePathPatterns(EXCLUDE_PATTERNS);
 
+        //registry.addInterceptor(jwtInterceptor).addPathPatterns(PATTERNS);
     }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         // TODO: setting pattern CORS
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000", "http://ec2-52-79-171-146.ap-northeast-2.compute.amazonaws.com","http://one-pick-go.com","https://one-pick-go.com")
+
+                .allowedOrigins("http://localhost:3000","https://one-pick-go.com")
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("*")
                 .allowCredentials(true);
