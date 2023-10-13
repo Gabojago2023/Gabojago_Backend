@@ -175,9 +175,11 @@ public class OnePickServiceImpl implements OnePickService {
         OnePick mostLikedOnePick = onePickRepository.findById(mostLikedPostId).get();
         OnePickDto onePickDto = OnePickDto.from(mostLikedOnePick);
         Integer userId = mostLikedOnePick.getUser().getId();
+        String userName = mostLikedOnePick.getUser().getName();
         User user = userService.getUser(userId);
         return  RankedOnePickDto.builder()
                 .userId(userId)
+                .userName(userName)
                 .userProfileImage(user.getImage())
                 .onePickDto(onePickDto)
                 .likedCount(mostLikedPostLikes)
