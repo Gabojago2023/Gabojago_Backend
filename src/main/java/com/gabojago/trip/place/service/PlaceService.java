@@ -24,7 +24,7 @@ public interface PlaceService {
     Slice<PlaceResponseDto> getBookmarkedAttractionsByUserId(Integer userId, Integer cursor,
             Integer size);
 
-    PlaceDetailResponseDto getPlaceDetailByPlaceId(Integer placeId);
+    PlaceDetailResponseDto getPlaceDetailByPlaceId(Integer placeId, Integer userId);
 
     void addScrapPlace(Integer placeId, Integer userId);
 
