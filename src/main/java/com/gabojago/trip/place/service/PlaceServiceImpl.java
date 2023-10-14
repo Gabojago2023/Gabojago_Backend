@@ -193,9 +193,9 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public PlaceDetailResponseDto getPlaceDetailByPlaceId(Integer placeId) {
+    public PlaceDetailResponseDto getPlaceDetailByPlaceId(Integer placeId, Integer userId) {
         Object[] result = placeRepository.findPlaceWithAvgRatingAndCommentCount(
-                placeId);
+                placeId, userId);
         return PlaceDetailResponseDto.from((Object[]) result[0]);
     }
 

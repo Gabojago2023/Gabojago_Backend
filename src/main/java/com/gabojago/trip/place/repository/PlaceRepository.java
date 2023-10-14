@@ -80,10 +80,13 @@ public interface PlaceRepository extends JpaRepository<Place, Integer> {
     @Query("SELECT p.id, p.name, p.longitude, p.latitude, p.address, p.category, p.imgUrl, p.imgUrl2, "
             + "p.sido.sidoCode, p.gugun.gugunCode, p.overview, "
             + "AVG(c.starRating) AS avgRating, "
-            + "COUNT(c.place.id) AS commentCount "
+            + "COUNT(c.place.id) AS commentCount, "
+            + "CASE WHEN ps.user.id IS NOT NULL THEN 1 ELSE 0 END AS isBookmarked "
             + "FROM Place p "
+            + "LEFT JOIN PlaceScrap ps ON p.id = ps.place.id AND ps.user.id = :userId "
             + "LEFT JOIN Comment c ON p.id = c.place.id WHERE p.id = :placeId")
-    Object[] findPlaceWithAvgRatingAndCommentCount(@Param("placeId") Integer placeId);
+    Object[] findPlaceWithAvgRatingAndCommentCount(@Param("placeId") Integer placeId,
+            @Param("userId") Integer userId);
 
     @Query(value = "SELECT new com.gabojago.trip.place.dto.response.RandomImageResponseDto(p.imgUrl) FROM Place p WHERE p.imgUrl <> '' ORDER BY FUNCTION('RAND')")
     List<RandomImageResponseDto> findRandomImages(Pageable pageable);
