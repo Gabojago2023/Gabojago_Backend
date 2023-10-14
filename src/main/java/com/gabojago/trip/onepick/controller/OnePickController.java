@@ -48,7 +48,9 @@ public class OnePickController {
 
         List<OnePickResponseDto> onePickDtos = new ArrayList<>();
         for (OnePick onePick : allOnePicks) {
-            onePickDtos.add(OnePickResponseDto.from(onePick));
+            OnePickResponseDto dto = OnePickResponseDto.from(onePick);
+            dto.setLikeCount(onePickService.getOnePickLikeCount(onePick.getId()));
+            onePickDtos.add(dto);
         }
 
         return new ResponseEntity<>(onePickDtos, HttpStatus.OK);
@@ -114,7 +116,10 @@ public class OnePickController {
             ticketService.useTicket(tickets.get(0).getId());
 
             OnePick onePick = onePickService.getOnePick(category, location, userId);
-            return new ResponseEntity<>(OnePickResponseDto.from(onePick), HttpStatus.OK);
+            OnePickResponseDto responseDto = OnePickResponseDto.from(onePick);
+            responseDto.setLikeCount(onePickService.getOnePickLikeCount(onePick.getId()));
+
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
 
         } catch (Exception e) {
             ticketService.revertTicket(ticketToUse);

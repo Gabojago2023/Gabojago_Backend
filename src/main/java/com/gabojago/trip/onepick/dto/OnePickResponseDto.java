@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OnePickResponseDto {
     private Integer id;
+    private Integer likeCount;
+
     private Integer userId;
     private String userName;
 
@@ -27,6 +29,7 @@ public class OnePickResponseDto {
 
     private BigDecimal latitude;
     private BigDecimal longitude;
+
 
     @Builder
     public OnePickResponseDto(Integer id, Integer userId, String userName, String description, Timestamp createdDate, Integer placeId, String placeName, String address, String placeImg, Integer category, Integer baseLocation, BigDecimal latitude, BigDecimal longitude) {
