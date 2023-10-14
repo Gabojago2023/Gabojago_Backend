@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface DistributedOnePickRepository extends JpaRepository<DistributedOnePick, Integer> {
     List<DistributedOnePick> findAllByUserId(Integer userId);
     List<DistributedOnePick> findAllByCategory(Integer category);
+    List<DistributedOnePick> findAllByOnePickId(Integer onePickId);
 }
