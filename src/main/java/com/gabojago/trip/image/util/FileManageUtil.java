@@ -25,7 +25,7 @@ import java.util.UUID;
 public class FileManageUtil {
 
     private final AmazonS3Client amazonS3Client;
-    //@Value("${cloud.aws.s3.bucket}")
+    @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
 
     /**
