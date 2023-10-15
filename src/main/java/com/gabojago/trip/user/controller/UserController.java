@@ -75,7 +75,7 @@ public class UserController {
             @RequestPart(value = "file", required = false) MultipartFile multipartFile,
             @RequestPart(value = "nickname", required = false) String nickname)
             throws NicknameAlreadyExistException {
-//        log.debug("[PUT] /user : file " + multipartFile.getOriginalFilename());
+        log.debug("[PUT] /user : file " + multipartFile);
         log.debug("[PUT] /user : nickname " + URLDecoder.decode(nickname, StandardCharsets.UTF_8));
 
         Integer id = authService.getUserIdFromToken(token);
