@@ -66,7 +66,7 @@ public class FileManageUtil {
             throw new FileUploadFailException("Filed upload failed");
         }
 
-        return "https://gabojago-image.s3.ap-northeast-2.amazonaws.com"+keyName;
+        return "https://gabojago-image.s3.ap-northeast-2.amazonaws.com/"+keyName;
     }
 
     /**
