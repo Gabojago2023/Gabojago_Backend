@@ -50,10 +50,6 @@ public class UserServiceImpl implements UserService {
         if (nickname != null && !nickname.isBlank()) {
             // 다른 사람이 바꾸고자하는 닉네임 이미 사용하고 있음
             User findUser = userRepository.findByNickname(nickname);
-            // 만약 유저 닉네임이 중복이라면 함수 종료
-            if (findUser != null && findUser.getId() != id) {
-                throw new NicknameAlreadyExistException("이미 사용중인 닉네임 입니다.");
-            }
             user.setNickname(nickname);
         }
         // 이미지 바꾸는 경우
