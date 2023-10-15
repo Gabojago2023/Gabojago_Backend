@@ -57,7 +57,7 @@ public class UserController {
 
     @GetMapping("/nickname-available")
     public ResponseEntity<NicknameDto> isAvailable(@RequestHeader("Authorization") String token,
-            @RequestBody String nickname) {
+            @RequestParam String nickname) {
         Integer userId = authService.getUserIdFromToken(token);
         NicknameDto nicknameDto = userService.isNicknameAvailable(userId, nickname);
         return new ResponseEntity<>(nicknameDto, HttpStatus.OK);
