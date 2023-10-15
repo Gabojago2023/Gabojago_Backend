@@ -73,19 +73,17 @@ public class UserController {
     @PutMapping
     public ResponseEntity<?> modify(@RequestHeader("Authorization") String token,
             @RequestPart(value = "file", required = false) MultipartFile multipartFile,
-            @RequestPart(value = "fileType", required = false) String fileType,
             @RequestPart(value = "nickname", required = false) String nickname)
             throws NicknameAlreadyExistException {
 //        log.debug("[PUT] /user : file " + multipartFile.getOriginalFilename());
-        log.debug("[PUT] /user : fileType " + fileType);
         log.debug("[PUT] /user : nickname " + URLDecoder.decode(nickname, StandardCharsets.UTF_8));
 
         Integer id = authService.getUserIdFromToken(token);
 
         String filePath = null;
-        if (fileType != null && !fileType.isBlank() && multipartFile != null
+        if (multipartFile != null
                 && !multipartFile.isEmpty()) {
-            filePath = fileManageUtil.uploadFile(fileType, multipartFile);
+            filePath = fileManageUtil.uploadFile(multipartFile);
         }
 
         log.debug("[filePath]>>>> " + filePath);

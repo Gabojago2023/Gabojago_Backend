@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
@@ -30,10 +31,11 @@ public class FileManageUtil {
     /**
      * S3로 파일 업로드
      */
-    public String uploadFile(String fileType, MultipartFile multipartFile)
+    public String uploadFile(MultipartFile multipartFile)
             throws FileUploadFailException {
+        LocalDate now = LocalDate.now();
 
-        String uploadFilePath = fileType + "/" + getFolderName();
+        String uploadFilePath = now + "/" + getFolderName();
 
         log.debug("uploadFilePath :" + uploadFilePath);
 
