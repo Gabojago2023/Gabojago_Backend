@@ -26,12 +26,15 @@ public class PlaceDetailResponseDto {
 
     private final Long commentCnt;
 
+    private final Integer isBookmarked;
+
     @Builder
     public PlaceDetailResponseDto(Integer id, String name, BigDecimal longitude,
             BigDecimal latitude,
             String address, String category, String imgUrl, String imgUrl2, int sidoCode,
             int gugunCode,
-            String overview, Double avgRating, Long commentCnt) {
+            String overview, Double avgRating, Long commentCnt,
+            Integer isBookmarked) {
         this.id = id;
         this.name = name;
         this.longitude = longitude;
@@ -45,6 +48,7 @@ public class PlaceDetailResponseDto {
         this.overview = overview;
         this.avgRating = avgRating;
         this.commentCnt = commentCnt;
+        this.isBookmarked = isBookmarked;
     }
 
     public static PlaceDetailResponseDto from(Object[] o) {
@@ -62,6 +66,7 @@ public class PlaceDetailResponseDto {
                 .overview((String) o[10])
                 .avgRating(o[11] != null ? (Double) o[11] : 0.0D)
                 .commentCnt((Long) o[12])
+                .isBookmarked((Integer) o[13])
                 .build();
     }
 

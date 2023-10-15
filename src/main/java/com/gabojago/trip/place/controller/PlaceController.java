@@ -60,7 +60,7 @@ public class PlaceController {
 
     @GetMapping("/keyword")
     public ResponseEntity<?> getPlaceSearchedByKeyword(
-            @RequestHeader(value = "Authorization", required=false) String token,
+            @RequestHeader(value = "Authorization", required = false) String token,
             @RequestParam("sido-code") Integer sidoCode,
             @RequestParam("gugun-code") Integer gugunCode, @RequestParam String keyword,
             @RequestParam(required = false) Integer cursor,
@@ -102,7 +102,7 @@ public class PlaceController {
 
     @GetMapping
     public ResponseEntity<?> getPlaceSearchedByLocation(
-            @RequestHeader(value = "Authorization", required=false) String token,
+            @RequestHeader(value = "Authorization", required = false) String token,
             @RequestParam("location") String location,
             @RequestParam(required = false) Integer cursor,
             @RequestParam Integer size) {
@@ -160,9 +160,19 @@ public class PlaceController {
     }
 
     @GetMapping("/{placeId}/detail")
-    public ResponseEntity<?> getPlaceDetail(@PathVariable Integer placeId) {
+    public ResponseEntity<?> getPlaceDetail(
+            @RequestHeader(value = "Authorization", required = false) String token,
+            @PathVariable Integer placeId) {
+        Integer userId;
+        if (token != null && !token.equals("")) {
+            userId = authService.getUserIdFromToken(token);
+        } else {
+            // 북마크 여부 상관없이
+            userId = 0;
+        }
+
         Map<String, PlaceDetailResponseDto> result = new HashMap<>();
-        PlaceDetailResponseDto placeDetailByPlaceId = placeService.getPlaceDetailByPlaceId(placeId);
+        PlaceDetailResponseDto placeDetailByPlaceId = placeService.getPlaceDetailByPlaceId(placeId, userId);
 
         result.put("place", placeDetailByPlaceId);
         return new ResponseEntity<>(result, HttpStatus.OK);

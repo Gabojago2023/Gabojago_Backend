@@ -90,7 +90,7 @@ class PlaceRepositoryTest {
     @Test
     void testFindPlaceWithAvgRatingAndCommentCount() {
         Object[] result = placeRepository.findPlaceWithAvgRatingAndCommentCount(
-                125266);
+                127269, 1);
         PlaceDetailResponseDto placeDetailResponseDto = PlaceDetailResponseDto.from((Object[]) result[0]);
         System.out.println("detail : " + placeDetailResponseDto);
     }
