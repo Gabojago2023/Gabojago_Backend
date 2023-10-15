@@ -92,7 +92,7 @@ public class UserController {
 
         userService.modifyUser(id, URLDecoder.decode(nickname, StandardCharsets.UTF_8), filePath);
 
-        return new ResponseEntity<>("닉네임 수정 성공", HttpStatus.OK);
+        return new ResponseEntity<>("수정 성공", HttpStatus.OK);
     }
 
     @DeleteMapping("/{userId}")
