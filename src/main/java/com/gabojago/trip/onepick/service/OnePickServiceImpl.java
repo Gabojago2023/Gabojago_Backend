@@ -186,4 +186,16 @@ public class OnePickServiceImpl implements OnePickService {
                 .build();
 
     }
+
+    public Integer getOnePickLikeCount(Integer onePickId) {
+        List<DistributedOnePick> onePickList = distributedOnePickRepository.findAllByOnePickId(onePickId);
+        Integer likeCount = 0;
+        for (DistributedOnePick distributedOnePick : onePickList) {
+            if (distributedOnePick.getLiked() != null && distributedOnePick.getLiked())
+                likeCount++;
+        }
+        return likeCount;
+    }
+
+
 }

@@ -14,17 +14,17 @@ public class DistributedOnePickDto {
     private Integer id;
     private Double rate;
     private Timestamp createdAt;
-    private OnePickDto onePickDto;
+    private OnePickResponseDto onePickResponseDto;
     private String description;
     private Boolean liked;
 
     @Builder
     public DistributedOnePickDto(Integer id, Double rate, Timestamp createdAt,
-            OnePickDto onePickDto, String description, Boolean liked) {
+            OnePickResponseDto onePickResponseDto, String description, Boolean liked) {
         this.id = id;
         this.rate = rate;
         this.createdAt = createdAt;
-        this.onePickDto = onePickDto;
+        this.onePickResponseDto = onePickResponseDto;
         this.description = description;
         this.liked = liked;
     }
@@ -34,7 +34,7 @@ public class DistributedOnePickDto {
                 .id(distributedOnePick.getId())
                 .rate(distributedOnePick.getRate())
                 .createdAt(distributedOnePick.getCreatedAt())
-                .onePickDto(OnePickDto.from(distributedOnePick.getOnePick()))
+                .onePickResponseDto(OnePickResponseDto.from(distributedOnePick.getOnePick()))
                 .description(distributedOnePick.getDescription())
                 .liked(distributedOnePick.getLiked())
                 .build();

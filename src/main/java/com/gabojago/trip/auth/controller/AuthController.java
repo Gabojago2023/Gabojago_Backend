@@ -56,21 +56,24 @@ public class AuthController {
         OAuthUserInfo oauthUser = null;
         OAuthUserInfoDto userInitialInfo;
         if (socialType.equals(OAuthProvider.GOOGLE.getProvider())) {
+            log.debug("GOOGLE");
             socialAuthService = googleAuthService;
             oAuthTokenDto = socialAuthService.getToken(authorizationCode);
             userInitialInfo = socialAuthService.getUserInfo(oAuthTokenDto);
+            log.debug("GOOGLE USERINITIALINFO");
             oauthUser = new GoogleUserInfo(userInitialInfo);
         } else if (socialType.equals(OAuthProvider.KAKAO.getProvider())) {
+            log.debug("KAKAO");
             socialAuthService = kakaoAuthService;
             oAuthTokenDto = socialAuthService.getToken(authorizationCode);
             userInitialInfo = socialAuthService.getUserInfo(oAuthTokenDto);
+            log.debug("KAKAO USERINITIALINFO");
             oauthUser = new KakaoUserInfo(userInitialInfo);
         }
-
+        log.debug("!!!!!");
         // provider 랑 providerId로 User 있는지 확인
         User userEntity = userService.getUserByProviderId(oauthUser.getProvider(),
                 oauthUser.getProviderId());
-
         // 유저가 존재해야 함
         if (userEntity == null) {
             throw new UserNotFoundException("유저가 존재하지 않습니다");

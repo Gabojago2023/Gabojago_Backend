@@ -28,4 +28,6 @@ public interface OnePickService {
     void likeDistributedOnePick(Integer distributedOnePickId);
 
     RankedOnePickDto getMostLikedOnePick(Integer category);
+
+    Integer getOnePickLikeCount(Integer onePickId);
 }
