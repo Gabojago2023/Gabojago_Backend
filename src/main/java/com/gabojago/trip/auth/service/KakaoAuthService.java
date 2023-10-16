@@ -36,8 +36,6 @@ public class KakaoAuthService implements SocialAuthService {
     @Value("${auth.kakao.redirect-url-sign}")
     private String REDIRECT_URI_SIGN ;
 
-    @Value("${auth.kakao.redirect-url-login}")
-    private String REDIRECT_URI_LOGIN ;
 
     @Autowired
     private RestTemplate restTemplate;
