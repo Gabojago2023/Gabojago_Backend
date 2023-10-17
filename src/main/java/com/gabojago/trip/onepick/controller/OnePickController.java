@@ -84,15 +84,26 @@ public class OnePickController {
         // check if logged in
         Integer userId = authService.getUserIdFromToken(token);
 
-        // register one pick
+        // check if ticket exists
+        Integer ticketCount = ticketService.countTicketsByUserId(userId);
+        if (ticketCount == 0)
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+
+        List<Ticket> tickets = List.of(ticketService.findTicketsByUserId(userId));
+        Ticket ticketToUse = tickets.get(0);
+
+        // atomic transaction
         try {
+            ticketService.useTicket(tickets.get(0).getId());
+
             onePickService.addOnePick(OnePick.from(onePickDto, new User(userId)));
             return new ResponseEntity<>(null, HttpStatus.CREATED);
 
         } catch (Exception e) {
-            // non-existing place id
+            ticketService.revertTicket(ticketToUse);
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
+
     }
 
     // 티켓 소비해서 원픽 뽑기

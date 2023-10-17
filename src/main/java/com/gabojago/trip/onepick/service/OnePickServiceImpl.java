@@ -49,7 +49,7 @@ public class OnePickServiceImpl implements OnePickService {
 
         HashMap<Integer, OnePick> validOnePicks = new HashMap<>();
         for (OnePick onePick : userOnePicks) {
-            validOnePicks.put(onePick.getPlace().getId(), onePick);
+            validOnePicks.put(onePick.getCategory(), onePick);
         }
 
         return new ArrayList<>(validOnePicks.values());
