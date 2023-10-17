@@ -31,7 +31,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 "/ticket/purchase",
 "/plans/**",
 "/users/nickname-available",
-"/attendance/**"); // 조회도 로그인 했을 때만? -> comments 조회는 /comments로
+"/attendance"); // 조회도 로그인 했을 때만? -> comments 조회는 /comments로
 
     private JwtInterceptor jwtInterceptor;
 
