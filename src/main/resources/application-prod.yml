@@ -56,8 +56,7 @@ auth:
       - account_email
     token-req-url : https://kauth.kakao.com/oauth/token
     user-info-request-url: https://kapi.kakao.com/v2/user/me
-    redirect-url-sign: https://one-pick-go.com
-    redirect-url-login: https://one-pick-go.com
+    redirect-url: https://one-pick-go.com
 
 logging:
   level:
