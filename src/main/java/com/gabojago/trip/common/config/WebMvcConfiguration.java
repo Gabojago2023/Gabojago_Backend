@@ -18,7 +18,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 "/one-pick",
 //"/one-pick/like",
 //"/one-pick/random",
-"/one-pick/random-all",
+//"/one-pick/random-all",
 "/places",
 "/places/{placeId:\\\\d+}/comment",
 "/places/{placeId:\\\\d+}/comment/{commentId:\\\\d+}",
