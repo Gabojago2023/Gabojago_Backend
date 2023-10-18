@@ -33,8 +33,8 @@ public class KakaoAuthService implements SocialAuthService {
     @Value("${auth.kakao.client-secret}")
     private String CLIENT_SECRET;
 
-    @Value("${auth.kakao.redirect-url-sign}")
-    private String REDIRECT_URI_SIGN ;
+    @Value("${auth.kakao.redirect-url}")
+    private String REDIRECT_URI ;
 
 
     @Autowired
@@ -140,7 +140,7 @@ public class KakaoAuthService implements SocialAuthService {
         params.put("grant_type", "authorization_code");
         params.put("client_id", CLIENT_ID);
         params.put("client_secret", CLIENT_SECRET);
-        params.put("redirect_uri", REDIRECT_URI_SIGN);
+        params.put("redirect_uri", REDIRECT_URI);
         params.put("code", code);
         return params;
     }
