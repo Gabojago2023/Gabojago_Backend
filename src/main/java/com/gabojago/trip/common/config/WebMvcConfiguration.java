@@ -24,7 +24,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 "/places/{placeId:\\\\d+}/comment/{commentId:\\\\d+}",
 "/places/{placeId:\\\\d+}/comment/{commentId:\\\\d+}",
 //"/places/{placeId:\\d+}/detail",
-"/places/{placeId:\\\\d+}/scrap",
+//"/places/{placeId:\\\\d+}/scrap",
 //"/places/keyword",
 //"/places/scrap",
 "/ticket/count",
