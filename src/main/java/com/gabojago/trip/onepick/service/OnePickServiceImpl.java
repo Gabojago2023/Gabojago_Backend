@@ -100,6 +100,8 @@ public class OnePickServiceImpl implements OnePickService {
                 DistributedOnePick distributedOnePick = DistributedOnePick.builder()
                         .onePick(onePick)
                         .user(new User(userId))
+                        .rate(0.0)
+                        .liked(false)
                         .build();
                 distributedOnePickRepository.save(distributedOnePick);
                 break;

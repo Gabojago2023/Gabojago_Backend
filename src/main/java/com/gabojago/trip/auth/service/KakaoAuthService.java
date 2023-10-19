@@ -92,6 +92,7 @@ public class KakaoAuthService implements SocialAuthService {
         } catch (Exception e) {
             log.debug("카카오 API 연결 실패: {}", code);
             log.debug(e.getMessage());
+            log.debug("????????"+REDIRECT_URI);
             throw new KakaoAuthenticateException("[2] 카카오 서버와의 연결에 실패하였습니다.");
         }
     }
