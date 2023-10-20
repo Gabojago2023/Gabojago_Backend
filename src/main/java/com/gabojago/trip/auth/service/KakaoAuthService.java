@@ -116,10 +116,14 @@ public class KakaoAuthService implements SocialAuthService {
             log.debug("[UserInfo-responseBody] " + responseBody);
             JSONParser parser = new JSONParser();
             JSONObject userInfo = (JSONObject) parser.parse(responseBody);
-
+            log.debug(userInfo);
             JSONObject kakaoAccount = (JSONObject) userInfo.get("kakao_account");
             log.debug("[UserInfo-JsonObject-kakao_account] " + kakaoAccount);
-            String email = (boolean) kakaoAccount.get("has_email") == true ? kakaoAccount.get("email").toString() : "";
+            
+            String email "test@gmail.com";
+            if(kakaoAccount!=null){
+                email = (boolean) kakaoAccount.get("has_email") == true ? kakaoAccount.get("email").toString() : "";
+            }
             JSONObject properties = (JSONObject) userInfo.get("properties");
             log.debug("[UserInfo-JsonObject-properties] " + properties);
 
