@@ -117,7 +117,7 @@ public class KakaoAuthService implements SocialAuthService {
             JSONParser parser = new JSONParser();
             JSONObject userInfo = (JSONObject) parser.parse(responseBody);
             JSONObject kakaoAccount = (JSONObject) userInfo.get("kakao_account");
-            log.debug("[UserInfo-JsonObject-kakao_account] " + kakaoAccount==null);
+            //log.debug("[UserInfo-JsonObject-kakao_account] " + kakaoAccount==null);
             
             String email = "test@gmail.com";
             if(kakaoAccount!=null){
