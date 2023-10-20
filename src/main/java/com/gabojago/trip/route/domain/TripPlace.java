@@ -1,6 +1,8 @@
 package com.gabojago.trip.route.domain;
 
 import com.gabojago.trip.place.domain.Place;
+import com.gabojago.trip.route.dto.TripPlaceDto;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -21,5 +23,21 @@ public class TripPlace {
     @JoinColumn(name = "TRIP_ROUTE_ID")
     private TripRoute tripRoute;
 
+    @Builder
+    public TripPlace(Integer id, Place place, int tripDay, int tripOrder, TripRoute tripRoute) {
+        this.id = id;
+        this.place = place;
+        this.tripDay = tripDay;
+        this.tripOrder = tripOrder;
+        this.tripRoute = tripRoute;
+    }
 
+    public static TripPlace from(TripPlaceDto dto, TripRoute tripRoute, Place place) {
+        return TripPlace.builder()
+                .place(place)
+                .tripDay(dto.getTripDay())
+                .tripOrder(dto.getTripOrder())
+                .tripRoute(tripRoute)
+                .build();
+    }
 }
