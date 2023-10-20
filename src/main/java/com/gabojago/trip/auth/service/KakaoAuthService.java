@@ -120,7 +120,7 @@ public class KakaoAuthService implements SocialAuthService {
             JSONObject kakaoAccount = (JSONObject) userInfo.get("kakao_account");
             log.debug("[UserInfo-JsonObject-kakao_account] " + kakaoAccount);
             
-            String email "test@gmail.com";
+            String email = "test@gmail.com";
             if(kakaoAccount!=null){
                 email = (boolean) kakaoAccount.get("has_email") == true ? kakaoAccount.get("email").toString() : "";
             }
