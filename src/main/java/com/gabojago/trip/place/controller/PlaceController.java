@@ -64,8 +64,8 @@ public class PlaceController {
             @RequestParam("sido-code") Integer sidoCode,
             @RequestParam("gugun-code") Integer gugunCode, @RequestParam String keyword,
             @RequestParam(required = false) Integer cursor,
-            @RequestParam Integer size) {
-        log.debug(token);
+            @RequestParam Integer size,
+            @RequestParam(required = false) Integer type) {
         Integer userId;
         if (token != null && !token.equals("")) {
             userId = authService.getUserIdFromToken(token);
@@ -75,9 +75,14 @@ public class PlaceController {
         }
 
         Map<String, Object> result = new HashMap<>();
-
-        Slice<PlaceResponseDto> list = placeService.searchAttractionByKeyword(userId, sidoCode,
-                gugunCode, keyword, cursor, size);
+        Slice<PlaceResponseDto> list;
+        if(type == null) {
+            list = placeService.searchAttractionByKeyword(userId, sidoCode,
+                    gugunCode, keyword, cursor, size);
+        } else {
+            // type 파라미터가 주어진 경우, 해당 타입으로 검색을 수행
+            list = placeService.searchAttractionByKeywordAndType(userId, sidoCode, gugunCode, keyword, cursor, size, type);
+        }
 
         Boolean hasNext = list.hasNext();
 
@@ -172,7 +177,8 @@ public class PlaceController {
         }
 
         Map<String, PlaceDetailResponseDto> result = new HashMap<>();
-        PlaceDetailResponseDto placeDetailByPlaceId = placeService.getPlaceDetailByPlaceId(placeId, userId);
+        PlaceDetailResponseDto placeDetailByPlaceId = placeService.getPlaceDetailByPlaceId(placeId,
+                userId);
 
         result.put("place", placeDetailByPlaceId);
         return new ResponseEntity<>(result, HttpStatus.OK);

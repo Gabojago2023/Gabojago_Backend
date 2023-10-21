@@ -89,6 +89,36 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
+    public Slice<PlaceResponseDto> searchAttractionByKeywordAndType(Integer userId,
+            Integer sidoCode, Integer gugunCode, String keyword, Integer cursor, Integer size,
+            Integer type) {
+        Pageable pageable = Pageable.ofSize(size + 1);
+
+        List<PlaceResponseDto> placeResponseDtoList = new ArrayList<>();
+
+        if (cursor == null) {
+            List<Object[]> result = placeRepository.findPlacesByFilterAndType(userId, sidoCode,
+                    gugunCode, keyword, pageable, type.toString());
+            for (Object[] o : result) {
+                PlaceResponseDto from = PlaceResponseDto.from2(o);
+                placeResponseDtoList.add(from);
+            }
+            pageable = Pageable.ofSize(size);
+            return checkLastPage2(pageable, placeResponseDtoList);
+        } else {
+            List<Object[]> result = placeRepository.findNextPlacesByFilterAndType(userId, sidoCode,
+                    gugunCode, keyword, cursor,
+                    pageable, type.toString());
+            for (Object[] o : result) {
+                PlaceResponseDto from = PlaceResponseDto.from2(o);
+                placeResponseDtoList.add(from);
+            }
+            pageable = Pageable.ofSize(size);
+            return checkLastPage2(pageable, placeResponseDtoList);
+        }
+    }
+
+    @Override
     public List<PlaceResponseDto> searchTop3ScrappedPlaces(Integer top) {
         PageRequest pageRequest = PageRequest.of(0, top);
 
