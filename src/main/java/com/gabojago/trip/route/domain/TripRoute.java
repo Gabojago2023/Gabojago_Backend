@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -29,6 +31,10 @@ public class TripRoute {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany
+    @JoinColumn(name ="TRIP_PLACE_ID")
+    List<TripPlace> tripPlaceList;
 
     @Builder
     public TripRoute(Integer id, String name, LocalDateTime createdAt, String tripImgUrl, Integer bestPlaceId, String content, boolean isPublic, LocalDate startDate, User user) {

@@ -1,5 +1,6 @@
 package com.gabojago.trip.route.dto;
 
+import com.gabojago.trip.route.domain.TripPlace;
 import lombok.*;
 
 @Getter
@@ -15,5 +16,13 @@ public class TripPlaceDto {
         this.tripDay = tripDay;
         this.tripOrder = tripOrder;
         this.placeId = placeId;
+    }
+
+    public static TripPlaceDto from(TripPlace tripPlace) {
+        return TripPlaceDto.builder()
+                .placeId(tripPlace.getPlace().getId())
+                .tripOrder(tripPlace.getTripOrder())
+                .tripDay(tripPlace.getTripDay())
+                .build();
     }
 }
