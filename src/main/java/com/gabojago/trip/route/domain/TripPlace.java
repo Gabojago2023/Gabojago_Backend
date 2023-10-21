@@ -22,6 +22,7 @@ public class TripPlace {
     private int tripDay;
     private int tripOrder;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="TRIP_ROUTE_ID", nullable = false)
     private TripRoute tripRoute;
 
     @Builder
