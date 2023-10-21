@@ -1,6 +1,7 @@
 package com.gabojago.trip.route.domain;
 
 import com.gabojago.trip.place.domain.Place;
+import com.gabojago.trip.route.dto.TripPlaceCreateDto;
 import com.gabojago.trip.route.dto.TripPlaceDto;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,6 +36,14 @@ public class TripPlace {
     }
 
     public static TripPlace from(TripPlaceDto dto, TripRoute tripRoute, Place place) {
+        return TripPlace.builder()
+                .place(place)
+                .tripDay(dto.getTripDay())
+                .tripOrder(dto.getTripOrder())
+                .tripRoute(tripRoute)
+                .build();
+    }
+    public static TripPlace from(TripPlaceCreateDto dto, TripRoute tripRoute, Place place) {
         return TripPlace.builder()
                 .place(place)
                 .tripDay(dto.getTripDay())
