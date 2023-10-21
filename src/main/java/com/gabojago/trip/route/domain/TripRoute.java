@@ -33,7 +33,6 @@ public class TripRoute {
     private User user;
 
     @OneToMany
-    @JoinColumn(name ="TRIP_PLACE_ID")
     List<TripPlace> tripPlaceList;
 
     @Builder
