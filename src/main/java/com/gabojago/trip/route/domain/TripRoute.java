@@ -32,7 +32,7 @@ public class TripRoute {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany
+    @OneToMany(mappedBy = "tripRoute")
     List<TripPlace> tripPlaceList;
 
     @Builder
