@@ -1,5 +1,6 @@
 package com.gabojago.trip.route.dto;
 
+import com.gabojago.trip.place.domain.Place;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,8 +38,25 @@ public class PlaceDetailDto {
         this.gugunCode = gugunCode;
         this.overview = overview;
     }
+
     @Builder
-    public PlaceDetailDto(String name){
+    public PlaceDetailDto(String name) {
         this.name = name;
+    }
+
+    public static PlaceDetailDto from(Place place) {
+        return PlaceDetailDto.builder()
+                .id(place.getId())
+                .name(place.getName())
+                .longitude(place.getLongitude())
+                .latitude(place.getLatitude())
+                .address(place.getAddress())
+                .category(place.getCategory())
+                .imgUrl(place.getImgUrl())
+                .imgUrl2(place.getImgUrl2())
+                .sidoCode(place.getSido().getSidoCode())
+                .gugunCode(place.getGugun().getGugunCode())
+                .overview(place.getOverview())
+                .build();
     }
 }

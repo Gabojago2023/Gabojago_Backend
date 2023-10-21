@@ -39,7 +39,7 @@ public class TripRouteServiceImpl implements TripRouteService {
         // 장소_id, 여행일자, 여행 순서 차례대로 저장
         List<TripPlaceDto> tripPlaces = tripRouteCreateDto.getTripPlaces();
         for (TripPlaceDto tripPlaceDto : tripPlaces) {
-            Optional<Place> byId = placeRepository.findById(tripPlaceDto.getPlaceId());
+            Optional<Place> byId = placeRepository.findById(tripPlaceDto.getPlace().getId());
             if (byId.isPresent()) {
                 Place place = byId.get();
                 tripPlaceRepository.save(TripPlace.from(tripPlaceDto, savedTripRoute, place));
