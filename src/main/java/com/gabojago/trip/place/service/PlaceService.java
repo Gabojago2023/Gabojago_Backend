@@ -15,6 +15,12 @@ public interface PlaceService {
             String keyword, Integer cursor,
             Integer size);
 
+    Slice<PlaceResponseDto> searchAttractionByKeywordAndType(Integer userId, Integer sidoCode,
+            Integer gugunCode,
+            String keyword, Integer cursor,
+            Integer size,
+            Integer type);
+
     List<PlaceResponseDto> searchTop3ScrappedPlaces(Integer top);
 
     Slice<PlaceResponseDto> searchAttractionByLocation(Integer userId, String location,
