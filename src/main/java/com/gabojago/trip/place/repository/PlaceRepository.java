@@ -61,6 +61,32 @@ public interface PlaceRepository extends JpaRepository<Place, Integer> {
             @Param("sidoCode") Integer sidoCode, @Param("gugunCode") Integer gugunCode,
             @Param("keyword") String keyword, @Param("cursor") Integer cursor, Pageable pageable);
 
+    @Query("SELECT p.id, p.name, p.longitude, p.latitude, p.address, p.category, p.imgUrl, p.imgUrl2, p.sido.sidoCode, p.gugun.gugunCode, p.overview, "
+            + "CASE WHEN ps.user.id IS NOT NULL THEN 1 ELSE 0 END AS isBookmarked "
+            + "FROM Place p "
+            + "LEFT JOIN PlaceScrap ps ON p.id = ps.place.id AND ps.user.id = :userId "
+            + "WHERE p.sido.sidoCode = :sidoCode " + "AND p.gugun.gugunCode = :gugunCode "
+            + "AND p.category = :type "
+            + "AND p.name LIKE CONCAT('%', :keyword, '%') "
+            + "ORDER BY CASE WHEN ps.user.id IS NOT NULL THEN 1 ELSE 0 END DESC, p.id")
+    List<Object[]> findPlacesByFilterAndType(@Param("userId") Integer userId,
+            @Param("sidoCode") Integer sidoCode, @Param("gugunCode") Integer gugunCode,
+            @Param("keyword") String keyword, Pageable pageable, @Param("type") String type);
+
+    @Query("SELECT p.id, p.name, p.longitude, p.latitude, p.address, p.category, p.imgUrl, p.imgUrl2, p.sido.sidoCode, p.gugun.gugunCode, p.overview, "
+            + "CASE WHEN ps.user.id IS NOT NULL THEN 1 ELSE 0 END AS isBookmarked "
+            + "FROM Place p "
+            + "LEFT JOIN PlaceScrap ps ON p.id = ps.place.id AND ps.user.id = :userId "
+            + "WHERE p.sido.sidoCode = :sidoCode " + "AND p.gugun.gugunCode = :gugunCode "
+            + "AND p.category = :type "
+            + "AND p.name LIKE CONCAT('%', :keyword, '%') "
+            + "AND p.id > :cursor "
+            + "ORDER BY p.id")
+    List<Object[]> findNextPlacesByFilterAndType(@Param("userId") Integer userId,
+            @Param("sidoCode") Integer sidoCode, @Param("gugunCode") Integer gugunCode,
+            @Param("keyword") String keyword, @Param("cursor") Integer cursor, Pageable pageable,
+            @Param("type") String type);
+
     @Query("SELECT p.id, p.name, p.longitude, p.latitude, p.address, p.category, p.imgUrl, p.imgUrl2, p.sido.sidoCode, p.gugun.gugunCode, p.overview, ps.id, "
             + "CASE WHEN ps.user.id IS NOT NULL THEN 1 ELSE 0 END AS isBookmarked "
             + "FROM Place p " + "JOIN PlaceScrap ps ON p.id = ps.place.id "
