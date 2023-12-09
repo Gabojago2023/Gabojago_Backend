@@ -30,7 +30,7 @@ public class SwaggerConfig {
         SecurityRequirement securityRequirement = new SecurityRequirement().addList("bearerAuth");
 
         return new OpenAPI().components(new Components().addSecuritySchemes("bearerAuth",securityScheme)).security(Arrays.asList(securityRequirement)).info(new Info()
-                .title("Gunpang Spring Boot REST API")
+                .title("Onepick Spring Boot REST API")
                 .version("1.0.0")
                 .description("Onepick의 swagger api 입니다."));
     }
