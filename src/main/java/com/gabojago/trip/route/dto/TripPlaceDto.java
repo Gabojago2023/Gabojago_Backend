@@ -1,5 +1,6 @@
 package com.gabojago.trip.route.dto;
 
+import com.gabojago.trip.route.domain.TripPlace;
 import lombok.*;
 
 @Getter
@@ -9,11 +10,20 @@ import lombok.*;
 public class TripPlaceDto {
     private int tripDay;
     private int tripOrder;
-    private int placeId;
+    private PlaceDetailDto place;
+    //private int placeId;
     @Builder
-    public TripPlaceDto(int tripDay, int tripOrder, int placeId) {
+    public TripPlaceDto(int tripDay, int tripOrder, PlaceDetailDto place) {
         this.tripDay = tripDay;
         this.tripOrder = tripOrder;
-        this.placeId = placeId;
+        this.place = place;
+    }
+
+    public static TripPlaceDto from(TripPlace tripPlace) {
+        return TripPlaceDto.builder()
+                .place(PlaceDetailDto.from(tripPlace.getPlace()))
+                .tripOrder(tripPlace.getTripOrder())
+                .tripDay(tripPlace.getTripDay())
+                .build();
     }
 }

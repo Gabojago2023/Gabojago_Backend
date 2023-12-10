@@ -6,6 +6,7 @@ import com.gabojago.trip.onepick.domain.OnePick;
 import com.gabojago.trip.onepick.dto.DistributedOnePickDto;
 import com.gabojago.trip.onepick.dto.DistributedRateDto;
 import com.gabojago.trip.onepick.dto.OnePickDto;
+import com.gabojago.trip.onepick.dto.OnePickResponseDto;
 import com.gabojago.trip.onepick.dto.RankedOnePickDto;
 import com.gabojago.trip.onepick.service.OnePickService;
 import com.gabojago.trip.ticket.domain.Ticket;
@@ -40,14 +41,16 @@ public class OnePickController {
 
     // 나의 모든 원픽 장소 조회
     @GetMapping
-    public ResponseEntity<List<OnePickDto>> getAllOnePicks(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<List<OnePickResponseDto>> getAllOnePicks(@RequestHeader("Authorization") String token) {
         Integer userId = authService.getUserIdFromToken(token);
 
         List<OnePick> allOnePicks = onePickService.getAllValidOnePicksByUserId(userId);
 
-        List<OnePickDto> onePickDtos = new ArrayList<>();
+        List<OnePickResponseDto> onePickDtos = new ArrayList<>();
         for (OnePick onePick : allOnePicks) {
-            onePickDtos.add(OnePickDto.from(onePick));
+            OnePickResponseDto dto = OnePickResponseDto.from(onePick);
+            dto.setLikeCount(onePickService.getOnePickLikeCount(onePick.getId()));
+            onePickDtos.add(dto);
         }
 
         return new ResponseEntity<>(onePickDtos, HttpStatus.OK);
@@ -81,25 +84,6 @@ public class OnePickController {
         // check if logged in
         Integer userId = authService.getUserIdFromToken(token);
 
-        // register one pick
-        try {
-            onePickService.addOnePick(OnePick.from(onePickDto, new User(userId)));
-            return new ResponseEntity<>(null, HttpStatus.CREATED);
-
-        } catch (Exception e) {
-            // non-existing place id
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    // 티켓 소비해서 원픽 뽑기
-    @GetMapping("/random")
-    public ResponseEntity<OnePickDto> getOnePick(@RequestHeader("Authorization") String token, @RequestParam(required = false) Integer category, @RequestParam(required = false) Integer location) {
-        log.debug("[GET] /one-pick/random", category, location);
-
-        // check if logged in
-        Integer userId = authService.getUserIdFromToken(token);
-
         // check if ticket exists
         Integer ticketCount = ticketService.countTicketsByUserId(userId);
         if (ticketCount == 0)
@@ -112,12 +96,45 @@ public class OnePickController {
         try {
             ticketService.useTicket(tickets.get(0).getId());
 
-            OnePick onePick = onePickService.getOnePick(category, location, userId);
-            return new ResponseEntity<>(OnePickDto.from(onePick), HttpStatus.OK);
+            onePickService.addOnePick(OnePick.from(onePickDto, new User(userId)));
+            return new ResponseEntity<>(null, HttpStatus.CREATED);
 
         } catch (Exception e) {
             ticketService.revertTicket(ticketToUse);
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    // 티켓 소비해서 원픽 뽑기
+    @GetMapping("/random")
+    public ResponseEntity<?> getOnePick(@RequestHeader("Authorization") String token, @RequestParam(required = false) Integer category, @RequestParam(required = false) Integer location) {
+        log.debug("[GET] /one-pick/random", category, location);
+
+        // check if logged in
+        Integer userId = authService.getUserIdFromToken(token);
+
+        // check if ticket exists
+        Integer ticketCount = ticketService.countTicketsByUserId(userId);
+        if (ticketCount == 0)
+            return new ResponseEntity<>("티켓이 부족합니다.", HttpStatus.BAD_REQUEST);
+
+        List<Ticket> tickets = List.of(ticketService.findTicketsByUserId(userId));
+        Ticket ticketToUse = tickets.get(0);
+
+        // atomic transaction
+        try {
+            ticketService.useTicket(tickets.get(0).getId());
+
+            OnePick onePick = onePickService.getOnePick(category, location, userId);
+            OnePickResponseDto responseDto = OnePickResponseDto.from(onePick);
+            responseDto.setLikeCount(onePickService.getOnePickLikeCount(onePick.getId()));
+
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
+
+        } catch (Exception e) {
+            ticketService.revertTicket(ticketToUse);
+            return new ResponseEntity<>("더 이상 뽑을 수 있는 원픽이 없습니다.", HttpStatus.BAD_REQUEST);
         }
     }
 

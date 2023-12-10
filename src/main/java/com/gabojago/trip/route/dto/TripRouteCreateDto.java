@@ -20,5 +20,5 @@ public class TripRouteCreateDto {
     private boolean isPublic;
 
     private Integer bestPlaceId;
-    private List<TripPlaceDto> tripPlaces;
+    private List<TripPlaceCreateDto> tripPlaces;
 }

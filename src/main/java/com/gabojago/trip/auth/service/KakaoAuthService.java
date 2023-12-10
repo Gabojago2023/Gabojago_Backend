@@ -33,11 +33,9 @@ public class KakaoAuthService implements SocialAuthService {
     @Value("${auth.kakao.client-secret}")
     private String CLIENT_SECRET;
 
-    @Value("${auth.kakao.redirect-url-sign}")
-    private String REDIRECT_URI_SIGN ;
+    @Value("${auth.kakao.redirect-url}")
+    private String REDIRECT_URI ;
 
-    @Value("${auth.kakao.redirect-url-login}")
-    private String REDIRECT_URI_LOGIN ;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -94,6 +92,7 @@ public class KakaoAuthService implements SocialAuthService {
         } catch (Exception e) {
             log.debug("카카오 API 연결 실패: {}", code);
             log.debug(e.getMessage());
+            log.debug("????????"+REDIRECT_URI);
             throw new KakaoAuthenticateException("[2] 카카오 서버와의 연결에 실패하였습니다.");
         }
     }
@@ -117,10 +116,13 @@ public class KakaoAuthService implements SocialAuthService {
             log.debug("[UserInfo-responseBody] " + responseBody);
             JSONParser parser = new JSONParser();
             JSONObject userInfo = (JSONObject) parser.parse(responseBody);
-
-            JSONObject kakaoAccount = (JSONObject) userInfo.get("kakao_account");
-            log.debug("[UserInfo-JsonObject-kakao_account] " + kakaoAccount);
-            String email = (boolean) kakaoAccount.get("has_email") == true ? kakaoAccount.get("email").toString() : "";
+            //JSONObject kakaoAccount = (JSONObject) userInfo.get("kakao_account");
+            //log.debug("[UserInfo-JsonObject-kakao_account] " + kakaoAccount==null);
+            
+            String email = "test@gmail.com";
+            // if(kakaoAccount!=null){
+            //     email = (boolean) kakaoAccount.get("has_email") == true ? kakaoAccount.get("email").toString() : "";
+            // }
             JSONObject properties = (JSONObject) userInfo.get("properties");
             log.debug("[UserInfo-JsonObject-properties] " + properties);
 
@@ -142,7 +144,7 @@ public class KakaoAuthService implements SocialAuthService {
         params.put("grant_type", "authorization_code");
         params.put("client_id", CLIENT_ID);
         params.put("client_secret", CLIENT_SECRET);
-        params.put("redirect_uri", REDIRECT_URI_SIGN);
+        params.put("redirect_uri", REDIRECT_URI);
         params.put("code", code);
         return params;
     }

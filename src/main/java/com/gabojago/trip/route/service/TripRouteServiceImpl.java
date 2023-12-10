@@ -5,10 +5,7 @@ import com.gabojago.trip.place.repository.PlaceRepository;
 import com.gabojago.trip.route.domain.Companion;
 import com.gabojago.trip.route.domain.TripPlace;
 import com.gabojago.trip.route.domain.TripRoute;
-import com.gabojago.trip.route.dto.TripPlaceDto;
-import com.gabojago.trip.route.dto.TripRouteCreateDto;
-import com.gabojago.trip.route.dto.TripRouteModifyDto;
-import com.gabojago.trip.route.dto.TripRouteResDto;
+import com.gabojago.trip.route.dto.*;
 import com.gabojago.trip.route.exception.TripRouteNotFoundException;
 import com.gabojago.trip.route.repository.CompanionRepository;
 import com.gabojago.trip.route.repository.TripPlaceRepository;
@@ -37,8 +34,8 @@ public class TripRouteServiceImpl implements TripRouteService {
                 TripRoute.from(tripRouteCreateDto, user));
 
         // 장소_id, 여행일자, 여행 순서 차례대로 저장
-        List<TripPlaceDto> tripPlaces = tripRouteCreateDto.getTripPlaces();
-        for (TripPlaceDto tripPlaceDto : tripPlaces) {
+        List<TripPlaceCreateDto> tripPlaces = tripRouteCreateDto.getTripPlaces();
+        for (TripPlaceCreateDto tripPlaceDto : tripPlaces) {
             Optional<Place> byId = placeRepository.findById(tripPlaceDto.getPlaceId());
             if (byId.isPresent()) {
                 Place place = byId.get();

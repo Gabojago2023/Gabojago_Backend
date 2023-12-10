@@ -50,7 +50,8 @@ public class DistributedOnePick {
     private Boolean liked;
 
     @Builder
-    public DistributedOnePick(Double rate, OnePick onePick, User user) {
+    public DistributedOnePick(Boolean liked, Double rate, OnePick onePick, User user) {
+        this.liked = liked;
         this.rate = rate;
         this.onePick = onePick;
         this.user = user;

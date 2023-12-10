@@ -49,7 +49,7 @@ public class OnePickServiceImpl implements OnePickService {
 
         HashMap<Integer, OnePick> validOnePicks = new HashMap<>();
         for (OnePick onePick : userOnePicks) {
-            validOnePicks.put(onePick.getPlace().getId(), onePick);
+            validOnePicks.put(onePick.getCategory(), onePick);
         }
 
         return new ArrayList<>(validOnePicks.values());
@@ -100,6 +100,8 @@ public class OnePickServiceImpl implements OnePickService {
                 DistributedOnePick distributedOnePick = DistributedOnePick.builder()
                         .onePick(onePick)
                         .user(new User(userId))
+                        .rate(0.0)
+                        .liked(false)
                         .build();
                 distributedOnePickRepository.save(distributedOnePick);
                 break;
@@ -186,4 +188,16 @@ public class OnePickServiceImpl implements OnePickService {
                 .build();
 
     }
+
+    public Integer getOnePickLikeCount(Integer onePickId) {
+        List<DistributedOnePick> onePickList = distributedOnePickRepository.findAllByOnePickId(onePickId);
+        Integer likeCount = 0;
+        for (DistributedOnePick distributedOnePick : onePickList) {
+            if (distributedOnePick.getLiked() != null && distributedOnePick.getLiked())
+                likeCount++;
+        }
+        return likeCount;
+    }
+
+
 }

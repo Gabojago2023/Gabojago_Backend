@@ -48,8 +48,7 @@ auth:
       - account_email
     token-req-url: https://kauth.kakao.com/oauth/token
     user-info-request-url: https://kapi.kakao.com/v2/user/me
-    redirect-url-sign: http://localhost:3000/kakao/sign
-    redirect-url-login: http://localhost:3000/kakao/login
+    redirect-url: http://localhost:3000
 
 
 logging:

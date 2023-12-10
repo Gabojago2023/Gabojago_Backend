@@ -81,7 +81,9 @@ public class TripRouteController {
     public ResponseEntity<?> getMyPlan(@RequestHeader("Authorization") String token){
         Integer userId = authService.getUserIdFromToken(token);
         User user = userService.getUser(userId);
-        List<TripRoute> tripRouteList = tripRouteService.getMyTripRoutes(user);
+        List<TripRouteResDto> tripRouteList = tripRouteService.getMyTripRoutes(user).stream()
+                .map(TripRouteResDto::from)
+                .toList();
         return ResponseEntity.status(HttpStatus.OK).body(tripRouteList);
     }
     private boolean isCompanionAndHasRole(User user, List<Companion> companionList) {

@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 @ToString
 @Getter
 @Setter
@@ -39,6 +40,10 @@ public class TripRouteResDto {
                 .userId(tripRoute.getUser().getId())
                 .tripImgUrl(tripRoute.getTripImgUrl())
                 .bestPlaceId(tripRoute.getBestPlaceId())
+                .tripPlaces(tripRoute.getTripPlaceList()
+                        .stream()
+                        .map(TripPlaceDto::from)
+                        .toList())
                 .build();
     }
 }
