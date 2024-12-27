@@ -4,7 +4,7 @@ version: '3.1'
 services:
   app:
     container_name: app
-    image: ynwoo/onepick_test
+    image: eundms112/onepick_test
     build:
       context: ./
       dockerfile: Dockerfile
